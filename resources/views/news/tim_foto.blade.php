@@ -1,0 +1,1 @@
+<img src="{{asset('storage/our-tim/'.$tim->foto)}}" alt="foto" style="width: 100%;"/>

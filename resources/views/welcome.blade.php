@@ -1,16 +1,25 @@
 @extends('template.layoutHome')
 @section('main')
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex align-items-center">
-    <div class="container" data-aos="zoom-out" data-aos-delay="100">
-      <h1>Welcome to <span>SMA xxx</span></h1>
-      <h2>Islami, Berprestasi, dan Humanis</h2>
-      <div class="d-flex">
-        <a href="#about" class="btn-get-started scrollto">Tentang Kami</a>
-        <a href="https://www.youtube.com/watch?v=SvF-VajpHGU" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
+ 
+<section id="hero">
+  <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      @foreach($banner as $bnr)
+      <div class="carousel-item @if($loop->iteration == 1) active @endif">
+        <img src="{{asset('storage/home-banner/'.$bnr->foto)}}" class="d-block w-100" alt="banner">
       </div>
+      @endforeach
     </div>
-  </section><!-- End Hero -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
 
   <main id="main">
 
@@ -21,33 +30,35 @@
         <div class="row">
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-              <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+              <div class="icon text-tk"><i class="bi bi-balloon-heart"></i></div>
+              <h4 class="title"><a href="https://tkit.iqis.sch.id">TK<span class="text-tk">IT</span></a></h4>
+              <p class="description">
+                TK Islam Terpadu Ibnul Qayyim Islamic School
+              </p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
-              <div class="icon"><i class="bx bx-file"></i></div>
-              <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-              <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+              <div class="icon text-sd"><i class="bi bi-people"></i></div>
+              <h4 class="title"><a href="https://sdit.iqis.sch.id">SD<span class="text-sd">IT</span></a></h4>
+              <p class="description">SD Islam Terpadu Ibnul Qayyim Islamic School</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
-              <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4 class="title"><a href="">Magni Dolores</a></h4>
-              <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+              <div class="icon text-smp"><i class="bi bi-book-half"></i></div>
+              <h4 class="title"><a href="https://smpit.iqis.sch.id">SMP<span class="text-smp">IT</span></a></h4>
+              <p class="description">SMP Islam Terpadu Ibnul Qayyim Islamic School</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box" data-aos="fade-up" data-aos-delay="400">
-              <div class="icon"><i class="bx bx-world"></i></div>
-              <h4 class="title"><a href="">Nemo Enim</a></h4>
-              <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+              <div class="icon text-sma"><i class="bi bi-mortarboard"></i></div>
+              <h4 class="title"><a href="https://smkit.iqis.sch.id">SMK<span class="text-sma">IT</span></a></h4>
+              <p class="description">SMK Islam Terpadu Ibnul Qayyim Islamic School</p>
             </div>
           </div>
 
@@ -63,48 +74,30 @@
         <div class="section-title">
           <h2>About</h2>
           <h3>Cari Tahu <span>Tentang Kami</span></h3>
-          <p></p>
-          <P>Pesatnya perkembangan Tehnologi Informasi hanya akan membawa kehancuran genarasi masa depan anak kita 
-            jika iman dan akhlaq belum terbangun dengan baik. Generasi yang qurota 
-            a’yun penyejuk hati adalah aset terbesar yang bisa melanjutkan cita-cita dan harapan orang tua.</P>
+          <P>
+            Mencetak Generasi Muslim yang Shalih, Hafizh dan Terampil
+          </P>
+          <p>
+            Yayasan Pendidikan Islam Ibnul Qayyim Islamic School berdakwah di masyarakat melalui jalur pendidikan formal dengan jenjang mulai dari TK, SD, SMP, sampai SMK yang berlandaskan prinsip Ahlussunnah Wal Jamaah
+          </p>
         </div>
 
         <div class="row">
           <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
-            <img src="{{url('Home/assets/img/about.jpg')}}" class="img-fluid" alt="" style="width:100%; heigth:100%">
+            <img src="{{url('Home/assets/img/about-2.png')}}" class="img-fluid" alt="" style="width:100%; heigth:100%">
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="100">
-            <h3>VISI</h3>
+            <h3>
+              “Mukmin yang kuat lebih baik dan lebih dicintai Allah Azza wa Jalla daripada mukmin yang lemah …” 
+            </h3>
             <p class="fst-italic">
-              ISLAMI, BERPRESTASI DAN HUMANIS
+              (Hadist shahih riwayat Imam Muslim dan lainnya)
             </p>
-            <h3>MISI</h3>
-            <ul>
-              <li>
-                <i class="bx bx-store-alt"></i>
-                <div>
-                  <p>MEMPERSIAPKAN ANAK AGAR DAPAT HIDUP DALAM DUNIA REALIS DAN MEMBAKALINYA DENGAN AQIDAH ISTIQOMAH, BERAKHLAK MULIA DAN MEMPUNYAI SEMANGAT BERAMAR MAKRUF NAHI MUNGKAR.</p>
-                </div>
-              </li>
-              <li>
-                <i class="bx bx-store-alt"></i>
-                <div>
-                  <p>MENGEMBANGKAN KEMAMPUAN ANAK UNTUK BERKOMPETENSI YANG SEHAT DAN POSITIF.</p>
-                </div>
-              </li>
-              <li>
-                <i class="bx bx-store-alt"></i>
-                <div>
-                  <p>MENUMBUHKAN SIKAP TOLERAN, TANGGUNG JAWAB, KEMANDIRIAN, DAN KECAKAPAN EMOSIONALNYA.</p>
-                </div>
-              </li>
-              <li>
-                <i class="bx bx-store-alt"></i>
-                <div>
-                  <p>MENINGKATKAN MUTU PENDIDIKAN SESUAI DENGAN TUNTUNAN MASYARAKAT DAN PERKEMBANGAN ILMU PENGETAHUAN DAN TEKNOLOGI (IPTEQ).</p>
-                </div>
-              </li>
-            </ul>
+            <p>
+              Sebuah hadits yang mulia dari Rasulullah shallallahu ‘alaihi wa sallam dimana ulama menjelaskan bahwa barangsiapa yang mengerjakan amal-amal shalih dengan benar, memperbaiki dirinya dengan ilmu yang bermanfaat dan amal shalih, juga memperbaiki orang lain dengan saling menasehati dalam kebenaran dan kesabaran, maka dia adalah Mukmin yang kuat. Dalam diri orang seperti ini terdapat tingkatan iman yang paling tinggi. Siapa yang belum sampai pada tingkatan ini, maka dia adalah Mukmin yang lemah.<br/>
+              Inilah yang memotivasi kami untuk terus menguatkan barisan kaum muslimin melalui jalur pendidikan. Karena hanya dengan pendidikan yang sesuai dengan tuntunan Rasulullah shallallahu ‘alaihi wa sallam saja kaum muslimin dapat meraih kemuliaannya di sisi Allah Azza wa Jalla.<br/>
+              Setelah berpengalaman selama 7 tahun mengusung pendidikan Islami yang berkualitas berbasis Sekolah Dasar, maka pada tahun 2018 kami melanjutkan tahapan pendidikan yang lebih tinggi berbasis Sekolah Menegah Pertama. Alhamdulillah dengan izin Allah Tabaraka wa Ta’ala Ibnul Qayyim Islamic School terus mendapat respon positif dari masyarakat sejak berdirinya hingga hari ini.<br/>
+            </p>
           </div>
         </div>
 
@@ -117,35 +110,27 @@
 
         <div class="row">
 
-          <div class="col-lg-3 col-md-6">
+          <div class="col-lg-4 col-md-6">
             <div class="count-box">
               <i class="bi bi-emoji-smile"></i>
-              <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="{{$count_siswa}}" data-purecounter-duration="1" class="purecounter"></span>
               <p>Siswa</p>
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
+          <div class="col-lg-4 col-md-6 mt-5 mt-md-0">
             <div class="count-box">
               <i class="bi bi-journal-richtext"></i>
-              <span data-purecounter-start="0" data-purecounter-end="52" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Guru/Pengajar</p>
+              <span data-purecounter-start="0" data-purecounter-end="{{$count_guru}}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Guru Dan Pegawai</p>
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-            <div class="count-box">
-              <i class="bi bi-headset"></i>
-              <span data-purecounter-start="0" data-purecounter-end="63" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Mata Pelajaran</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+          <div class="col-lg-4 col-md-6 mt-5 mt-lg-0">
             <div class="count-box">
               <i class="bi bi-people"></i>
-              <span data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="1" class="purecounter"></span>
-              <p>Kelas</p>
+              <span data-purecounter-start="0" data-purecounter-end="{{$count_campus}}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Sekolah</p>
             </div>
           </div>
 
@@ -155,7 +140,7 @@
     </section><!-- End Counts Section -->
 
     <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
+    <section id="services" class="services section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -218,14 +203,50 @@
       </div>
     </section><!-- End Testimonials Section -->
 
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Team</h2>
+          <h3>Our Hardworking <span>Team</span></h3>
+          <p>Staf dan pengurus Yayasan Ibnul Qayyim Islamic School Makassar.</p>
+        </div>
+
+        <div class="row">
+          @foreach($team as $tim)
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="member">
+              <div class="member-img">
+                <img src="{{asset('storage/our-tim/'.$tim->foto)}}" class="img-fluid" alt="">
+                <div class="social">
+                  <a target="_blank" href="{{$tim->twitter}}"><i class="bi bi-twitter"></i></a>
+                  <a target="_blank" href="{{$tim->fb}}"><i class="bi bi-facebook"></i></a>
+                  <a target="_blank" href="{{$tim->ig}}"><i class="bi bi-instagram"></i></a>
+                  <a target="_blank" href="{{$tim->linked}}"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>{{$tim->nama}}</h4>
+                <span>{{$tim->jabatan}}</span>
+              </div>
+            </div>
+          </div>
+          @endforeach
+
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+
     <!-- ======= Portfolio Section ======= -->
-    <section id="portfolio" class="portfolio">
+    <section id="portfolio" class="portfolio section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
           <h2>Berita</h2>
-          <h3>Berita <span>Terbaru</span></h3>
-          <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
+          <h3>Berita <span>Terkini</span></h3>
+          <p>Ikuti berita terbaru tetang Ibnul Qayyim Islamic School Makassar.</p>
         </div>
 
         <div class="row" data-aos="fade-up" data-aos-delay="100">
@@ -237,273 +258,75 @@
         </div>
 
         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-
+          @foreach ($news as $item)
           <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-1.jpg')}}" class="img-fluid" alt="">
+            <img src="{{asset('storage/photo-news/'.$item->poster)}}" class="img-fluid" alt="IMG">
             <div class="portfolio-info">
-              <h4>App 1</h4>
-              <p>App</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-1.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-              <a href="/news" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+              <h4><i class="bi bi-newspaper"></i> {{$item->judul}}</h4>
+              <p><i class="bi bi-calendar-week"></i> {{$item->post_date}}</p>
+              <a href="{{asset('storage/photo-news/'.$item->poster)}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{$item->judul}}"><i class="bx bx-plus"></i></a>
+              <a href="{{url('/news').'/'.$item->idnews.'/read'}}" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
             </div>
           </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-2.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 3</h4>
-              <p>Web</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-2.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
-              <a href="/news" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-3.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>App 2</h4>
-              <p>App</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-3.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 2"><i class="bx bx-plus"></i></a>
-              <a href="/news" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-4.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 2</h4>
-              <p>Card</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-4.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 2"><i class="bx bx-plus"></i></a>
-              <a href="/news" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-5.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 2</h4>
-              <p>Web</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-5.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 2"><i class="bx bx-plus"></i></a>
-              <a href="/news" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-6.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>App 3</h4>
-              <p>App</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-6.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 3"><i class="bx bx-plus"></i></a>
-              <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-8.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 3</h4>
-              <p>Card</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-8.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
-              <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-7.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 1</h4>
-              <p>Card</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-7.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 1"><i class="bx bx-plus"></i></a>
-              <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-8.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 3</h4>
-              <p>Card</p>
-              <a href="{{url('Home/assets/img/portfolio/portfolio-8.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
-              <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <img src="{{url('Home/assets/img/portfolio/portfolio-9.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 3</h4>
-              <p>Web</p>
-              <a href="{{url('assets/img/portfolio/portfolio-9.jpg')}}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
-              <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
-            </div>
-          </div>
+          @endforeach
 
         </div>
 
       </div>
     </section><!-- End Portfolio Section -->
 
-    <!-- ======= Team Section ======= -->
-    <section id="team" class="team section-bg">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Team</h2>
-          <h3>Our Hardworking <span>Team</span></h3>
-          <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
-        </div>
-
-        <div class="row">
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-            <div class="member">
-              <div class="member-img">
-                <img src="{{url('Home/assets/img/team/team-1.jpg')}}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Walter White</h4>
-                <span>Kepala Sekolah</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-            <div class="member">
-              <div class="member-img">
-                <img src="{{url('Home/assets/img/team/team-2.jpg')}}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Sarah Jhonson</h4>
-                <span>Wakil Kepala Sekolah</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="member-img">
-                <img src="{{url('Home/assets/img/team/team-3.jpg')}}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>William Anderson</h4>
-                <span>Staff</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
-            <div class="member">
-              <div class="member-img">
-                <img src="{{url('Home/assets/img/team/team-4.jpg')}}" class="img-fluid" alt="">
-                <div class="social">
-                  <a href=""><i class="bi bi-twitter"></i></a>
-                  <a href=""><i class="bi bi-facebook"></i></a>
-                  <a href=""><i class="bi bi-instagram"></i></a>
-                  <a href=""><i class="bi bi-linkedin"></i></a>
-                </div>
-              </div>
-              <div class="member-info">
-                <h4>Amanda Jepson</h4>
-                <span>Bendahara</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section><!-- End Team Section -->
-
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Contact</h2>
-          <h3><span>Contact Us</span></h3>
+          <h2>Kontak</h2>
+          <h3><span>Hubungi Kami</span></h3>
           <p>Jangan segan untuk menguhubungi kami melalui kontak yang telah disediakan.</p>
         </div>
 
-        <div class="row" data-aos="fade-up" data-aos-delay="100">
-          <div class="col-lg-6">
+        <div class="row">
+
+        <div class="row col-lg-6" data-aos="fade-up" data-aos-delay="100">
+
+          <div class="col-lg-12 ">
+            <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1052.593057285752!2d119.52824285052118!3d-5.093664471271525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbefb98cf06e587%3A0xe048f9722d2bde85!2sSDIT%20Ibnul%20Qayyim%20Makassar!5e0!3m2!1sen!2sid!4v1694280581845!5m2!1sen!2sid" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
+          </div>
+
+        </div>
+
+        <div class="row col-lg-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-12">
             <div class="info-box mb-4">
               <i class="bx bx-map"></i>
-              <h3>Alamat</h3>
-              <p>Jl. A.P. Pettarani No. 2 Makassar</p>
+              <p>
+                {{$contact->campus_alamat}}<br/> 
+              </p>
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6">
+          <div class="col-lg-6 col-md-6">
             <div class="info-box  mb-4">
               <i class="bx bx-envelope"></i>
               <h3>Email</h3>
-              <p>contact@example.com</p>
+              <p>{{$contact->email_campus}}</p>
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6">
+          <div class="col-lg-6 col-md-6">
             <div class="info-box  mb-4">
               <i class="bx bx-phone-call"></i>
               <h3>Contact</h3>
-              <p>+1 5589 55488 55</p>
+              <p>	{{$contact->campus_contact}} </p>
             </div>
           </div>
 
         </div>
-
-        <div class="row" data-aos="fade-up" data-aos-delay="100">
-
-          <div class="col-lg-6 ">
-            <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
-          </div>
-
-          <div class="col-lg-6">
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-              <div class="row">
-                <div class="col form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                </div>
-                <div class="col form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
-              </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
-          </div>
-
-        </div>
+      </div>
 
       </div>
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
+
   @endsection

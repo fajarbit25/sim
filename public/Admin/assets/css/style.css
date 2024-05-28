@@ -1,5 +1,19 @@
+*{
+  font-size: 14px;
+}
 :root {
   scroll-behavior: smooth;
+}
+
+
+/**Test berdiri */
+.vertical-text {
+  writing-mode: vertical-lr !important;
+    transform: rotate(180deg) !important;
+}
+
+.btn-xs{
+  --bs-btn-padding-y: .10rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .85rem;
 }
 
 body {
@@ -9,12 +23,15 @@ body {
 }
 
 a {
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
   text-decoration: none;
 }
 
+
 a:hover {
-  color: #717ff5;
+  /* color: #717ff5; */
+  color: #168148;
   text-decoration: none;
 }
 
@@ -53,7 +70,8 @@ h6 {
   font-size: 24px;
   margin-bottom: 0;
   font-weight: 600;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
 }
 
 /*--------------------------------------------------------------
@@ -66,7 +84,8 @@ h6 {
   right: 15px;
   bottom: 15px;
   z-index: 99999;
-  background: #4154f1;
+  /* background: #4154f1; */
+  background: #036430;
   width: 40px;
   height: 40px;
   border-radius: 4px;
@@ -80,7 +99,8 @@ h6 {
 }
 
 .back-to-top:hover {
-  background: #6776f4;
+/* background: #6776f4; */
+  background: #168148;
   color: #fff;
 }
 
@@ -225,7 +245,8 @@ h6 {
   padding: 20px 0 15px 0;
   font-size: 18px;
   font-weight: 500;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
   font-family: "Poppins", sans-serif;
 }
 
@@ -283,7 +304,8 @@ h6 {
 
 .accordion-flush .accordion-button:not(.collapsed) {
   box-shadow: none;
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
 }
 
 .accordion-flush .accordion-body {
@@ -331,13 +353,16 @@ h6 {
 
 .nav-tabs-bordered .nav-link:hover,
 .nav-tabs-bordered .nav-link:focus {
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
 }
 
 .nav-tabs-bordered .nav-link.active {
   background-color: #fff;
-  color: #4154f1;
-  border-bottom: 2px solid #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
+  /* border-bottom: 2px solid #4154f1; */
+  border-bottom: 2x solid #036430;
 }
 
 /*--------------------------------------------------------------
@@ -361,7 +386,8 @@ h6 {
 .logo span {
   font-size: 26px;
   font-weight: 700;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
   font-family: "Nunito", sans-serif;
 }
 
@@ -380,7 +406,8 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
 }
 
 .header .search-bar {
@@ -417,7 +444,8 @@ h6 {
 .header .search-form input {
   border: 0;
   font-size: 14px;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
   border: 1px solid rgba(1, 41, 112, 0.2);
   padding: 7px 38px 7px 8px;
   border-radius: 3px;
@@ -440,7 +468,8 @@ h6 {
 }
 
 .header .search-form button i {
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
 }
 
 /*--------------------------------------------------------------
@@ -457,13 +486,15 @@ h6 {
 
 .header-nav .nav-icon {
   font-size: 22px;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
   margin-right: 25px;
   position: relative;
 }
 
 .header-nav .nav-profile {
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
 }
 
 .header-nav .nav-profile img {
@@ -673,7 +704,8 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
   transition: 0.3;
   background: #f6f9ff;
   padding: 10px 15px;
@@ -683,11 +715,13 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #036430;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
+  color: #1f2124;
+  /* color: #036430; */
   background: #fff;
 }
 
@@ -696,12 +730,14 @@ h6 {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #03351a;
   background: #f6f9ff;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #168148;
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {
@@ -724,7 +760,8 @@ h6 {
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  color: #012970;
+  /* color: #012970; */
+  color: #036430;
   transition: 0.3;
   padding: 10px 0 10px 40px;
   transition: 0.3s;
@@ -739,11 +776,13 @@ h6 {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
-  color: #4154f1;
+  /* color: #4154f1; */
+  color: #03351a;
 }
 
 .sidebar-nav .nav-content a.active i {
-  background-color: #4154f1;
+  /* background-color: #4154f1; */
+  background-color: #148168;
 }
 
 /*--------------------------------------------------------------

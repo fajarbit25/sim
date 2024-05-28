@@ -28,8 +28,8 @@
             <div class="portfolio-details-slider swiper">
               <div class="swiper-wrapper align-items-center">
 
-                <div class="swiper-slide">
-                  <img src="{{url('Home/assets/img/portfolio/portfolio-details-1.jpg')}}" alt="">
+                <div class="">
+                  <img src="{{asset('storage/photo-news/'.$berita->poster)}}" alt="IMG" style="width: 100%;">
                 </div>
 
               </div>
@@ -41,17 +41,25 @@
             <div class="portfolio-info">
               <h3>Informasi</h3>
               <ul>
-                <li><strong>Judul</strong>: This is an example of portfolio detail</li>
-                <li><strong>Upload By</strong>: Staf Administrasi Sekolah</li>
-                <li><strong>Tanggal Posting</strong>: 01 March, 2020</li>
+                <li><strong>Judul</strong>: {{$berita->judul}}</li>
+                <li><strong>Upload By</strong>: 
+                  @if($berita->level == 1)
+                    <span>Administrator</span>
+                  @elseif($berita->level == 2)
+                    <span>Kepala Sekolah</span>
+                  @elseif($berita->level == 3)
+                    <span>Staff/Guru</span>
+                  @else
+                    <span>Siswa</span>
+                  @endif
+                </li>
+                <li><strong>Tanggal Posting</strong>: {{$berita->post_date}}</li>
               </ul>
             </div>
           </div>
           <div class="portfolio-description">
-            <h2>This is an example of portfolio detail</h2>
-            <p>
-            Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
-            </p>
+            <h2>{!!$berita->judul!!}</h2>
+              {!!$berita->berita!!}
           </div>
 
         </div>
