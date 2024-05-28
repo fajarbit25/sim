@@ -25,6 +25,7 @@ use App\Models\Teacher;
 use App\Models\Tipetransaction;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        /**Superuser */
         User::create([
             'first_name'        => 'Superadmin',
             'email'             => 'sa@iqis.sch.id',
@@ -43,9 +45,9 @@ class DatabaseSeeder extends Seeder
             'phone'             => '0895330078690',
             'telephone'         => NULL,
             'photo'             => 'https://sim.iqis.sch.id/storage/photo-users/user.png',
-            'campus_id'         => 0,
+            'campus_id'         => 1,
             'email_verified_at' => '2023-09-02',
-            'password'          => '$2y$10$4pynHtr20RIyoawMQ69UHOFaiB9JKn0eraYxgZxKNVzPg3C9OeGdS',
+            'password'          => Hash::make('admin'),
             'kelas'             => 0,
         ]);
 
@@ -65,6 +67,67 @@ class DatabaseSeeder extends Seeder
         KompetensiKhususTeacher::create(['user_id' => 1]);
         PenugasanTeacher::create(['user_id' => 1]);
 
+        /**Admin TK */
+        User::create([
+            'first_name'        => 'Admin TKIT',
+            'email'             => 'admins-tk@iqis.sch.id',
+            'level'             => 1,
+            'status'            => 2,
+            'phone'             => '081000000001',
+            'telephone'         => NULL,
+            'photo'             => 'https://sim.iqis.sch.id/storage/photo-users/user.png',
+            'campus_id'         => 2,
+            'email_verified_at' => '2023-09-02',
+            'password'          => Hash::make('iqis@2024'),
+            'kelas'             => 0,
+        ]);
+
+        Teacher::create([
+            'user_id'       => 2,
+            'jenis_kelamin' => 'Perempuan',
+            'tempat_lahir'  => NULL,
+            'tanggal_lahir' => NULL,
+            'ibu_kandung'   => 'nama-ibu',
+            'nik'           => '0000000000000001'
+        ]);
+
+        BiodataTeacher::create(['user_id'=> 2,]);
+        Alamat::create(['user_id'   => 2,]);
+        SchoolTeacher::create(['user_id'   => 2,]);
+        KepegawaianTeacher::create(['user_id'   => 2,]);
+        KompetensiKhususTeacher::create(['user_id' => 2,]);
+        PenugasanTeacher::create(['user_id' => 2,]);
+
+        /**Admin TK */
+        User::create([
+            'first_name'        => 'Admin SDIT',
+            'email'             => 'admins@iqis.sch.id',
+            'level'             => 1,
+            'status'            => 2,
+            'phone'             => '081000000002',
+            'telephone'         => NULL,
+            'photo'             => 'https://sim.iqis.sch.id/storage/photo-users/user.png',
+            'campus_id'         => 3,
+            'email_verified_at' => '2023-09-02',
+            'password'          => Hash::make('iqis@2024'),
+            'kelas'             => 0,
+        ]);
+
+        Teacher::create([
+            'user_id'       => 3,
+            'jenis_kelamin' => 'Perempuan',
+            'tempat_lahir'  => NULL,
+            'tanggal_lahir' => NULL,
+            'ibu_kandung'   => 'nama-ibu',
+            'nik'           => '0000000000000002'
+        ]);
+
+        BiodataTeacher::create(['user_id'=> 3,]);
+        Alamat::create(['user_id'   => 3,]);
+        SchoolTeacher::create(['user_id'   => 3,]);
+        KepegawaianTeacher::create(['user_id'   => 3,]);
+        KompetensiKhususTeacher::create(['user_id' => 3,]);
+        PenugasanTeacher::create(['user_id' => 3,]);
 
         Tipetransaction::create(['campus_id' => 1, 'tipe' => 'PPDB']);
         Tipetransaction::create(['campus_id' => 2, 'tipe' => 'PPDB']);

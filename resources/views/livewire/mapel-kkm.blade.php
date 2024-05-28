@@ -131,6 +131,7 @@
                         <div class="form-group">
                             <label for="predikat">Predikat <span class="text-danger">*</span> </label>
                             <select name="predikat" id="predikat" class="form-control" wire:model="predikat">
+                                <option value="A">-Pilih Predikat..</option>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>

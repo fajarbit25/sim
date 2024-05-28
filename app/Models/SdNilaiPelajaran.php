@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KompetensiDasar extends Model
+class SdNilaiPelajaran extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'ta',
-        'semester',
-        'idmapel',
-        'kelas',
-        'aspek',
-        'kode',
-        'deskripsi',
-        'campus_id',
+       'user_id',
+       'mapel_id',
+       'aspek',
+       'kd',
+       'nilai',
     ];
 }

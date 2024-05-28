@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('nilai_min');
             $table->integer('nilai_max');
             $table->string('deskripsi');
+            $table->string('campus_id');
             $table->timestamps();
         });
     }

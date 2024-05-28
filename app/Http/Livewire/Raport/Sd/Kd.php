@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Raport\Sd;
 use App\Models\Gurumapel;
 use App\Models\KompetensiDasar;
 use App\Models\Room;
+use App\Models\Semester;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -21,6 +22,8 @@ class Kd extends Component
     public $idDelete;
     public $idEdit;
 
+    public $ta;
+    public $semester;
     public $dataKelas;
     public $dataMapel;
     public $dataPengetahuan;
@@ -35,6 +38,7 @@ class Kd extends Component
     {
         $this->getDataKelas();
         $this->getDataMapel();
+        $this->getDataSemester();
     }
 
     public function loadAll()
@@ -43,12 +47,20 @@ class Kd extends Component
         $this->getDataMapel();
         $this->getDataPengetahuan();
         $this->getDataKeterampilan();
+        $this->getDataSemester();
     }
 
     public function render()
     {
         $this->loadAll();
         return view('livewire.raport.sd.kd');
+    }
+
+    public function getDataSemester()
+    {
+        $data = Semester::where('is_active', 'true')->first();
+        $this->ta = $data->tahun_ajaran;
+        $this->semester = $data->semester_kode;
     }
 
     public function getDataKelas()
@@ -66,14 +78,16 @@ class Kd extends Component
 
     public function getDataPengetahuan()
     {
-        $data = KompetensiDasar::where('idmapel', $this->mapel)->where('kelas', $this->kelas)
+        $data = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
+                            ->where('idmapel', $this->mapel)->where('kelas', $this->kelas)
                             ->where('aspek', 'Pengetahuan')->get();
         $this->dataPengetahuan = $data;
     }
 
     public function getDataKeterampilan()
     {
-        $data = KompetensiDasar::where('idmapel', $this->mapel)->where('kelas', $this->kelas)
+        $data = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
+                            ->where('idmapel', $this->mapel)->where('kelas', $this->kelas)
                             ->where('aspek', 'Keterampilan')->get();
         $this->dataKeterampilan = $data;
     }
@@ -88,6 +102,8 @@ class Kd extends Component
     {
         $this->validate();
         $data = [
+            'ta'            => $this->ta,
+            'semester'      => $this->semester,
             'idmapel'       => $this->mapel,
             'kelas'         => $this->kelas,
             'aspek'         => $this->aspek,

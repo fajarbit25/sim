@@ -46,11 +46,11 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group mb-3 col-sm-6">
-              <label for="tingkat">Nama Tingkat</label>
+              <label for="tingkat">Tingkat (Rentang 1-6)</label>
               <input type="text" name="tingkat" id="tingkat" class="form-control" required autocomplete="off"/>
             </div>
             <div class="form-group mb-3 col-sm-6">
-              <label for="kelas">Kode / Kelompok</label>
+              <label for="kelas">Kode / Kelompok (A-Z)</label>
               <input type="text" name="kelas" id="kelas" class="form-control" required autocomplete="off"/>
             </div>
             <div class="form-group mb-3">
@@ -83,11 +83,11 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group mb-3 col-lg-6">
-              <label for="tingkatEdit">TingkatEdit</label>
+              <label for="tingkatEdit">Tingkat (Rentang 1-6)</label>
               <input type="text" name="tingkatEdit" id="tingkatEdit" class="form-control" required autocomplete="off"/>
             </div>
             <div class="form-group mb-3 col-lg-6">
-              <label for="kelas">Kode / Kelompok</label>
+              <label for="kelas">Kode / Kelompok (A-Z)</label>
               <input type="text" name="kelas" id="kelasEdit" value="{{old('kelasEdit')}}" class="form-control" required autocomplete="off"/>
             </div>
             <div class="form-group mb-3 col-lg-6">

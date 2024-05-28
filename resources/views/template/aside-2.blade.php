@@ -68,6 +68,11 @@
             </a>
           </li>
           <li>
+            <a href="{{url('/raport/sd/penilaian')}}">
+              <i class="bi bi-circle"></i><span>Form Penilaian</span>
+            </a>
+          </li>
+          <li>
             <a href="{{url('/nilai/report')}}">
               <i class="bi bi-circle"></i><span>Report</span>
             </a>

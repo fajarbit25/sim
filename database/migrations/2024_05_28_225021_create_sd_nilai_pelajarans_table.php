@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kompetensi_dasars', function (Blueprint $table) {
+        Schema::create('sd_nilai_pelajarans', function (Blueprint $table) {
             $table->id();
-            $table->string('ta');
-            $table->string('semester');
-            $table->string('idmapel');
-            $table->string('kelas');
+            $table->string('user_id');
+            $table->string('mapel_id');
             $table->string('aspek');
-            $table->string('kode');
-            $table->string('deskripsi');
-            $table->string('campus_id');
+            $table->string('kd');
+            $table->integer('nilai');
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kompetensi_dasars');
+        Schema::dropIfExists('sd_nilai_pelajarans');
     }
 };

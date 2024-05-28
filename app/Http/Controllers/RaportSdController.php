@@ -19,4 +19,12 @@ class RaportSdController extends Controller
         ];
         return view('raport.sd.kd', $data);
     }
+
+    public function penilaian():View
+    {
+        $data = [
+            'title'     => 'Form Penilaian',
+        ];
+        return view('raport.sd.penilaian', $data);
+    }
 }
