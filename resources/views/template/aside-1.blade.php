@@ -110,8 +110,8 @@
             </a>
           </li>
           <li>
-            <a href="{{url('/nilai/report')}}">
-              <i class="bi bi-circle"></i><span>Report</span>
+            <a href="{{url('/raport/sd')}}">
+              <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
         </ul>

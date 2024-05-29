@@ -72,11 +72,6 @@
               <i class="bi bi-circle"></i><span>Form Penilaian</span>
             </a>
           </li>
-          <li>
-            <a href="{{url('/nilai/report')}}">
-              <i class="bi bi-circle"></i><span>Report</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Forms Nav -->
 

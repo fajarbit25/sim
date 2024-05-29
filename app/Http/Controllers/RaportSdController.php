@@ -27,12 +27,12 @@ class RaportSdController extends Controller
         ];
         return view('raport.sd.penilaian', $data);
     }
-    
+
     public function raport():view
     {
         $data = [
             'title'     => 'Rapor Siswa',
         ];
-        return view('tk.raport.index', $data);
+        return view('raport.sd.index', $data);
     }
 }
