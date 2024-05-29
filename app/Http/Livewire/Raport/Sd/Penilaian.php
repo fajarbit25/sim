@@ -32,6 +32,10 @@ class Penilaian extends Component
     public $dataPredikat;
     public $dataCapaian;
 
+    public $nick_name;
+    public $name;
+    public $siswa;
+
     protected $rules = [
         'kelas'     => 'required',
         'mapel'     => 'required',
@@ -92,7 +96,7 @@ class Penilaian extends Component
 
     public function createFormNilai()
     {
-        //$this->validate();
+        $this->validate();
         $dataSiswa = User::where('kelas', $this->kelas)->select('id')->get();
         $dataKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
 
@@ -121,7 +125,8 @@ class Penilaian extends Component
                         ->join('kompetensi_dasars', 'kompetensi_dasars.id', 'sd_nilai_pelajarans.kd')
                         ->where('sd_nilai_pelajarans.ta', $this->ta)->where('sd_nilai_pelajarans.semester', $this->semester)
                         ->where('mapel_id', $this->mapel)->where('sd_nilai_pelajarans.aspek', $this->aspek)
-                        ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd')->get();
+                        ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'users.id as idsiswa',  
+                        'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd')->get();
         $this->dataNilai = $data;
     }
 
@@ -161,5 +166,29 @@ class Penilaian extends Component
         $data = Predikat::where('campus_id', Auth::user()->campus_id)
                             ->where('jenis', 'Capaian')->get();
         $this->dataCapaian = $data;
+    }
+
+    public function modalNickName($id, $name)
+    {
+        $this->siswa = $id;
+        $this->name = $name;
+        $this->emit('modalNickName');
+    }
+
+    public function updateNickName()
+    {
+        $this->validate([
+            'nick_name'     => 'required',
+        ]);
+
+        $user = User::findOrFail($this->siswa);
+        $user->update(['nick_name' => $this->nick_name]);
+        $this->closeModal();
+        $this->nick_name = "";
+    }
+
+    public function closeModal()
+    {
+        $this->emit('closeModal');
     }
 }

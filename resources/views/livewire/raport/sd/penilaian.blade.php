@@ -20,7 +20,8 @@
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
                                 <label for="kelas">Kelas</label>
-                                <select name="kelas" id="kelas" class="form-control" wire:model="kelas" @if(count($dataKelas) == 0) disabled @endif>
+                                <select name="kelas" id="kelas" class="form-control @error('kelas') is-invalid @enderror" 
+                                wire:model="kelas" @if(count($dataKelas) == 0) disabled @endif>
                                     @if(count($dataKelas) != 0)
                                     <option value="0">Pilih Kelas--</option>
                                     @foreach($dataKelas as $item)
@@ -33,7 +34,8 @@
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
                                 <label for="mapel">Mata Pelajaran</label>
-                                <select class="form-control" wire:model="mapel" @if(count($dataMapel) == 0) disabled @endif>
+                                <select class="form-control @error('mapel') is-invalid @enderror " 
+                                wire:model="mapel" @if(count($dataMapel) == 0) disabled @endif>
                                     @if(count($dataMapel) != 0)
                                     <option value="0">Pilih Mapel--</option>
                                     @foreach($dataMapel as $item)
@@ -46,7 +48,8 @@
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
                                 <label for="aspek">Aspek Penilaian</label>
-                                <select name="aspek" id="aspek" class="form-control" wire:model="aspek" @if(count($dataMapel) == 0) disabled @endif>
+                                <select name="aspek" id="aspek" class="form-control @error('aspek') is-invalid @enderror" 
+                                wire:model="aspek" @if(count($dataMapel) == 0) disabled @endif>
                                     <option value="0">-Pilih Aspek Penilaian--</option>
                                     <option value="Pengetahuan">Pengetahuan</option>
                                     <option value="Keterampilan">Keterampilan</option>
@@ -71,7 +74,6 @@
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">Daftar Nilai SDIT Ibnul Qayyim Makassar</h3>
-                    
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -83,10 +85,10 @@
                                     @foreach ($dataKd as $item)
                                         <th>{{$item->kode}}</th>
                                     @endforeach
-                                    <th>HPA</th>
-                                    <th>Predikat</th>
-                                    <th>Max</th>
-                                    <th>Min</th>
+                                    <th class="bg-light">HPA</th>
+                                    <th class="bg-light">Predikat</th>
+                                    <th class="bg-light">Max</th>
+                                    <th class="bg-light">Min</th>
                                     <th>Deskripsi</th>
                                 </tr>
                             </thead>
@@ -96,7 +98,13 @@
                                     <td> {{$loop->iteration}} </td>
                                     <td> {{$items->first()->nis}} </td>
                                     <td style="white-space: nowrap;"> {{$namaSiswa}} </td>
-                                    <td> {{$items->first()->nick_name}} </td>
+                                    <td>
+                                        @if(!$items->first()->nick_name)
+                                            <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName('{{$items->first()->idsiswa}}', '{{$namaSiswa}}')"> Input </a>
+                                        @else 
+                                        {{$items->first()->nick_name}}
+                                        @endif
+                                    </td>
 
                                     @foreach($items as $item)
                                     <td>
@@ -130,7 +138,6 @@
                                     <td class="bg-light">{{ $items->max('nilai') }}</td>
                                     <td class="bg-light">{{ $items->min('nilai') }}</td>
                                     <td>
-                                        <span>Ananda </span>
 
                                         <span>{{$items->first()->nick_name}} </span>
 
@@ -175,4 +182,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalNickName" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">{{$name}}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="nick_name">Masukkan Nama Panggilan <span class="text-danger">*</span> </label>
+                <input type="text" class="form-control @error('nick_name') is-invalid @enderror" wire:model="nick_name">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="updateNickName()">
+               <span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> </span> Simpan
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+
+    @push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+
+            Livewire.on('modalNickName', function () {
+                $('#modalNickName').modal('show')
+            }); //membuka modalodal('show')
+
+
+            Livewire.on('closeModal', function () {
+                $('#modalNickName').modal('hide')
+            }); //menutup semua modal
+
+
+            Livewire.on('showAlert', function (data) {
+                if(data.type === 200){
+                    var icons = 'success'
+                }else if(data.type === 500){
+                    var icons = 'warning'
+                }
+                Swal.fire({
+                    icon: icons,
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        });
+    </script>
+    @endpush
+
 </div>
