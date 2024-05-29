@@ -9,6 +9,8 @@ class SdNilaiPelajaran extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'ta',
+        'semester',
        'user_id',
        'mapel_id',
        'aspek',

@@ -3,8 +3,11 @@
 namespace App\Http\Livewire\Raport\Sd;
 
 use App\Models\Gurumapel;
+use App\Models\KompetensiDasar;
 use App\Models\Mapel;
+use App\Models\Predikat;
 use App\Models\Room;
+use App\Models\SdNilaiPelajaran;
 use App\Models\Semester;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +21,22 @@ class Penilaian extends Component
     public $kelas;
     public $mapel;
     public $aspek;
+    public $nilai;
+    public $kkm;
 
     public $dataKelas;
     public $dataSiswa;
     public $dataMapel;
     public $dataNilai;
+    public $dataKd;
+    public $dataPredikat;
+    public $dataCapaian;
+
+    protected $rules = [
+        'kelas'     => 'required',
+        'mapel'     => 'required',
+        'aspek'     => 'required',
+    ];
 
     public function mount()
     {
@@ -33,6 +47,11 @@ class Penilaian extends Component
         $this->getDataSiswa();
         $this->getDataKelas();
         $this->getDataMapel();
+        $this->getDataNilai();
+        $this->getDataKd();
+        $this->getDataPredikat();
+        $this->getDataCapaian(); 
+        
     }
 
     public function render()
@@ -47,6 +66,9 @@ class Penilaian extends Component
                         ->where('gurumapels.campus_id', Auth::user()->campus_id)
                         ->select('kode_mapel', 'nama_mapel', 'mapel_id')->get();
         $this->dataMapel = $data;
+        if($this->mapel){
+            $this->getKkm();
+        }
     }
 
     public function getDataSemester()
@@ -68,8 +90,76 @@ class Penilaian extends Component
         $this->dataKelas = $data;
     }
 
+    public function createFormNilai()
+    {
+        //$this->validate();
+        $dataSiswa = User::where('kelas', $this->kelas)->select('id')->get();
+        $dataKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
+
+        foreach($dataSiswa as $items){
+            $dataKd = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
+                            ->where('idmapel', $this->mapel)->where('kelas', $dataKelas->tingkat)
+                            ->where('aspek', $this->aspek)->select('id')->get();
+            foreach($dataKd as $item){
+                SdNilaiPelajaran::create([
+                    'ta'            => $this->ta,
+                    'semester'      => $this->semester,
+                    'user_id'       => $items->id,
+                    'mapel_id'      => $this->mapel,
+                    'aspek'         => $this->aspek,
+                    'kd'            => $item->id,
+                    'nilai'         => 0,
+                ]);
+            }
+        }
+    }
+
     public function getDataNilai()
     {
-        
+        $data = SdNilaiPelajaran::leftJoin('users', 'users.id', '=', 'sd_nilai_pelajarans.user_id')
+                        ->leftJoin('registers', 'registers.user_id', '=', 'sd_nilai_pelajarans.user_id')
+                        ->join('kompetensi_dasars', 'kompetensi_dasars.id', 'sd_nilai_pelajarans.kd')
+                        ->where('sd_nilai_pelajarans.ta', $this->ta)->where('sd_nilai_pelajarans.semester', $this->semester)
+                        ->where('mapel_id', $this->mapel)->where('sd_nilai_pelajarans.aspek', $this->aspek)
+                        ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd')->get();
+        $this->dataNilai = $data;
+    }
+
+    public function getDataKd()
+    {
+        $data = KompetensiDasar::where('aspek', $this->aspek)->get();
+        $this->dataKd = $data;
+    }
+
+    public function updateNilaiKd($id)
+    {
+        $this->validate([
+            'nilai'     => 'required|integer|min:60|max:99',
+        ]);
+        $kd = SdNilaiPelajaran::findOrFail($id);
+        $kd->update([
+            'nilai'     => $this->nilai,
+        ]); 
+        $this->nilai = "";
+    }
+
+    public function getKkm()
+    {
+        $data = Mapel::findOrFail($this->mapel);
+        $this->kkm = $data->kkm;
+    }
+
+    public function getDataPredikat()
+    {
+        $data = Predikat::where('campus_id', Auth::user()->campus_id)
+                            ->where('jenis', 'Predikat')->get();
+        $this->dataPredikat = $data;
+    }
+
+    public function getDataCapaian()
+    {
+        $data = Predikat::where('campus_id', Auth::user()->campus_id)
+                            ->where('jenis', 'Capaian')->get();
+        $this->dataCapaian = $data;
     }
 }

@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('sd_nilai_pelajarans', function (Blueprint $table) {
             $table->id();
+            $table->string('ta');
+            $table->string('semester');
             $table->string('user_id');
             $table->string('mapel_id');
             $table->string('aspek');

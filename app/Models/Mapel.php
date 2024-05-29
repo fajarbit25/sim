@@ -12,5 +12,6 @@ class Mapel extends Model
         return 'posts_index';
     }
     use HasFactory;
+    protected $primaryKey = 'idmapel';
     protected $fillable = ['kode_mapel', 'nama_mapel', 'mapel_campus', 'is_active', 'jenis', 'kkm'];
 }
