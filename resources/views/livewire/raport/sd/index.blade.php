@@ -115,15 +115,49 @@
                                 <th>Predikat</th>
                                 <th>Deskripsi</th>
                             </tr>
-                            @foreach($nilaiPengetahuan->groupBy('nama_mapel') as $namaMapel => $items)
+                            @foreach($dataNilai->groupBy('nama_mapel') as $namaMapel => $items)
                             <tr>
-                                <td> {{$loop->iteration}} </td>
-                                <td> {{$namaMapel}} </td>
-                                <td> {{$items->avg('nilai')}} </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$namaMapel}}</td>
+                                @php
+                                    $avgPengetahuan = $items->where('aspek', 'Pengetahuan');
+                                    $avgKeterampilan = $items->where('aspek', 'Keterampilan');
+                                @endphp
+                                <td>{{$avgPengetahuan->avg('nilai')}}</td>
+                                <td>
+                                    @foreach($dataPredikat->where('jenis', 'Predikat') as $predikat)
+                                    @if($predikat->nilai_min <= $avgPengetahuan->avg('nilai') && $predikat->nilai_max >= $avgPengetahuan->avg('nilai'))
+                                       {{$predikat->deskripsi}}
+                                    @endif
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <span>{{$detailSiswa->nick_name}}</span>
+
+                                    @foreach($dataPredikat->where('jenis', 'Capaian') as $predikat)
+                                        @if($predikat->nilai_min <= $avgKeterampilan->max('nilai') && $predikat->nilai_max >= $avgKeterampilan->max('nilai'))
+                                        <span class="fw-bold">{{$predikat->deskripsi}}</span>
+                                        @endif
+                                    @endforeach
+
+                                    <span>dalam </span>
+
+                                    @foreach ($dataKd as $kd)
+                                        @if($kd->id == $avgPengetahuan->where('nilai', $avgPengetahuan->max('nilai'))->first()->idkd)
+                                        <span class="fw-bold">{{$kd->deskripsi}}, </span>
+                                        @endif
+                                    @endforeach
+
+
+                                </td>
+                                <td>{{$avgKeterampilan->avg('nilai')}}</td>
+                                <td>
+                                    @foreach($dataPredikat->where('jenis', 'Predikat') as $predikat)
+                                    @if($predikat->nilai_min <= $avgKeterampilan->avg('nilai') && $predikat->nilai_max >= $avgKeterampilan->avg('nilai'))
+                                       {{$predikat->deskripsi}}
+                                    @endif
+                                    @endforeach
+                                </td>
                                 <td></td>
                             </tr>
                             @endforeach

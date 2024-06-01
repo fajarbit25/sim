@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
+use Dompdf\Dompdf;
 
 class TkController extends Controller
 {
@@ -259,6 +259,7 @@ class TkController extends Controller
             'result'    => $result,
             'data'      => $rppmDiniyah,
             'wali_kelas'=> $getKelas->first_name,
+            'campus'        => Campu::where('idcampus', Auth::user()->campus_id)->first(),
 
         ];
         return view('tk.rppm-diniyah.print', $data);

@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Raport\Sd;
 
 use App\Models\Campu;
+use App\Models\KompetensiDasar;
 use App\Models\Mapel;
+use App\Models\Predikat;
 use App\Models\Room;
 use App\Models\SdNilaiPelajaran;
 use App\Models\Semester;
@@ -22,7 +24,9 @@ class Index extends Component
     public $dataKelas;
     public $dataSiswa;
     public $dataCampus;
-    public $nilaiPengetahuan;
+    public $dataNilai;
+    public $dataPredikat;
+    public $dataKd;
 
     public $detailSiswa;
     public $detailSemester;
@@ -41,7 +45,9 @@ class Index extends Component
         $this->getDetailSiswa();
         if($this->ta){
             $this->getDetailSemester();
-            $this->getNilaiPengetahuan();
+            $this->getNilai();
+            $this->getDataPredikat();
+            $this->getDataKd();
         }
     }
 
@@ -76,7 +82,7 @@ class Index extends Component
         $data = User::join('registers', 'registers.user_id', '=', 'users.id')
                         ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                         ->where('id', $this->siswa)
-                        ->select('id', 'first_name', 'nis', 'tingkat', 'kode_kelas')->first();
+                        ->select('id', 'first_name', 'nis', 'tingkat', 'kode_kelas', 'nick_name')->first();
         $this->detailSiswa = $data;
     }
 
@@ -92,15 +98,26 @@ class Index extends Component
         $this->detailSemester = $data;
     }
 
-    public function getNilaiPengetahuan()
+    public function getNilai()
     {
         $data = SdNilaiPelajaran::leftJoin('mapels', 'mapels.idmapel', '=', 'sd_nilai_pelajarans.mapel_id')
                             ->join('kompetensi_dasars', 'kompetensi_dasars.id', '=', 'sd_nilai_pelajarans.kd')
                             ->where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
                             ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
-                            ->where('user_id', $this->siswa)
-                            ->where('sd_nilai_pelajarans.aspek', 'Pengetahuan')
+                            ->where('sd_nilai_pelajarans.user_id', $this->siswa)
                             ->get();
-        $this->nilaiPengetahuan = $data;
+        $this->dataNilai = $data;
+    }
+
+    public function getDataPredikat()
+    {
+        $data = Predikat::where('campus_id', Auth::user()->campus_id)->get();
+        $this->dataPredikat = $data;
+    }
+
+    public function getDataKd()
+    {
+        $data = KompetensiDasar::where('campus_id', Auth::user()->campus_id)->get();
+        $this->dataKd = $data;
     }
 }

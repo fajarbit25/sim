@@ -115,7 +115,7 @@ class DatabaseSeeder extends Seeder
 
         Teacher::create([
             'user_id'       => 3,
-            'jenis_kelamin' => 'Perempuan',
+            'jenis_kelamin' => 'Laki-Laki',
             'tempat_lahir'  => NULL,
             'tanggal_lahir' => NULL,
             'ibu_kandung'   => 'nama-ibu',
