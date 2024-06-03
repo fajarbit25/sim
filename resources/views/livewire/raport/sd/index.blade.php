@@ -31,139 +31,131 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 mb-3">
-                        <div class="form-group">
-                            <label for="siswa">Siswa</label>
-                            <select class="form-control @error('siswa') is-invalid @enderror" 
-                            wire:model="siswa" @if(count($dataSiswa) == 0) disabled @endif>
-                                @if(count($dataSiswa) != 0)
-                                <option value="0">Pilih Siswa--</option>
-                                @foreach($dataSiswa as $item)
-                                <option value="{{$item->id}}">{{$item->nis.' | '.$item->first_name}}</option>
-                                @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div><!--/.col-->
 
-    @if($siswa)
+    @if($kelas && $ta)
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title">Rapor Dan Profil Peserta Didik</h3>
+                <h3 class="card-title">Rapor Peserta Didik Kelas {{$detailKelas->tingkat}} {{$detailKelas->kode_kelas}}</h3>
                 <div class="row">
                     <div class="col-2">
-                        <span class="fw-bold">Nama Peserta Didik :</span> <br/>
-                        <span class="fw-bold">NIS :</span> <br/>
+                        <span class="fw-bold">Semester :</span> <br/>
+                        <span class="fw-bold">Tahun Ajaran :</span> <br/>
                         <span class="fw-bold">Nama Sekolah </span> <br/>
                         <span class="fw-bold">Alamat Sekolah </span> 
                     </div>
-                    <div class="col-4">
-                        : {{$detailSiswa->first_name}}<br>
-                        : {{$detailSiswa->nis}}<br>
-                        : {{$dataCampus->campus_name}}<br>
-                        :   {{$dataCampus->campus_alamat}}
-                    </div>
-                    <div class="col-2">
-                        <span class="fw-bold">Kelas </span> <br/>
-                        <span class="fw-bold">Semester </span> <br/>
-                        <span class="fw-bold">Tahun Pelajaran </span> 
-                    </div>
-                    <div class="col-4">
-                        : {{$detailSiswa->tingkat}} {{$detailSiswa->kode_kelas}} <br/>
+                    <div class="col-8">
                         : @if($detailSemester->semester_kode == 1) Ganjil @else Genap @endif <br/>
-                        : {{$detailSemester->tahun_ajaran}}
-                        <br/>
+                        : {{$detailSemester->tahun_ajaran}} <br/>
+                        : {{$dataCampus->campus_name}}<br>
+                        :  {{$dataCampus->campus_alamat}}
                     </div>
-                    <div class="col-sm-12 mb-3">
-                        <span class="fw-bold">A. Kompetensi Sikap</span>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th colspan="3" class="bg-light text-center">Deskripsi</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Sikap Spiritual</td>
-                                <td>Deskripsi</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Sikap Sosial</td>
-                                <td>Deskripsi</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="col-sm-12 mb-3">
-                        <span class="fw-bold">B. Kompetensi Pengetahuan dan Keterampilan</span>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th rowspan="2">No</th>
-                                <th rowspan="2">Muatan Pelajaran</th>
-                                <th colspan="3">Pengetahuan</th>
-                                <th colspan="3">Keterampilan</th>
-                            </tr>
-                            <tr>
-                                <th>Nilai</th>
-                                <th>Predikat</th>
-                                <th>Deskripsi</th>
-                                <th>Nilai</th>
-                                <th>Predikat</th>
-                                <th>Deskripsi</th>
-                            </tr>
-                            @foreach($dataNilai->groupBy('nama_mapel') as $namaMapel => $items)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$namaMapel}}</td>
-                                @php
-                                    $avgPengetahuan = $items->where('aspek', 'Pengetahuan');
-                                    $avgKeterampilan = $items->where('aspek', 'Keterampilan');
-                                @endphp
-                                <td>{{$avgPengetahuan->avg('nilai')}}</td>
-                                <td>
-                                    @foreach($dataPredikat->where('jenis', 'Predikat') as $predikat)
-                                    @if($predikat->nilai_min <= $avgPengetahuan->avg('nilai') && $predikat->nilai_max >= $avgPengetahuan->avg('nilai'))
-                                       {{$predikat->deskripsi}}
-                                    @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    <span>{{$detailSiswa->nick_name}}</span>
-
-                                    @foreach($dataPredikat->where('jenis', 'Capaian') as $predikat)
-                                        @if($predikat->nilai_min <= $avgKeterampilan->max('nilai') && $predikat->nilai_max >= $avgKeterampilan->max('nilai'))
-                                        <span class="fw-bold">{{$predikat->deskripsi}}</span>
+                    @if(count($dataNilai) != 0)
+                    <div class="col-sm-12 py-3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" class="bg-light">No.</th>
+                                        <th rowspan="2" class="bg-light">Nama Siswa</th>
+                                        <th rowspan="2" class="bg-light">Panggilan</th>
+                                        <th colspan="{{count($dataMapel)}}" class="bg-light">Nilai Akhir</th>
+                                        <th rowspan="2" class="bg-light">Rata-Rata</th>
+                                        <th rowspan="2" class="bg-light">Jumlah</th>
+                                        <th rowspan="2" class="bg-light">Rank</th>
+                                        <th rowspan="2" class="bg-light">Kriteria</th>
+                                        @if(Auth::user()->level <= 1)
+                                        <th rowspan="2" class="bg-light">Cetak</th>
                                         @endif
-                                    @endforeach
+                                    </tr>
+                                    <tr>
+                                        @foreach($dataMapel as $item)
+                                        <th> {{$item->kode_mapel}} </th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($dataNilai->groupBy('first_name') as $firstName => $items)
+                                    <tr>
+                                        <td> {{$loop->iteration}} </td>
+                                        <td> {{$firstName}} </td>
+                                        <td> {{$items->first()->nick_name}} </td>
+                                        @foreach($dataMapel as $item)
+                                        <td>
+                                            @php
+                                                $avgNilai = $items->where('mapel_id', $item->idmapel)->avg('nilai');
+                                            @endphp
+                                            {{number_format($avgNilai, 2)}}
+                                        </td>
+                                        @endforeach
+                                        <td>
+                                            {{number_format($dataNilai->where('iduser', $items->first()->iduser)->avg('nilai'), 2)}}
+                                        </td>
+                                        <td>
+                                            {{$dataNilai->where('iduser', $items->first()->iduser)->sum('nilai')}}
+                                        </td>
+                                        <td> 
 
-                                    <span>dalam </span>
+                                            @php
+                                                // Mengelompokkan dataNilai berdasarkan iduser
+                                                $groupedData = $dataNilai->groupBy('iduser');
+                                            
+                                                // Menghitung nilai rata-rata untuk setiap iduser
+                                                $averages = $groupedData->map(function($items) {
+                                                    return $items->avg('nilai');
+                                                });
+                                            
+                                                // Mengurutkan iduser berdasarkan nilai rata-rata secara menurun
+                                                $sortedIds = $averages->sortDesc()->keys()->toArray();
+                                            
+                                                // Membuat array asosiatif yang berisi peringkat untuk setiap iduser
+                                                $rankedUsers = array_combine($sortedIds, range(1, $averages->count()));
+                                            @endphp
+                                            
+                                            @foreach($groupedData as $userId => $ranks)
+                                                @php
+                                                    $avgNilai = $averages[$userId];
+                                                    $userRank = $rankedUsers[$userId];
+                                                @endphp
+                                            
+                                                <!-- Tampilkan data jika user_id sama dengan user_id yang pertama -->
+                                                @if($userId == $items->first()->iduser)
+                                                <span class="fw-bold">{{ $userRank }}</span>
+                                                @endif
+                                            @endforeach
 
-                                    @foreach ($dataKd as $kd)
-                                        @if($kd->id == $avgPengetahuan->where('nilai', $avgPengetahuan->max('nilai'))->first()->idkd)
-                                        <span class="fw-bold">{{$kd->deskripsi}}, </span>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $avgKriteria = $dataNilai->where('iduser', $items->first()->iduser)->avg('nilai');
+                                            @endphp
+
+                                            @if($avgKriteria > 0 && $avgKriteria <= 79)
+                                                <span>Cukup Memuaskan</span>
+                                            @elseif($avgKriteria > 80 && $avgKriteria <= 89)
+                                                <span>Memuaskan</span>
+                                            @elseif($avgKriteria > 90 && $avgKriteria <= 100)
+                                                <span>Sangat Memuaskan</span>
+                                            @endif
+                                        </td>
+                                        @if(Auth::user()->level <= 1)
+                                        <td class="bg-light">
+                                            <a href="/raport/sd/{{$items->first()->idraport}}/cetak" class="btn btn-warning btn-xs" target="_blank">
+                                                <i class="bi bi-printer-fill"></i> Cetak
+                                            </a>
+                                        </td>
                                         @endif
+                                    </tr>
                                     @endforeach
-
-
-                                </td>
-                                <td>{{$avgKeterampilan->avg('nilai')}}</td>
-                                <td>
-                                    @foreach($dataPredikat->where('jenis', 'Predikat') as $predikat)
-                                    @if($predikat->nilai_min <= $avgKeterampilan->avg('nilai') && $predikat->nilai_max >= $avgKeterampilan->avg('nilai'))
-                                       {{$predikat->deskripsi}}
-                                    @endif
-                                    @endforeach
-                                </td>
-                                <td></td>
-                            </tr>
-                            @endforeach
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
+                    @endif
                 </div>
             </div>
         </div>

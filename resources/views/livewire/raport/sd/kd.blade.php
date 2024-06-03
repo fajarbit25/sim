@@ -4,7 +4,8 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Kompetensi Dasar</h3>
+                    
+                    <h3 class="card-title"><span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span></span> Kompetensi Dasar</h3>
                     <div class="row">
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
@@ -33,19 +34,19 @@
             </div>
         </div> <!--/.col-->
 
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">
-                        <a href="javascript:void(0)" class="text-success" wire:click="modalKd('Pengetahuan')"> <i class="bi bi-plus"></i> </a> 
-                        Aspek Pengetahuan
+                        <a href="javascript:void(0)" class="text-success" wire:click="modalKd('Formatif')"> <i class="bi bi-plus"></i> </a>
+                            Aspek Formatif
                     </h3>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Kode</th>
-                                <th>Ringkasan KD/Materi PENGETAHUAN yang di Nilai</th>
+                                <th>Tujuan Pembelajaran</th>
                                 <th>Manage</th>
                             </tr>
                         </thead>
@@ -76,7 +77,7 @@
             </div>
         </div><!--/.col-->
 
-        <div class="col-sm-6">
+        {{-- <div class="col-sm-6">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">
@@ -117,7 +118,7 @@
                     </table>
                 </div>
             </div>
-        </div><!--/.col-->
+        </div><!--/.col--> --}}
 
         <!-- Modal -->
         <div class="modal fade" id="modalKd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>

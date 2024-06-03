@@ -77,7 +77,7 @@
 
                   <button class="nav-link" id="v-pills-prosem-tab" data-bs-toggle="pill" 
                   data-bs-target="#v-pills-prosem" type="button" role="tab" aria-controls="v-pills-prosem" 
-                  aria-selected="false" onclick="loadProsem()">PROSEM</button>
+                  aria-selected="false" onclick="loadProsem()">MODUL AJAR</button>
 
                 </div>
                 <div class="tab-content" id="v-pills-tabContent">

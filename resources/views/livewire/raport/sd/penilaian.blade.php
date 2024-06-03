@@ -3,7 +3,15 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">Form Penilaian</h3>
+                    <h3 class="card-title">
+                        <span wire:loading class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        Form Penilaian
+                    </h3>
+                    @if (session()->has('message'))
+                        <div class="alert alert-danger">
+                            {{ session('message') }}
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
@@ -51,8 +59,7 @@
                                 <select name="aspek" id="aspek" class="form-control @error('aspek') is-invalid @enderror" 
                                 wire:model="aspek" @if(count($dataMapel) == 0) disabled @endif>
                                     <option value="0">-Pilih Aspek Penilaian--</option>
-                                    <option value="Pengetahuan">Pengetahuan</option>
-                                    <option value="Keterampilan">Keterampilan</option>
+                                    <option value="Formatif">Formatif</option>
                                 </select>
                             </div>
                         </div>
@@ -89,16 +96,16 @@
                                     <th class="bg-light">Predikat</th>
                                     <th class="bg-light">Max</th>
                                     <th class="bg-light">Min</th>
-                                    <th>Deskripsi</th>
+                                    <th>Capaian Kompetensi Upper/Lower</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($dataNilai->groupBy('first_name') as $namaSiswa => $items)
                                 <tr>
-                                    <td> {{$loop->iteration}} </td>
-                                    <td> {{$items->first()->nis}} </td>
-                                    <td style="white-space: nowrap;"> {{$namaSiswa}} </td>
-                                    <td>
+                                    <td rowspan="2"> {{$loop->iteration}} </td>
+                                    <td rowspan="2"> {{$items->first()->nis}} </td>
+                                    <td rowspan="2" style="white-space: nowrap;"> {{$namaSiswa}} </td>
+                                    <td rowspan="2">
                                         @if(!$items->first()->nick_name)
                                             <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName('{{$items->first()->idsiswa}}', '{{$namaSiswa}}')"> Input </a>
                                         @else 
@@ -107,7 +114,7 @@
                                     </td>
 
                                     @foreach($items as $item)
-                                    <td>
+                                    <td rowspan="2">
                                         <a class="icon" href="javascript:void(0)" data-bs-toggle="dropdown">
                                            {{$item->nilai}}
                                         </a>
@@ -123,22 +130,21 @@
                                         </ul>
                                     </td>
                                     @endforeach
-                                    <th class="bg-light">
+                                    <th rowspan="2" class="bg-light">
                                         <span class="@if($items->avg('nilai') <= $kkm) text-danger @endif"> 
-                                            {{ $items->avg('nilai') }}
+                                            {{ number_format($items->avg('nilai'), 2) }}
                                         </span>
                                     </th>
-                                    <th class="bg-light">
+                                    <th rowspan="2" class="bg-light">
                                         @foreach($dataPredikat as $predikat)
                                             @if($predikat->nilai_min <= $items->avg('nilai') && $predikat->nilai_max >= $items->avg('nilai'))
                                                 {{$predikat->deskripsi}}
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="bg-light">{{ $items->max('nilai') }}</td>
-                                    <td class="bg-light">{{ $items->min('nilai') }}</td>
+                                    <td rowspan="2" class="bg-light">{{ $items->max('nilai') }}</td>
+                                    <td rowspan="2" class="bg-light">{{ $items->min('nilai') }}</td>
                                     <td>
-
                                         <span>{{$items->first()->nick_name}} </span>
 
                                         @foreach($dataCapaian as $capaian)
@@ -151,12 +157,16 @@
 
                                         @foreach ($dataKd as $kd)
                                             @if($kd->id == $items->where('nilai', $items->max('nilai'))->first()->idkd)
-                                            <span class="fw-bold">{{$kd->deskripsi}}, </span>
+                                            <span class="fw-bold">{{$kd->deskripsi}} </span>
                                             @endif
                                         @endforeach
+                                        .
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>{{$items->first()->nick_name}} </span>
 
-                                        <span>dan </span>
-                                        
                                         @foreach($dataCapaian as $capaian)
                                         @if($capaian->nilai_min <= $items->min('nilai') && $capaian->nilai_max >= $items->min('nilai'))
                                         <span class="fw-bold"> {{$capaian->deskripsi}} </span>
@@ -170,7 +180,6 @@
                                             <span class="fw-bold">{{$kd->deskripsi}}, </span>
                                             @endif
                                         @endforeach
-
                                     </td>
                                 </tr>
                                 @endforeach

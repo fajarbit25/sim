@@ -22,32 +22,35 @@ class Index extends Component
 
     public $dataTa;
     public $dataKelas;
-    public $dataSiswa;
     public $dataCampus;
     public $dataNilai;
     public $dataPredikat;
     public $dataKd;
+    public $dataMapel;
 
-    public $detailSiswa;
     public $detailSemester;
+    public $detailKelas;
 
     public function mount()
     {
         $this->getDataTa();
-        $this->getDataKelas();
-        $this->getDataSiswa();
     }
 
     public function loadAll()
     {
-        $this->getDataSiswa();
         $this->getDataCampus();
-        $this->getDetailSiswa();
+        $this->getDataKelas();
+
         if($this->ta){
             $this->getDetailSemester();
             $this->getNilai();
             $this->getDataPredikat();
             $this->getDataKd();
+            $this->getDataMapel();
+        }
+
+        if($this->kelas){
+            $this->getDetailKelas();
         }
     }
 
@@ -69,21 +72,10 @@ class Index extends Component
         $this->dataKelas = $data;
     }
 
-    public function getDataSiswa()
+    public function getDetailKelas()
     {
-        $data = User::join('registers', 'registers.user_id', '=', 'users.id')
-                        ->where('kelas', $this->kelas)
-                        ->select('id', 'first_name', 'nis')->orderBy('first_name', 'ASC')->get();
-        $this->dataSiswa = $data;
-    }
-
-    public function getDetailSiswa()
-    {
-        $data = User::join('registers', 'registers.user_id', '=', 'users.id')
-                        ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
-                        ->where('id', $this->siswa)
-                        ->select('id', 'first_name', 'nis', 'tingkat', 'kode_kelas', 'nick_name')->first();
-        $this->detailSiswa = $data;
+        $data = Room::findOrFail($this->kelas);
+        $this->detailKelas = $data;
     }
 
     public function getDataCampus()
@@ -101,10 +93,12 @@ class Index extends Component
     public function getNilai()
     {
         $data = SdNilaiPelajaran::leftJoin('mapels', 'mapels.idmapel', '=', 'sd_nilai_pelajarans.mapel_id')
-                            ->join('kompetensi_dasars', 'kompetensi_dasars.id', '=', 'sd_nilai_pelajarans.kd')
+                            ->leftJoin('users', 'users.id', '=', 'sd_nilai_pelajarans.user_id')
+                            ->leftJoin('kompetensi_dasars', 'kompetensi_dasars.id', '=', 'sd_nilai_pelajarans.kd')
                             ->where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
                             ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
-                            ->where('sd_nilai_pelajarans.user_id', $this->siswa)
+                            ->where('users.kelas', $this->kelas)
+                            ->select('users.id as iduser', 'first_name', 'nick_name', 'nilai', 'mapel_id', 'sd_nilai_pelajarans.id as idraport')
                             ->get();
         $this->dataNilai = $data;
     }
@@ -119,5 +113,11 @@ class Index extends Component
     {
         $data = KompetensiDasar::where('campus_id', Auth::user()->campus_id)->get();
         $this->dataKd = $data;
+    }
+
+    public function getDataMapel()
+    {
+        $data = Mapel::where('mapel_campus', Auth::user()->campus_id)->get();
+        $this->dataMapel = $data;
     }
 }

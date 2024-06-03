@@ -46,7 +46,7 @@ class Kd extends Component
         $this->getDataKelas();
         $this->getDataMapel();
         $this->getDataPengetahuan();
-        $this->getDataKeterampilan();
+        //$this->getDataKeterampilan();
         $this->getDataSemester();
     }
 
@@ -80,7 +80,7 @@ class Kd extends Component
     {
         $data = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
                             ->where('idmapel', $this->mapel)->where('kelas', $this->kelas)
-                            ->where('aspek', 'Pengetahuan')->get();
+                            ->where('aspek', 'Formatif')->get();
         $this->dataPengetahuan = $data;
     }
 

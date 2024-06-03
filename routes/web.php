@@ -479,4 +479,5 @@ Route::controller(RaportSdController::class)->group(function(){
     Route::get('/raport/sd/kompetensi-dasar', 'kd')->middleware('auth', 'sdguru')->name('raportSd.kompetensiDasar');
     Route::get('/raport/sd/penilaian', 'penilaian')->middleware('auth', 'sdguru')->name('raportSd.penilaian');
     Route::get('/raport/sd', 'raport')->middleware('auth', 'sdadmin')->name('raportSd.raport');
+    Route::get('/raport/sd/{public_token}/cetak', 'raportCetak')->middleware('auth', 'sdadmin')->name('raportSd.raport-cetak');
 });

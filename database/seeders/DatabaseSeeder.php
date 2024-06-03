@@ -563,7 +563,7 @@ class DatabaseSeeder extends Seeder
             ["Hadits & Doa", "Hadits orang yang dikehendaki kebaikan untuk Allah"],
             ["Hadits & Doa", "Hadits larangan membahayakan orang lain"],
             ["Hadits & Doa", "Hadits mencintai saudara"],
-            ["Hadits & Doa", "Doa sebekum dan setelah wudhu"],
+            ["Hadits & Doa", "Doa sebelum dan setelah wudhu"],
             ["Hadits & Doa", "Doa masuk masjid"],
             ["Hadits & Doa", "Doa ketika mendengar adzan"],
             ["Hadits & Doa", "Doa keberkahan bagi orang lain"],

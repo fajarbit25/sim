@@ -104,16 +104,20 @@ class Penilaian extends Component
             $dataKd = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
                             ->where('idmapel', $this->mapel)->where('kelas', $dataKelas->tingkat)
                             ->where('aspek', $this->aspek)->select('id')->get();
-            foreach($dataKd as $item){
-                SdNilaiPelajaran::create([
-                    'ta'            => $this->ta,
-                    'semester'      => $this->semester,
-                    'user_id'       => $items->id,
-                    'mapel_id'      => $this->mapel,
-                    'aspek'         => $this->aspek,
-                    'kd'            => $item->id,
-                    'nilai'         => 0,
-                ]);
+            if(count($dataKd) == 0){
+                session()->flash('message', 'KD/TP untuk Mata Pelajaran yang Dipilih Belum Ada!');
+            }else{             
+                foreach($dataKd as $item){
+                    SdNilaiPelajaran::create([
+                        'ta'            => $this->ta,
+                        'semester'      => $this->semester,
+                        'user_id'       => $items->id,
+                        'mapel_id'      => $this->mapel,
+                        'aspek'         => $this->aspek,
+                        'kd'            => $item->id,
+                        'nilai'         => 0,
+                    ]);
+                }
             }
         }
     }
@@ -125,6 +129,7 @@ class Penilaian extends Component
                         ->join('kompetensi_dasars', 'kompetensi_dasars.id', 'sd_nilai_pelajarans.kd')
                         ->where('sd_nilai_pelajarans.ta', $this->ta)->where('sd_nilai_pelajarans.semester', $this->semester)
                         ->where('mapel_id', $this->mapel)->where('sd_nilai_pelajarans.aspek', $this->aspek)
+                        ->where('users.kelas', $this->kelas)
                         ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'users.id as idsiswa',  
                         'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd')->get();
         $this->dataNilai = $data;
@@ -132,7 +137,8 @@ class Penilaian extends Component
 
     public function getDataKd()
     {
-        $data = KompetensiDasar::where('aspek', $this->aspek)->get();
+        $data = KompetensiDasar::where('aspek', $this->aspek)
+                        ->where('idmapel', $this->mapel)->get();
         $this->dataKd = $data;
     }
 

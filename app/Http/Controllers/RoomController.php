@@ -174,7 +174,9 @@ class RoomController extends Controller
     public function siswaUnAlocated()
     {
         $data = [
-            'user'  => User::join('students', 'students.user_id', '=', 'users.id', 'left')->where('level', 4)->where('kelas', 0)->get(),
+            'user'  => User::join('students', 'students.user_id', '=', 'users.id', 'left')
+                        ->where('users.campus_id', Auth::user()->campus_id)
+                        ->where('level', 4)->where('kelas', 0)->get(),
         ];
         return view('kelas.add_unalocated', $data);
     }
