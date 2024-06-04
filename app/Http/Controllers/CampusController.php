@@ -73,35 +73,36 @@ class CampusController extends Controller
      */
     public function store(Request $request):RedirectResponse
     {
-        $request->validate([
-            'campus_name'       => 'required|unique:campus',
-            'campus_initial'    => 'required|unique:campus',
-            'campus_tingkat'    => 'required',
-            'campus_contact'    => 'required',
-            'campus_kepsek'     => 'required',
-            'campus_alamat'     => 'required',
-            'yt'                => 'required',
-            'fb'                => 'required',
-            'ig'                => 'required',
-            'tele'              => 'required',
-            'email_campus'      => 'required',
-        ]);
-        $data = [
-            'campus_name'       => $request->campus_name,
-            'campus_initial'    => $request->campus_initial,
-            'campus_tingkat'    => $request->campus_tingkat,
-            'campus_contact'    => $request->campus_contact,
-            'campus_kepsek'     => $request->campus_kepsek,
-            'campus_alamat'     => $request->campus_alamat,
-            'yt'                => $request->yt,
-            'fb'                => $request->fb,
-            'ig'                => $request->ig,
-            'tele'              => $request->tele,
-            'email_campus'      => $request->email_campus,
-        ];
+        // $request->validate([
+        //     'campus_name'       => 'required|unique:campus',
+        //     'campus_initial'    => 'required|unique:campus',
+        //     'campus_tingkat'    => 'required',
+        //     'campus_contact'    => 'required',
+        //     'campus_kepsek'     => 'required',
+        //     'niy_kepsek'        => 'required',
+        //     'campus_alamat'     => 'required',
+        //     'yt'                => 'required',
+        //     'fb'                => 'required',
+        //     'ig'                => 'required',
+        //     'tele'              => 'required',
+        //     'email_campus'      => 'required',
+        // ]);
+        // $data = [
+        //     'campus_name'       => $request->campus_name,
+        //     'campus_initial'    => $request->campus_initial,
+        //     'campus_tingkat'    => $request->campus_tingkat,
+        //     'campus_contact'    => $request->campus_contact,
+        //     'campus_kepsek'     => $request->campus_kepsek,
+        //     'campus_alamat'     => $request->campus_alamat,
+        //     'yt'                => $request->yt,
+        //     'fb'                => $request->fb,
+        //     'ig'                => $request->ig,
+        //     'tele'              => $request->tele,
+        //     'email_campus'      => $request->email_campus,
+        // ];
 
-        Campu::create($data);
-        return redirect('/campus')->with(['success' => 'Data berhasil disimpan.']);
+        // Campu::create($data);
+        return redirect('/campus')->with(['warning' => 'Penambahan data Satuan Pendidikan Tidak Diizinkan!.']);
     }
 
     /**
@@ -143,6 +144,7 @@ class CampusController extends Controller
             'campus_tingkat'  => $request->campus_tingkat,
             'campus_kepsek'   => $request->campus_kepsek,
             'campus_contact'  => $request->campus_contact,
+            'niy_kepsek'      => $request->niy_kepsek,
             'campus_alamat'   => $request->campus_alamat,
             'yt'              => $request->yt,
             'fb'              => $request->fb,

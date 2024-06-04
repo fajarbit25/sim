@@ -24,6 +24,7 @@ class Campu extends Model
         'campus_contact',
         'email_campus',
         'campus_kepsek',
+        'niy_kepsek',
         'campus_alamat',
         'yt',
         'fb',

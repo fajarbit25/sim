@@ -16,5 +16,6 @@ class SdNilaiPelajaran extends Model
        'aspek',
        'kd',
        'nilai',
+       'tanggal_raport'
     ];
 }

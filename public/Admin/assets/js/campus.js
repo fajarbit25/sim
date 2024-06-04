@@ -26,6 +26,7 @@ function modalEdit(id)
             $("#campus_name_edit").val(data.campus_name);
             $("#campus_tingkat_edit").val(data.campus_tingkat);
             $("#campus_kepsek_edit").val(data.campus_kepsek);
+            $("#niy_kepsek_edit").val(data.niy_kepsek);
             $("#campus_contact_edit").val(data.campus_contact);
             $("#campus_alamat_edit").val(data.campus_alamat);
             $("#idcampus").val(data.idcampus);
@@ -50,6 +51,7 @@ function updateCampus()
     var campus_contact = $("#campus_contact_edit").val();
     var campus_alamat = $("#campus_alamat_edit").val();
     var email_campus = $("#email_campus_edit").val();
+    var niy_kepsek = $("#niy_kepsek_edit").val();
 
     var yt = $("#ytEdit").val();
     var fb = $("#fbEdit").val();
@@ -67,6 +69,7 @@ function updateCampus()
             campus_name:campus_name,
             campus_tingkat:campus_tingkat,
             campus_kepsek:campus_kepsek,
+            niy_kepsek:niy_kepsek,
             campus_contact:campus_contact,
             campus_alamat:campus_alamat,
             yt:yt,

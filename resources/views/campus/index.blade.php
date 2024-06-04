@@ -6,7 +6,7 @@
         <h1>SIMS</h1>
         <nav>
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
             <li class="breadcrumb-item">{{$title}}</li>
           </ol>
         </nav>
@@ -145,6 +145,10 @@
           <div class="form-group mb-3">
             <label for="campus_kepsek_edit">Kepala Sekolah <span class="text-danger">*</span></label>
             <input type="text" name="campus_kepsek_edit" id="campus_kepsek_edit" class="form-control @error('campus_kepsek_edit') is-invalid @enderror" required autocomplete="off">
+          </div>
+          <div class="form-group mb-3">
+            <label for="niy_kepsek_edit">NIY Kepala Sekolah <span class="text-danger">*</span></label>
+            <input type="text" name="niy_kepsek_edit" id="niy_kepsek_edit" class="form-control @error('niy_kepsek_edit') is-invalid @enderror" required autocomplete="off">
           </div>
           <div class="form-group mb-3">
             <label for="campus_contact_edit">Kontak <span class="text-danger">*</span></label>

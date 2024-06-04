@@ -16,6 +16,7 @@ use Livewire\Component;
 class Index extends Component
 {
     public $loading = false;
+    public $notif;
     public $ta;
     public $kelas;
     public $siswa;
@@ -30,6 +31,8 @@ class Index extends Component
 
     public $detailSemester;
     public $detailKelas;
+    public $tanggalRaport;
+    public $dataTanggalraport;
 
     public function mount()
     {
@@ -46,11 +49,12 @@ class Index extends Component
             $this->getNilai();
             $this->getDataPredikat();
             $this->getDataKd();
-            $this->getDataMapel();
+            $this->getDataMapel(); 
         }
 
         if($this->kelas){
             $this->getDetailKelas();
+            $this->getDataTanggal();
         }
     }
 
@@ -103,6 +107,34 @@ class Index extends Component
         $this->dataNilai = $data;
     }
 
+    public function getDataTanggal()
+    {
+        $data = SdNilaiPelajaran::leftJoin('users', 'users.id', '=', 'sd_nilai_pelajarans.user_id')
+                                ->where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
+                                ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
+                                ->where('users.kelas', $this->kelas)
+                                ->select('tanggal_raport')
+                                ->first();
+        $this->dataTanggalraport = $data->tanggal_raport;
+    }
+
+    public function updateTanggalRaport()
+    {
+        $this->validate([
+            'tanggalRaport'     => 'required|max:10|min:10',
+        ]);
+        SdNilaiPelajaran::leftJoin('users', 'users.id', '=', 'sd_nilai_pelajarans.user_id')
+                        ->where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
+                        ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
+                        ->where('users.kelas', $this->kelas)
+                        ->update(['tanggal_raport' => $this->tanggalRaport]);
+        $this->notif = [
+            'status'    => 200,
+            'message'   => 'Tanggal Diperbaharui!',
+        ];
+        $this->showAlert();
+    }
+ 
     public function getDataPredikat()
     {
         $data = Predikat::where('campus_id', Auth::user()->campus_id)->get();
@@ -119,5 +151,14 @@ class Index extends Component
     {
         $data = Mapel::where('mapel_campus', Auth::user()->campus_id)->get();
         $this->dataMapel = $data;
+    }
+
+    public function showAlert()
+    {
+        // Panggil JavaScript untuk menampilkan popup SweatAlert
+        $this->emit('showAlert', [
+            'type' => $this->notif['status'],
+            'message' => $this->notif['message'],
+        ]);
     }
 }

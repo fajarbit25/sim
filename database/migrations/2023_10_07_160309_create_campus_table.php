@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('campus_contact');
             $table->string('email_campus');
             $table->string('campus_kepsek');
+            $table->string('niy_kepsek')->nullable();
             $table->string('campus_alamat');
             $table->string('yt');
             $table->string('fb');

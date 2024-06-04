@@ -55,6 +55,7 @@
             <select name="jenis" id="jenis" class="form-control @error('jenis') is-invalid @enderror">
               <option value="Reguler">Reguler</option>
               <option value="Muatan Lokal">Muatan Lokal</option>
+              <option value="Seni">Seni</option>
               <option value="Ekstrakulikuler">Ekstrakulikuler</option>
             </select>
           </div>
@@ -96,6 +97,7 @@
             <select name="jenis_edit" id="jenis_edit" class="form-control @error('jenis_edit') is-invalid @enderror">
               <option value="Reguler">Reguler</option>
               <option value="Muatan Lokal">Muatan Lokal</option>
+              <option value="Seni">Seni</option>
               <option value="Ekstrakulikuler">Ekstrakulikuler</option>
             </select>
           </div>

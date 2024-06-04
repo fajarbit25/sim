@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('aspek');
             $table->string('kd');
             $table->integer('nilai');
+            $table->string('tanggal_raport')->nullable();
             $table->timestamps();
         });
     }

@@ -54,6 +54,20 @@
                         : {{$dataCampus->campus_name}}<br>
                         :  {{$dataCampus->campus_alamat}}
                     </div>
+                    @if($kelas)
+                    <div class="col-12 mt-3">
+                        <div class="col-4">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Tanggal Raport :  @if($dataTanggalraport) {{$dataTanggalraport}} @else - @endif</span>
+                                <input type="date" class="form-control @error('tanggalRaport') is-invalid @enderror" aria-describedby="button-addon2" wire:model="tanggalRaport" wire:change="updateTanggalRaport()">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">
+                                        Update
+                                        <span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> 
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     @if(count($dataNilai) != 0)
                     <div class="col-sm-12 py-3">
                         <div class="table-responsive">
@@ -134,11 +148,11 @@
                                                 $avgKriteria = $dataNilai->where('iduser', $items->first()->iduser)->avg('nilai');
                                             @endphp
 
-                                            @if($avgKriteria > 0 && $avgKriteria <= 79)
+                                            @if($avgKriteria > 0 && $avgKriteria < 80)
                                                 <span>Cukup Memuaskan</span>
-                                            @elseif($avgKriteria > 80 && $avgKriteria <= 89)
+                                            @elseif($avgKriteria > 80 && $avgKriteria < 90)
                                                 <span>Memuaskan</span>
-                                            @elseif($avgKriteria > 90 && $avgKriteria <= 100)
+                                            @elseif($avgKriteria > 90 && $avgKriteria < 100)
                                                 <span>Sangat Memuaskan</span>
                                             @endif
                                         </td>
@@ -161,5 +175,27 @@
         </div>
     </div>
     @endif
+
+
+    @push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+
+            Livewire.on('showAlert', function (data) {
+                if(data.type === 200){
+                    var icons = 'success'
+                }else if(data.type === 500){
+                    var icons = 'warning'
+                }
+                Swal.fire({
+                    icon: icons,
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        });
+    </script>
+    @endpush
 
 </div>

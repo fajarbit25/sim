@@ -137,7 +137,7 @@
                                     </th>
                                     <th rowspan="2" class="bg-light">
                                         @foreach($dataPredikat as $predikat)
-                                            @if($predikat->nilai_min <= $items->avg('nilai') && $predikat->nilai_max >= $items->avg('nilai'))
+                                            @if($predikat->nilai_min <= number_format($items->avg('nilai'), 0) && $predikat->nilai_max >= number_format($items->avg('nilai'), 0))
                                                 {{$predikat->deskripsi}}
                                             @endif
                                         @endforeach
