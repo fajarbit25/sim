@@ -70,6 +70,9 @@ class Kernel extends HttpKernel
         'finance' => \App\Http\Middleware\Finance::class,
         'proses' => \App\Http\Middleware\Proses::class,
         'sdguru' => \App\Http\Middleware\Sdguru::class,
+        'smpguru' => \App\Http\Middleware\SmpGuru::class,
+        'smkguru' => \App\Http\Middleware\SmkGuru::class,
+        'allguru' => \App\Http\Middleware\AllGuru::class,
         'sdadmin' => \App\Http\Middleware\Sdadmin::class,
     ];
 }

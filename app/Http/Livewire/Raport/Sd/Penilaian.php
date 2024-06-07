@@ -105,7 +105,7 @@ class Penilaian extends Component
                             ->where('idmapel', $this->mapel)->where('kelas', $dataKelas->tingkat)
                             ->where('aspek', $this->aspek)->select('id')->get();
             if(count($dataKd) == 0){
-                session()->flash('message', 'KD/TP untuk Mata Pelajaran yang Dipilih Belum Ada!');
+                session()->flash('message', 'TP untuk Mata Pelajaran yang Dipilih Belum Ada!');
             }else{             
                 foreach($dataKd as $item){
                     SdNilaiPelajaran::create([

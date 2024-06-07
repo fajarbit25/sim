@@ -476,27 +476,6 @@
 </div>
 
 <script>
-    // window.onload = function() {
-    //     var footer = document.getElementById("footer");
-    //     footer.style.display = "none";
-    //     window.onbeforeprint = function() {
-    //         footer.style.display = "block";
-    //         var pageCount = document.querySelectorAll('.page-break').length;
-    //         var currentPage = 1;
-    //         var currentPageElement = document.getElementById('currentPage');
-    //         if (currentPageElement) {
-    //             var matches = window.location.search.match(/page=(\d+)/);
-    //             if (matches && matches[1]) {
-    //                 currentPage = parseInt(matches[1]);
-    //             }
-    //             currentPageElement.textContent = currentPage + '/' + pageCount;
-    //         }
-    //         document.getElementById('pageCount').textContent = ' {{$load->first_name}} ' + currentPage + '/' + pageCount;
-    //     };
-    //     window.onafterprint = function() {
-    //         footer.style.display = "none";
-    //     };
-    // };
     window.print()
 </script>
 

@@ -63,14 +63,26 @@
             </a>
           </li>
           <li>
-            <a href="{{url('/raport/sd/kompetensi-dasar')}}">
+            <a href="{{url('/mapel')}}">
+              <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
+            </a>
+          </li>
+          <li>
+          <li>
+            <a href="{{url('/raport/km/kompetensi-dasar')}}">
               <i class="bi bi-circle"></i><span>Kompetensi Dasar</span>
             </a>
           </li>
           <li>
+            @if(Auth::user()->campus_id == 3)
             <a href="{{url('/raport/sd/penilaian')}}">
               <i class="bi bi-circle"></i><span>Form Penilaian</span>
             </a>
+            @else 
+            <a href="{{url('/raport/km/penilaian')}}">
+              <i class="bi bi-circle"></i><span>Form Penilaian</span>
+            </a>
+            @endif
           </li>
         </ul>
       </li><!-- End Forms Nav -->
@@ -103,12 +115,6 @@
               <i class="bi bi-circle"></i><span>Data Kampus</span>
             </a>
           </li>
-          <li>
-            <a href="{{url('/mapel')}}">
-              <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
-            </a>
-          </li>
-          <li>
             <a href="{{url('/kelas')}}">
               <i class="bi bi-circle"></i><span>Kelas</span>
             </a>

@@ -25,6 +25,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\TkController;
 use App\Http\Controllers\TracertStudyController;
 use App\Http\Controllers\RaportSdController;
+use App\Http\Controllers\RaportController;
 
 Route::controller(HomeController::class)->group(function(){
     Route::get('/','index')->name('home');
@@ -476,8 +477,12 @@ Route::controller(TkController::class)->group(function(){
 });
 
 Route::controller(RaportSdController::class)->group(function(){
-    Route::get('/raport/sd/kompetensi-dasar', 'kd')->middleware('auth', 'sdguru')->name('raportSd.kompetensiDasar');
+    Route::get('/raport/km/kompetensi-dasar', 'kd')->middleware('auth', 'allguru')->name('raportSd.kompetensiDasar');
     Route::get('/raport/sd/penilaian', 'penilaian')->middleware('auth', 'sdguru')->name('raportSd.penilaian');
     Route::get('/raport/sd', 'raport')->middleware('auth', 'sdadmin')->name('raportSd.raport');
     Route::get('/raport/sd/{public_token}/cetak', 'raportCetak')->middleware('auth', 'sdadmin')->name('raportSd.raport-cetak');
+});
+
+Route::controller(RaportController::class)->group(function(){
+    Route::get('/raport/km/penilaian', 'penilaian')->middleware('auth', 'allguru')->name('raportKm.penilaian');
 });
