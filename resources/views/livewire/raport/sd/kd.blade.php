@@ -77,6 +77,49 @@
             </div>
         </div><!--/.col-->
 
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <a href="javascript:void(0)" class="text-success" wire:click="modalKd('Sumatif')"> <i class="bi bi-plus"></i> </a>
+                            Aspek Sumatif
+                    </h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Kode</th>
+                                <th>Lingkup Materi</th>
+                                <th>Manage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($dataKdSumatif)
+                            @foreach($dataKdSumatif as $item)
+                            <tr>
+                                <td> {{$loop->iteration}} </td>
+                                <td> {{$item->kode}} </td>
+                                <td> {{$item->deskripsi}} </td>
+                                <td>
+                                    <a href="javascript:void(0)" class="text-success" wire:click="modalEdit({{$item->id}})"> <i class="bi bi-pencil-square"></i> </a>
+                                    <a href="javascript:void(0)" class="text-danger" wire:click="modalDelete({{$item->id}})"> <i class="bi bi-trash"></i> </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @endif
+                            @if(count($dataKdSumatif) == 0)
+                            <tr>
+                                <td colspan="4">
+                                    <span class="fw-bold fst-italic">Tidak ada data!</span>
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!--/.col-->
+
         {{-- <div class="col-sm-6">
             <div class="card">
                 <div class="card-body">

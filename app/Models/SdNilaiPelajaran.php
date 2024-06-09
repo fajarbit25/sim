@@ -16,6 +16,9 @@ class SdNilaiPelajaran extends Model
        'aspek',
        'kd',
        'nilai',
+       'tampil',
+       'non_test',
+        'test',
        'tanggal_raport'
     ];
 }

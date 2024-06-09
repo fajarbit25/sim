@@ -5,7 +5,9 @@ namespace App\Http\Livewire\Raport\Sd;
 use App\Models\Gurumapel;
 use App\Models\KompetensiDasar;
 use App\Models\Room;
+use App\Models\SdNilaiPelajaran;
 use App\Models\Semester;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -27,7 +29,7 @@ class Kd extends Component
     public $dataKelas;
     public $dataMapel;
     public $dataPengetahuan;
-    public $dataKeterampilan;
+    public $dataKdSumatif;
 
     protected $rules = [
         'kode'          => 'required',
@@ -46,7 +48,7 @@ class Kd extends Component
         $this->getDataKelas();
         $this->getDataMapel();
         $this->getDataPengetahuan();
-        //$this->getDataKeterampilan();
+        $this->getDataKdSumatif();
         $this->getDataSemester();
     }
 
@@ -84,12 +86,13 @@ class Kd extends Component
         $this->dataPengetahuan = $data;
     }
 
-    public function getDataKeterampilan()
+  
+    public function getDataKdSumatif()
     {
         $data = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
                             ->where('idmapel', $this->mapel)->where('kelas', $this->kelas)
-                            ->where('aspek', 'Keterampilan')->get();
-        $this->dataKeterampilan = $data;
+                            ->where('aspek', 'Sumatif')->get();
+        $this->dataKdSumatif = $data;
     }
 
     public function modalKd($aspek)
@@ -111,7 +114,31 @@ class Kd extends Component
             'deskripsi'     => $this->ringkasan,
             'campus_id'     => Auth::user()->campus_id,
         ];
-        KompetensiDasar::create($data);
+        $kd = KompetensiDasar::create($data);
+
+        $loadKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
+        $cekDataNilai = SdNilaiPelajaran::where('kd', $kd->id)->count();
+        if($cekDataNilai == 0){
+            $users = User::join('rooms', 'rooms.idkelas', '=', 'users.kelas')
+                        ->where('rooms.tingkat', $loadKelas->tingkat)
+                        ->select('users.id as userid')->get();
+            foreach($users as $user){
+                SdNilaiPelajaran::create([
+                    'ta'        => $this->ta,
+                    'semester'  => $this->semester,
+                    'user_id'   => $user->userid,
+                    'mapel_id'  => $this->mapel,
+                    'aspek'     => $this->aspek,
+                    'kd'        => $kd->id,
+                    'nilai'     => 0,
+                    'non_test'      => 0,
+                    'test'          => 0,
+                    'na_semester'   => 0,
+                    'tampil'    => 0,
+                ]);
+            }
+        }
+
         $this->closeModal();
         $this->resetForm();
         $this->notif = [
@@ -132,6 +159,9 @@ class Kd extends Component
     {
         $data = KompetensiDasar::findOrFail($this->idDelete);
         $data->delete();
+        
+        SdNilaiPelajaran::where('kd', $this->idDelete)->delete();
+
         $this->closeModal();
         $this->notif = [
             'status'    => 500,

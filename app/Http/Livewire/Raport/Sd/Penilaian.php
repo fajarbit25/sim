@@ -116,6 +116,9 @@ class Penilaian extends Component
                         'aspek'         => $this->aspek,
                         'kd'            => $item->id,
                         'nilai'         => 0,
+                        'non_test'      => 0,
+                        'test'          => 0,
+                        'tampil'        => 0,
                     ]);
                 }
             }

@@ -15,12 +15,17 @@ use Livewire\Component;
 class Penilaian extends Component
 {
     public $loading = false;
+    public $info = 'false';
     public $campus;
     public $ta;
     public $semester;
     public $kelas;
     public $aspek;
     public $mapel;
+    public $nilai;
+    public $idChangeNickName; //parameter untuk mengganti nama penggilan
+    public $nickName; //untuk tampilan edit nama panggilan
+    public $name; //untuk menangkap nama panggilan dari form
 
     public $dataCampus;
     public $dataTa;
@@ -28,6 +33,18 @@ class Penilaian extends Component
     public $dataMapel;
     public $dataNilai;
     public $dataKd;
+    public $detailTp;
+
+
+    protected $rules = [
+        'campus'    => 'required',
+        'ta'        => 'required',
+        'semester'  => 'required',
+        'kelas'     => 'required',
+        'mapel'     => 'required',
+        'aspek'     => 'required',
+        'nilai'     => 'required|integer|min:60|max:99',
+    ];
 
     public function mount()
     {
@@ -102,6 +119,9 @@ class Penilaian extends Component
                         'aspek'     => $this->aspek,
                         'kd'        => $kd->idkd,
                         'nilai'     => 0,
+                        'non_test'  => 0,
+                        'test'      => 0,
+                        'tampil'    => 0,
                     ]);
                 }
             }
@@ -117,7 +137,8 @@ class Penilaian extends Component
                         ->where('mapel_id', $this->mapel)->where('sd_nilai_pelajarans.aspek', $this->aspek)
                         ->where('users.kelas', $this->kelas)
                         ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'users.id as idsiswa',  
-                        'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd', 'tampil')->get();
+                        'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd', 'tampil', 'kompetensi_dasars.deskripsi',
+                        'non_test', 'test')->get();
         $this->dataNilai = $data;
     }
 
@@ -133,15 +154,15 @@ class Penilaian extends Component
     public function lihatKd($id)
     {
         $data = SdNilaiPelajaran::findOrFail($id);
-        if($data->tampil == null){
+       if($data->tampil == 0){
             $data->update([
                 'tampil'    => 1,
             ]);
-        }else{
+       }else{
             $data->update([
-                'tampil'    => null,
+                'tampil'    => 0,
             ]);
-        }
+       }
     }
 
     public function updateNilai($id)
@@ -156,6 +177,107 @@ class Penilaian extends Component
                 'nilai'     => 0,
             ]);
         }
+    }
+
+    public function modalTp($id)
+    {
+        $data = KompetensiDasar::findOrFail($id);
+        $this->detailTp = $data->deskripsi;
+        $this->emit('modalTp');
+    }
+
+    public function generateNewStudents()
+    {
+        $loadKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
+        $users = User::leftJoin('sd_nilai_pelajarans', 'sd_nilai_pelajarans.user_id', '=', 'users.id')
+                ->where('users.kelas', $this->kelas)
+                ->whereNull('sd_nilai_pelajarans.id')
+                ->select('users.id as userid')
+                ->get();
+        
+        foreach($users as $user){
+            $kds = KompetensiDasar::where('ta', $this->ta)->where('semester', $this->semester)
+                                    ->where('idmapel', $this->mapel)->where('kelas', $loadKelas->tingkat)
+                                    ->where('aspek', $this->aspek)->select('id')->get();
+            foreach($kds as $kd){
+                SdNilaiPelajaran::create([
+                    'ta'            => $this->ta,
+                    'semester'      => $this->semester,
+                    'user_id'       => $user->userid,
+                    'mapel_id'      => $this->mapel,
+                    'aspek'         => $this->aspek,
+                    'kd'            => $kd->id,
+                    'nilai'         => 0,
+                    'non_test'      => 0,
+                    'test'          => 0,
+                    'tampil'        => 0,
+                ]);
+            }
+        }
+        
+    }
+
+    public function updateInfo()
+    {
+        if($this->info == 'true'){
+            $this->info = 'false';
+        }elseif($this->info = 'false'){
+            $this->info = 'true';
+        }
+    }
+
+    public function updateNilaiKd($id)
+    {
+        $this->validate(['nilai'     => 'required|integer|min:60|max:99',]);
+        $nilai = SdNilaiPelajaran::findOrFail($id);
+        $nilai->update([
+            'nilai'     => $this->nilai,
+        ]);
+
+        $this->nilai = "";
+    }
+
+    public function updateNonTes($id)
+    {
+        $this->validate(['nilai'     => 'required|integer|min:60|max:99',]);
+        $nilai = SdNilaiPelajaran::findOrFail($id);
+        $nilai->update([
+            'non_test'     => $this->nilai,
+        ]);
+
+        $this->nilai = "";
+    }
+
+    public function updateTes($id)
+    {
+        $this->validate(['nilai'     => 'required|integer|min:60|max:99',]);
+        $nilai = SdNilaiPelajaran::findOrFail($id);
+        $nilai->update([
+            'test'     => $this->nilai,
+        ]);
+
+        $this->nilai = "";
+    }
+
+    public function modalNickName($id)
+    {
+        $user = User::findOrFail($id);
+        $this->nickName = $user->first_name;
+        $this->idChangeNickName = $id;
+        $this->emit('modalNickName');
+    }
+
+    public function changeNickName()
+    {
+        $user = User::findOrFail($this->idChangeNickName);
+        $user->update(['nick_name' => $this->name]);
+        $this->name = "";
+        $this->closeModal();
+    }
+
+    public function closeModal()
+    {
+        $this->emit('closeModal');
     }
 
 }
