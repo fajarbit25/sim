@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'smkguru' => \App\Http\Middleware\SmkGuru::class,
         'allguru' => \App\Http\Middleware\AllGuru::class,
         'sdadmin' => \App\Http\Middleware\Sdadmin::class,
+        'smpsmkadmin' => \App\Http\Middleware\SmpSmkAdmin::class,
     ];
 }

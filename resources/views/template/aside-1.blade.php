@@ -109,11 +109,20 @@
               <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
             </a>
           </li>
+          @if(Auth::user()->campus_id > 3)
+          <li>
+            <a href="{{url('/raport/kurikulum-merdeka')}}">
+              <i class="bi bi-circle"></i><span>Rapor</span>
+            </a>
+          </li>
+          @else
           <li>
             <a href="{{url('/raport/sd')}}">
               <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
+          @endif
+
         </ul>
       </li><!-- End Forms Nav -->
 
