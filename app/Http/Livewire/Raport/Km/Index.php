@@ -53,7 +53,7 @@ class Index extends Component
                             ->where('users.kelas', $this->kelas)
                             ->where('sd_nilai_pelajarans.aspek', 'Sumatif')
                             ->select('users.id as iduser', 'first_name', 'nick_name', 'nilai', 'mapel_id', 'sd_nilai_pelajarans.id as idraport',
-                            'mapels.kode_mapel')
+                            'mapels.kode_mapel', 'test', 'non_test')
                             ->get();
         $this->dataNilai = $data;
 

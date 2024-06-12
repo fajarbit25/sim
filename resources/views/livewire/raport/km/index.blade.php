@@ -62,6 +62,8 @@
                                                 <th> {{$kodeMapel}} </th>
                                         @endforeach
                                     @endif
+                                    <th class="bg-light">Non Test</th>
+                                    <th class="bg-light">Test</th>
                                     <th class="bg-light">Rata-Rata</th>
                                     <th class="bg-light">Rank</th>
                                     <th class="bg-light">Cetak</th>
@@ -74,9 +76,18 @@
                                             <td> {{$loop->iteration}} </td>
                                             <td> {{$items->first()->first_name}} </td>
                                             @foreach($items->groupBy('mapel_id') as $idmapel => $filteredItems)
-                                                    <td> {{$filteredItems->avg('nilai')}} </td>
+                                                    @php
+                                                        $avgSumatif = $filteredItems->avg('nilai');
+                                                        $sumTes = $filteredItems->sum('test');
+                                                        $sumNonTes = $filteredItems->sum('non_test');
+                                                        $total = $avgSumatif+$sumTes+$sumNonTes;
+                                                        $nilaiAkhir = $total/3;
+                                                    @endphp
+                                                    <td> {{number_format($avgSumatif, 2)}} </td>
+                                                    <td>{{number_format($sumNonTes, 2)}}</td>
+                                                    <td>{{number_format($sumTes, 2)}}</td>
+                                                    <th>{{number_format($nilaiAkhir, 2)}}</th>
                                             @endforeach
-                                            <td> {{number_format($items->avg('nilai'), 2)}} </td>
                                             <td>
                                                 @php
                                                     // Mengelompokkan dataNilai berdasarkan iduser
@@ -107,7 +118,7 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                <a href="javascript:void(0)" class="text-warning">
+                                                <a href="/raport/kurikulum-merdeka/{{$items->first()->idraport}}/print" target="_blank" class="text-warning">
                                                     <i class="bi bi-printer-fill"></i>
                                                 </a>
                                             </td>

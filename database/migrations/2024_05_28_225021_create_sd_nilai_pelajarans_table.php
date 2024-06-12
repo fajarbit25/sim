@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sd_nilai_pelajarans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('ta');
             $table->string('semester');
             $table->string('user_id');

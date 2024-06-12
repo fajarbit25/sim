@@ -486,4 +486,5 @@ Route::controller(RaportSdController::class)->group(function(){
 Route::controller(RaportController::class)->group(function(){
     Route::get('/raport/km/penilaian', 'penilaian')->middleware('auth', 'allguru')->name('raportKm.penilaian');
     Route::get('/raport/kurikulum-merdeka', 'index')->middleware('auth', 'smpsmkadmin')->name('raportKm.index');
+    Route::get('/raport/kurikulum-merdeka/{id}/print', 'printRaport')->middleware('auth', 'smpsmkadmin')->name('raportKm.printRaport');
 });

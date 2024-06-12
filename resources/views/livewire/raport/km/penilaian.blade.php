@@ -187,8 +187,8 @@
 
                                         @foreach($items as $item)
                                         <td>
-                                            <input type="checkbox" @if($item->nilai == 1) checked @endif wire:click="updateNilai({{$item->id_nilai}})">
-                                            <input type="checkbox" wire:click="lihatKd({{$item->id_nilai}})" @if($item->tampil == 1) checked @endif>
+                                            <input type="checkbox" @if($item->nilai == 1) checked @endif wire:click="updateNilai('{{$item->id_nilai}}')">
+                                            <input type="checkbox" wire:click="lihatKd('{{$item->id_nilai}}')" @if($item->tampil == 1) checked @endif>
                                         </td>
                                         @endforeach
 
@@ -251,7 +251,7 @@
                                     <tr>
                                         @foreach($dataKd as $item)
                                         <th style="background-color: rgb(117, 161, 96);">
-                                            <a href="javascipt:void" wire:click="modalTp({{$item->id}})"> LM-{{$item->kode}} </a>
+                                            <a href="javascript:void(0)" wire:click="modalTp('{{$item->id}}')"> LM-{{$item->kode}} </a>
                                         </th>
                                         @endforeach
                                         <th style="background-color: rgb(117, 161, 96);">
@@ -268,7 +268,7 @@
                                             <td>{{$items->first()->first_name}}</td>
                                             <td>
                                                 @if($items->first()->nick_name == null)
-                                                <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName({{$idSiswa}})"> 
+                                                <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName('{{$idSiswa}}')"> 
                                                     <i class="bi bi-pencil"></i> Edit 
                                                 </a>
                                                 @else 
@@ -284,7 +284,7 @@
                                                      <div class="col-sm-12" style="padding-left: 10px; padding-right:10px; max-width:200px;">
                                                          <div class="input-group">
                                                              <input type="text" class="form-control @error('nilai') is-invalid @endif" aria-describedby="button-addon2" wire:model.lazy="nilai">
-                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNilaiKd({{$item->id_nilai}})">
+                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNilaiKd('{{$item->id_nilai}}')">
                                                                  <i class="bi bi-check"></i>
                                                              </button>
                                                          </div>
@@ -303,7 +303,7 @@
                                                      <div class="col-sm-12" style="padding-left: 10px; padding-right:10px; max-width:200px;">
                                                          <div class="input-group">
                                                              <input type="text" class="form-control @error('nilai') is-invalid @endif" aria-describedby="button-addon2" wire:model.lazy="nilai">
-                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNonTes({{$items->first()->id_nilai}})">
+                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNonTes('{{$items->first()->id_nilai}}')">
                                                                  <i class="bi bi-check"></i>
                                                              </button>
                                                          </div>
@@ -318,7 +318,7 @@
                                                      <div class="col-sm-12" style="padding-left: 10px; padding-right:10px; max-width:200px;">
                                                          <div class="input-group">
                                                              <input type="text" class="form-control @error('nilai') is-invalid @endif" aria-describedby="button-addon2" wire:model.lazy="nilai">
-                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateTes({{$items->first()->id_nilai}})">
+                                                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateTes('{{$items->first()->id_nilai}}')">
                                                                  <i class="bi bi-check"></i>
                                                              </button>
                                                          </div>
