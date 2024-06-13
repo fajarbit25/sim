@@ -11,6 +11,7 @@ use Livewire\Component;
 class Index extends Component
 {
     public $loading = false;
+    public $notif;
     public $semester;
     public $kelas;
     public $ta;
@@ -19,6 +20,7 @@ class Index extends Component
     public $dataKelas;
     public $dataNilai;
     public $detailSemester;
+    public $tanggalRaport = "";
 
     public function mount()
     {
@@ -34,6 +36,7 @@ class Index extends Component
 
         if($this->kelas){
             $this->getDataNilai();
+            $this->getTanggalRapor();
         }
     }
 
@@ -81,5 +84,41 @@ class Index extends Component
     {
         $data = Semester::findOrFail($this->semester);
         $this->detailSemester = $data;
+    }
+
+    public function updateTanggal()
+    {
+        $data = SdNilaiPelajaran::where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
+            ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
+            ->select('sd_nilai_pelajarans.id as idNilai', 'tanggal_raport')  // Pilih semua kolom dari sd_nilai_pelajarans untuk update
+            ->get();
+
+        foreach ($data as $item) {
+            SdNilaiPelajaran::where('id', $item->idNilai)->update(['tanggal_raport' => $this->tanggalRaport,]);
+        }
+
+        $this->notif = [
+            'status'    => 200,
+            'message'   => 'Tanggal Diperbaharui!',
+        ];
+        $this->showAlert();
+    }
+
+    public function getTanggalRapor()
+    {
+        $data = SdNilaiPelajaran::where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
+            ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
+            ->select('sd_nilai_pelajarans.id as idNilai', 'tanggal_raport')  // Pilih semua kolom dari sd_nilai_pelajarans untuk update
+            ->first();
+        $this->tanggalRaport = $data->tanggal_raport ?? "";
+    }
+
+    public function showAlert()
+    {
+        // Panggil JavaScript untuk menampilkan popup SweatAlert
+        $this->emit('showAlert', [
+            'type' => $this->notif['status'],
+            'message' => $this->notif['message'],
+        ]);
     }
 }

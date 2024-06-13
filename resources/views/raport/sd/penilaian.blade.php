@@ -14,7 +14,7 @@
  
 
     <section class="section">
-       @livewire('raport.km.penilaian')
+       @livewire('raport.sd.penilaian')
     </section>
 </main>
 

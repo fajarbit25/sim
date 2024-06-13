@@ -45,12 +45,26 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">
-                        <span wire:loading>
-                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                        </span>
-                        Nilai Akhir Asesmen Sumatif
-                    </h3>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 class="card-title">
+                                <span wire:loading>
+                                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                </span>
+                                Nilai Akhir Asesmen Sumatif
+                            </h3>
+                        </div>
+                        @if($dataNilai)
+                        <div class="col-sm-4 pt-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">
+                                    Tanggal Raport : @if($tanggalRaport == null) - @else {{$tanggalRaport}} @endif
+                                </span>
+                                <input type="date" class="form-control" wire:change="updateTanggal()" wire:model="tanggalRaport">
+                            </div>
+                        </div>
+                        @endif
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -62,9 +76,6 @@
                                                 <th> {{$kodeMapel}} </th>
                                         @endforeach
                                     @endif
-                                    <th class="bg-light">Non Test</th>
-                                    <th class="bg-light">Test</th>
-                                    <th class="bg-light">Rata-Rata</th>
                                     <th class="bg-light">Rank</th>
                                     <th class="bg-light">Cetak</th>
                                 </tr>
@@ -83,9 +94,6 @@
                                                         $total = $avgSumatif+$sumTes+$sumNonTes;
                                                         $nilaiAkhir = $total/3;
                                                     @endphp
-                                                    <td> {{number_format($avgSumatif, 2)}} </td>
-                                                    <td>{{number_format($sumNonTes, 2)}}</td>
-                                                    <td>{{number_format($sumTes, 2)}}</td>
                                                     <th>{{number_format($nilaiAkhir, 2)}}</th>
                                             @endforeach
                                             <td>
@@ -132,4 +140,25 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+
+            Livewire.on('showAlert', function (data) {
+                if(data.type === 200){
+                    var icons = 'success'
+                }else if(data.type === 500){
+                    var icons = 'warning'
+                }
+                Swal.fire({
+                    icon: icons,
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        });
+    </script>
+    @endpush
 </div>

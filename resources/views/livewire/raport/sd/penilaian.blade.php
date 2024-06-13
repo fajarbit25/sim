@@ -100,14 +100,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($dataNilai->groupBy('first_name') as $namaSiswa => $items)
+                                @foreach($dataNilai->groupBy('idsiswa') as $siswaId => $items)
                                 <tr>
                                     <td rowspan="2"> {{$loop->iteration}} </td>
                                     <td rowspan="2"> {{$items->first()->nis}} </td>
-                                    <td rowspan="2" style="white-space: nowrap;"> {{$namaSiswa}} </td>
+                                    <td rowspan="2" style="white-space: nowrap;"> {{$items->first()->first_name}} </td>
                                     <td rowspan="2">
                                         @if(!$items->first()->nick_name)
-                                            <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName('{{$items->first()->idsiswa}}', '{{$namaSiswa}}')"> Input </a>
+                                            <a href="javascript:void(0)" class="fw-bold" wire:click="modalNickName('{{$items->first()->idsiswa}}', '{{$items->first()->first_name}}')"> Input </a>
                                         @else 
                                         {{$items->first()->nick_name}}
                                         @endif
@@ -122,7 +122,7 @@
                                             <div class="col-sm-12" style="padding-left: 10px; padding-right:10px; max-width:200px;">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control @error('nilai') is-invalid @endif" aria-describedby="button-addon2" wire:model.lazy="nilai">
-                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNilaiKd({{$item->id_nilai}})">
+                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNilaiKd('{{$item->id_nilai}}')">
                                                         <i class="bi bi-check"></i>
                                                     </button>
                                                 </div>
