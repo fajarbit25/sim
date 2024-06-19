@@ -24,15 +24,15 @@
               <div class="card info-card sales-card">
 
                 <div class="card-body">
-                  <h5 class="card-title">NISN : {{$students->nisn}} </h5>
+                  <h5 class="card-title">NIS/NISN : {{$students->nisn}} </h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                         {{-- <i class="bi bi-person-bounding-box"></i> --}}
-                        <img src="{{asset('/storage/photo-users/'.Auth::user()->photo)}}" alt="profile" style="width: 100%;">
+                        <img src="{{Auth::user()->photo}}" alt="profile" style="width: 100%;">
                     </div>
                     <div class="ps-3">
-                      <h6>{{Auth::user()->first_name}} </h6>
+                      <h6>{{Auth::user()->first_name}}</h6>
                       <span class="text-success small pt-1 fw-bold">{{$campus->campus_initial}}</span> <span class="text-muted small pt-2 ps-1">{{$campus->campus_name}}</span>
                     </div>
                   </div>

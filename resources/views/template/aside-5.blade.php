@@ -42,6 +42,31 @@
         </ul>
       </li><!-- End Icons Nav -->
 
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-cash-coin">
+            </i>Setting &nbsp; <i id="finance-notif-up"></i>
+          </span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="/finance/payment-master">
+              <i class="bi bi-circle"></i><span>Data Master</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/api-setting">
+              <i class="bi bi-circle"></i><span>Api Setting</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/potongan-tagihan">
+              <i class="bi bi-circle"></i><span>Potongan Tagihan</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Icons Nav -->
+
 
       <li class="nav-heading">Pages</li>
 

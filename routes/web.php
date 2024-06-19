@@ -18,6 +18,7 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\OrangtuaController;
+use App\Http\Controllers\PaymentControlller;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\ScoreController;
@@ -487,4 +488,12 @@ Route::controller(RaportController::class)->group(function(){
     Route::get('/raport/km/penilaian', 'penilaian')->middleware('auth', 'allguru')->name('raportKm.penilaian');
     Route::get('/raport/kurikulum-merdeka', 'index')->middleware('auth', 'smpsmkadmin')->name('raportKm.index');
     Route::get('/raport/kurikulum-merdeka/{id}/print', 'printRaport')->middleware('auth', 'smpsmkadmin')->name('raportKm.printRaport');
+});
+
+Route::controller(PaymentControlller::class)->group(function () {
+    Route::get('/finance/user-payment', 'index')->middleware('auth', 'sditfinance')->name('finance.userPayment');
+    Route::get('/finance/api-setting', 'apiSetting')->middleware('auth', 'finance')->name('finance.apiSetting');
+    Route::get('/finance/potongan-tagihan', 'potonganTagihan')->middleware('auth', 'finance')->name('finance.potonganTagihan');
+    Route::get('/finance/payment-master', 'paymentMaster')->middleware('auth', 'finance')->name('finance.paymentMaster');
+    Route::get('/finance/send-notifikasi-wa', 'sendNotifikasiWA')->middleware('auth')->name('finance.sendNotifikasiWA');
 });
