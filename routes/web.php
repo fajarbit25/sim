@@ -378,6 +378,8 @@ Route::controller(OrangtuaController::class)->group(function(){
     Route::get('/user/{id}/tahfidz', 'tahfidz')->middleware('auth')->name('siswa.tahfidz');
     Route::get('/user/invoice/{id}/show', 'showInvoice')->middleware('auth')->name('siswa.showInvoice');
     Route::get('/user/invoice/{id}/evidence', 'showEviden')->middleware('auth')->name('siswa.showEviden');
+    Route::post('/user/invoice/checkout', 'checkout')->middleware('auth')->name('ortu.checkout');
+    Route::get('/user/history-pembayaran', 'invoiceHistory')->middleware('auth')->name('ortu.invoiceHistory');
 });
 
 Route::controller(CampusController::class)->group(function(){
@@ -495,5 +497,6 @@ Route::controller(PaymentControlller::class)->group(function () {
     Route::get('/finance/api-setting', 'apiSetting')->middleware('auth', 'finance')->name('finance.apiSetting');
     Route::get('/finance/potongan-tagihan', 'potonganTagihan')->middleware('auth', 'finance')->name('finance.potonganTagihan');
     Route::get('/finance/payment-master', 'paymentMaster')->middleware('auth', 'finance')->name('finance.paymentMaster');
+    Route::get('/finance/payment-unpaid', 'paymentUnpaid')->middleware('auth', 'finance')->name('finance.paymentUnpaid');
     Route::get('/finance/send-notifikasi-wa', 'sendNotifikasiWA')->middleware('auth')->name('finance.sendNotifikasiWA');
 });

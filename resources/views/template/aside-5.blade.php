@@ -24,6 +24,11 @@
             </a>
           </li>
           <li>
+            <a href="/finance/payment-unpaid">
+              <i class="bi bi-circle"></i><span>Unpaid</span>
+            </a>
+          </li>
+          <li>
             <a href="/finance/transaction">
               <i class="bi bi-circle"></i><span>Transaksi</span>
             </a>
@@ -31,6 +36,11 @@
           <li>
             <a href="/finance/mutasi">
               <i class="bi bi-circle"></i><span>Mutasi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/payment-master">
+              <i class="bi bi-circle"></i><span>Data Siswa</span>
             </a>
           </li>
           <li>
@@ -49,11 +59,6 @@
           </span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/finance/payment-master">
-              <i class="bi bi-circle"></i><span>Data Master</span>
-            </a>
-          </li>
           <li>
             <a href="/finance/api-setting">
               <i class="bi bi-circle"></i><span>Api Setting</span>

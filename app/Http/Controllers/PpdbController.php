@@ -282,7 +282,7 @@ class PpdbController extends Controller
         $invoice = [
             'user_id'           => $user->id,
             'jenis_transaksi'   => 'IN',  
-            'tipe_transaksi'    => $loadtt->idtt,
+            'tipe_transaksi'    => $loadtt->tipe,
             'kode_transaksi'    => date('y').$middleCode.rand(1111, 9999),
             'nomor_invoice'     => date('y').rand(1111, 9999),
             'invoice_date'      => date('Y-m-d'),

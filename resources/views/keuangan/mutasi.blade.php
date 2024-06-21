@@ -34,7 +34,7 @@
                                     <optgroup label="Pilih Tipe Transaksi">
                                       <option value="ALL">ALL</option>
                                       @foreach($tipe as $tp)
-                                      <option value="{{$tp->idtt}}">{{$loop->iteration.'. '.$tp->tipe}}</option>
+                                      <option value="{{$tp->tipe}}">{{$loop->iteration.'. '.$tp->tipe}}</option>
                                       @endforeach
                                     </optgroup>
                                 </select> 

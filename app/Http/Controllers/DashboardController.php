@@ -10,6 +10,7 @@ use App\Models\Alamat;
 use App\Models\BiodataTeacher;
 use App\Models\Campu;
 use App\Models\Confirmpayment;
+use App\Models\Invoice;
 use App\Models\KepegawaianTeacher;
 use App\Models\KompetensiKhususTeacher;
 use App\Models\PendidikanTeacher;
@@ -74,6 +75,7 @@ class DashboardController extends Controller
                                     ->join('mapels', 'mapels.idmapel', '=', 'scores.mapel')->get(),
                     'logs'      => Siswalog::where('user_id', $id)->where('tanggal', date('Y-m-d'))
                                     ->join('mapels', 'mapels.idmapel', '=', 'siswalogs.mapel_id')->get(),
+                    'countInv'  => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Unpaid')->count(),
                 ];
                 return view('dashboard.orang_tua', $data, $datasiswa); 
             }else{

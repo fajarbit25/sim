@@ -26,6 +26,8 @@ return new class extends Migration
             $table->bigInteger('payment_fee');
             $table->enum('status', ['Paid', 'Pending', 'Unpaid']);
             $table->string('deskripsi')->nullable();
+            $table->enum('check_list', ['0', '1']);
+            $table->string('due_date');
             $table->timestamps();
         });
     }

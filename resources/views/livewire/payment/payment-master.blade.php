@@ -49,7 +49,7 @@
                             <div class="col-sm-12">
                                 <button type="button" class="btn btn-primary" wire:click="createInvoice()">
                                     <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                                    Buat Tagihan
+                                    Buat Data
                                 </button>
                             </div>
                             @endif
@@ -76,6 +76,8 @@
                                     <th> Tagihan </th>
                                     <th> Potongan </th>
                                     <th> Total Tagihan </th>
+                                    <th> Tanggal Penagihan </th>
+                                    <th>Check</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,22 +95,39 @@
                                         </a>
                                     </td>
                                     <th> Rp.{{number_format($items->total_price)}},- </th>
+                                    <td>
+                                        @if($items->due_date == '0000-00-00')
+                                            -
+                                        @else 
+                                            {{$items->due_date}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" wire:click="updateCheckList('{{$items->id}}')" @if($items->check_list == 1) checked @endif>
+                                    </td>
                                 </tr>
                                 @endforeach
         
                                 @if(count($dataTagihan) == 0) 
                                 <tr>
-                                    <td colspan="8" class="fst-italic">Tidak ada data!</td>
+                                    <td colspan="9" class="fst-italic">Tidak ada data!</td>
                                 </tr>
                                 @else 
                                 <tr>
-                                    <td colspan="8">{{$dataTagihan->links()}}</td>
+                                    <td colspan="9">{{$dataTagihan->links()}}</td>
                                 </tr>
                                 @endif
                                 @endif
                                 
                             </tbody>
                         </table>
+                        @if($dataTagihan)
+                        <div class="col-sm-12 text-end">
+                            <button type="button" class="btn btn-info btn-sm" wire:click="checkAll()"><i class="bi bi-check2-square"></i> Checklist Semua</button>
+                            <button type="button" class="btn btn-primary btn-sm" wire:click="createAutoSend()"><i class="bi bi-clock-history"></i> Atur Tanggal Pengiriman </button>
+                            <button type="button" class="btn btn-success btn-sm" wire:click="kirimTagihan()"><i class="bi bi-send"></i> Kirim Manual</button>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -233,6 +252,35 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalAutoSend" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Atur Tanggal Pengiriman</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12">
+                    <div class="mb-3">
+                        <label for="tanggalBroadcast" class="form-label">Tanggal Penagihan</label>
+                        <input type="date" class="form-control @error('due_date') is-invalid @enderror" 
+                        id="tanggalBroadcast" aria-describedby="tanggalBroadcastHelp" wire:model="due_date">
+                        <div id="tanggalBroadcastHelp" class="form-text">Invoice akan dikirimkan sesuai tanggal yang ditentukan.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" wire:click="setAutoSend()">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
+                    Simpan
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
         document.addEventListener('livewire:load', function () {
@@ -244,10 +292,13 @@
                 $('#modalJenis').modal('show')
             }); //membuka modal
 
-            // Livewire.on('closeModal', function () {
-            //     $('#modalAdd').modal('hide')
-            //     $('#modalDelete').modal('hide')
-            // }); //membuka modal
+            Livewire.on('modalAutoSend', function () {
+                $('#modalAutoSend').modal('show')
+            }); //membuka modal
+
+            Livewire.on('closeModal', function () {
+                $('#modalAutoSend').modal('hide')
+            }); //membuka modal
 
             Livewire.on('showAlert', function (data) {
                 if(data.type === 200){

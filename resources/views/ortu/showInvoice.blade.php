@@ -39,18 +39,36 @@
                               <strong>Nomor Invoice : </strong> {{$invoice->nomor_invoice}} <br/>
                               <strong>Kode Transaksi : </strong> {{$invoice->kode_transaksi}} <br/>
                               <strong>Tanggal Invoice : </strong> {{$invoice->invoice_date}} <br/>
-                              <strong>Jenis Tagihan : </strong> {{$invoice->tipe}} <br/>
-                              <strong>Jumlah Tagihan : </strong> {{number_format($invoice->amount)}} <br/>
-                              <strong>Status : </strong>
-                              @if($invoice->invoice_status == 'PAID')<span class="badge bg-success rounded-pill">{{$invoice->invoice_status}}</span>@endif
-                              @if($invoice->invoice_status == 'PENDING')<span class="badge bg-warning rounded-pill">{{$invoice->invoice_status}}</span>@endif
+                              <strong>Jenis Tagihan : </strong> {{$invoice->jenis_transaksi}} <br/>
+                              <strong>Keterangan : </strong> {{$invoice->description}}<br/>
+                              <strong>Status :</strong>
+                              @if($invoice->invoice_status == 'PAID' || $invoice->invoice_status == 'Paid' )<span class="badge bg-success rounded-pill">{{$invoice->invoice_status}}</span>@endif
+                              @if($invoice->invoice_status == 'PENDING' || $invoice->invoice_status == 'Unpaid')<span class="badge bg-warning rounded-pill">{{$invoice->invoice_status}}</span>@endif
                               @if($invoice->invoice_status == 'CANCELLED')<span class="badge bg-danger rounded-pill">{{$invoice->invoice_status}}</span>@endif
-                              <br/>
-                              <strong>Keterangan : </strong> {{$invoice->description}}
+                              <hr/>
+                              @php
+                                  $totalDiscount = $discount->sum('total_discount');
+                              @endphp
+                              <strong>Jumlah Tagihan : </strong> Rp.{{number_format($invoice->amount+$totalDiscount)}},- <br/>
+                              <strong>Potongan : </strong> <br/>
+                              @foreach($discount as $disc)
+                              {{$disc->jenis_discount}} :  Rp.{{number_format($disc->total_discount)}},- <br/>
+                              @endforeach
+                              <hr>
+                              <strong>Total Tagihan :Rp.{{number_format($invoice->amount)}},-  </strong>
+                              <hr/>
+                              
                             </div>
                           </div>
-                        </div>
-                        <div class="accordion-item">
+                          <div class="col-sm-12">
+                            
+                          </div>
+                          @if($invoice->invoice_status == 'Unpaid')
+                            <div class="col-sm-12 m-3">
+                                <a href="javascript:void(0)" class="btn btn-success w-100" onclick="confirmPayment()"><i class="bi bi-credit-card"></i> Bayar</a>
+                            </div>
+                          @endif
+                        {{-- <div class="accordion-item">
                           <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
                                 @if($invoice->invoice_status == 'PAID')
@@ -124,10 +142,10 @@
                                 </div>
                             </div>
                           </div>
-                        </div>
+                        </div> --}}
                     </div>
 
-                      <a href="/user/invoice" class="btn btn-secondary my-3 w-100"><i class="bi bi-arrow-left"></i> Back</a>
+                      <a href="/user/invoice" class="btn btn-secondary my-3 w-100"><i class="bi bi-arrow-left"></i> Kembali</a>
     
                 </div>
             </div>
@@ -155,9 +173,46 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="confirmPay" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Informasi</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          @if($invoice->invoice_status == 'Unpaid')
+          <div class="col-sm-12 m-3">
+              <span class="fw-bold">Informasi.</span><br/>
+              <span class="mb-3">
+                -Segera Lakukan Pembayaran setelah memilih metode pembayaran.<br/>
+                -Metode Pembayaran tidak dapat diubah.<br/>
+                -Jika mengalami kendala, Segera hubungi pihak sekolah!.<br/>
+                -Setelah memilih metode pembayaran, Halaman pembayaran tidak dapat diakses kembali <br/>
+                -Harap Simpan/Download Kode Pembayaran anda.
+              </span>
+              <form action="{{route('ortu.checkout')}}" method="POST">
+                @csrf
+                <input type="hidden" name="kode_transaksi" value="{{$invoice->kode_transaksi}}">
+                <button type="submit" class="btn btn-success w-100 mt-3"><i class="bi bi-credit-card"></i> Lanjutkan</button>
+              </form>
+          </div>
+          @endif
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   </main><!-- End #main -->
+ 
+
   <script type="text/javascript">
+
     function buktiTransfer(id)
     {
         var url = "/user/invoice/" + id + "/evidence";
@@ -172,6 +227,11 @@
             }
         });
         $("#modal-eviden").modal('show');
+    }
+
+    function confirmPayment()
+    {
+      $("#confirmPay").modal('show');
     }
   </script>
   @endsection

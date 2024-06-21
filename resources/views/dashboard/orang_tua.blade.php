@@ -41,6 +41,24 @@
               </div>
             </div><!-- End Sales Card -->
 
+            @if($countInv != 0)
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <h2 class="card-title">Informasi!</h2>
+                  <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> &nbsp;
+                    <div>
+                      <a href="/user/invoice">
+                      <span class="fst-italic"> Terdapat </span> <span class="fst-italic fw-bold">{{$countInv}} </span>
+                      <span>tagihan pembayaran perlu dikonfirmasi!</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @endif
+
             @if($ppdb->status == 1)
             <div class="col-sm-12">
               <div class="card">

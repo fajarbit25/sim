@@ -2,7 +2,7 @@
 <select name="tipe" id="tipe" class="form-control">
     <optgroup label="Pilih Jenis Transaksi">
         @foreach($tipe as $tip)
-        <option value="{{$tip->idtt}}">{{$loop->iteration.'. '.$tip->tipe}}</option>
+        <option value="{{$tip->tipe}}">{{$loop->iteration.'. '.$tip->tipe}}</option>
         @endforeach
     </optgroup>
 </select>

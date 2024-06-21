@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Campu;
 use App\Models\Confirmpayment;
 use App\Models\Invoice;
+use App\Models\MiddtransToken;
+use App\Models\Payment;
+use App\Models\PaymentDiscountInvoice;
 use App\Models\Score;
 use App\Models\Semester;
 use App\Models\Siswalog;
@@ -89,24 +92,113 @@ class OrangtuaController extends Controller
     {
         $data = [
             'title'     => 'Invoice',
-            'invoice'   => Invoice::where('user_id', Auth::user()->id)
-                            ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')
-                            ->join('confirmpayments', 'confirmpayments.invoice_id', '=', 'invoices.idiv')->get(),
+            'invoice'   => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Unpaid')->get(),
         ];
         return view('ortu.invoice', $data);
     }
+
+    public function invoiceHistory():view
+    {
+        $data = [
+            'title'     => 'History Pembayaran',
+            'invoice'   => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Paid')->get(),
+        ];
+        return view('ortu.invoice-history', $data);
+    }
+
     public function showInvoice($id)
     {
-        $loadinv = Invoice::where('nomor_invoice', $id)->first();
+        /**Data Invoice */
+        $loadinv = Invoice::where('kode_transaksi', $id)->first();
         $idinv = $loadinv->idiv;
+
+
         $data = [
-            'title'     => '#'.$id,
-            'invoice'   => Invoice::where('nomor_invoice', $id)
-                            ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')->first(),
+            'title'     => '#'.$loadinv->nomor_invoice,
+            'invoice'   => Invoice::where('kode_transaksi', $id)->first(),
             'confirm'   => Confirmpayment::where('invoice_id', $idinv)->first(),
+            'discount'  => PaymentDiscountInvoice::join('payment_discounts', 'payment_discounts.id', '=', 'payment_discount_invoices.discount_id')
+                            ->where('invoice_id', $loadinv->nomor_invoice)->select('payment_discounts.jenis_discount', 'payment_discounts.total_discount')
+                            ->get(),
+            // 'totalDisc'=> PaymentDiscountInvoice::join('payment_discounts', 'payment_discounts.id', '=', 'payment_discount_invoices.discount_id')
+            //                 ->where('invoice_id', $loadinv->nomor_invoice)->select('payment_discounts.jenis_discount', 'payment_discounts.total_discount')
+            //                 ->sum('payment_discounts.total_discount'),
+
         ];
+
         return view('ortu.showInvoice', $data);
     }
+
+    public function checkout(Request $request)
+    {
+        /**Data Invoice */
+        $loadinv = Invoice::where('kode_transaksi', $request->kode_transaksi)->first();
+        $idinv = $loadinv->idiv;
+
+        /**Middtrans */
+        //Get Token
+        $token = MiddtransToken::where('campus_id', Auth::user()->campus_id)->first();
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = $token->server_key;
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $idinv,
+                'gross_amount' => $loadinv->amount,
+            ),
+            'customer_details' => array(
+                'first_name' => Auth::user()->first_name,
+                'last_name' => '',
+                'email' => Auth::user()->email,
+                'phone' => Auth::user()->phone,
+            ),
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        /**End Middtrans */
+
+        $data = [
+            'title'         => 'Checkout',
+            'clientKey'     => $token->client_key,
+            'snapToken'     => $snapToken,
+        ];
+
+        return view('ortu.checkout', $data);
+    }
+
+    public function callback(Request $request)
+    {
+        //Get Token
+        $token = MiddtransToken::where('merchant_id', $request->merchant_id)->first();
+        $serverKey = $token->server_key;
+
+        $hashed = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
+
+        if($hashed == $request->signature_key){
+            if($request->transaction_status == 'settlement'){
+                Invoice::where('idiv', $request->order_id)->update([
+                    'invoice_status'    => 'Paid',
+                    'payment_type'      => $request->payment_type,
+                ]);
+
+                Payment::where('id', $request->order_id)->update([
+                    'status'    => 'Paid',
+                ]);
+            }
+            return response()->json([
+                'status'    => 200,
+                'message'   => 'Berhasil',
+            ], 200);
+        }
+    }
+
+
     public function showEviden($id)
     {
         $data = Confirmpayment::where('invoice_id', $id)->first();

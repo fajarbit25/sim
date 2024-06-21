@@ -66,9 +66,9 @@
                                     <label for="status">Status Pembayaran <span class="text-danger">*</span></label>
                                     <select name="status" id="status" class="form-control">
                                         <optgroup label="Pilih Tipe Transaksi">
-                                            <option value="PAID">PAID</option>
-                                            <option value="UNPAID">UNPAID</option>
-                                            <option value="PENDING">PENDING</option>
+                                            <option value="Paid">PAID</option>
+                                            <option value="Unpaid">UNPAID</option>
+                                            <option value="Pending">PENDING</option>
                                         </optgroup>
                                     </select>
                                 </div>

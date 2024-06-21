@@ -41,6 +41,9 @@
             <a href="/user/invoice">
               <i class="bi bi-circle"></i><span>Tagihan</span>
             </a>
+            <a href="/user/history-pembayaran">
+              <i class="bi bi-circle"></i><span>History</span>
+            </a>
           </li>
         </ul>
       </li><!-- End Components Nav -->

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AbsenApiController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthTokenController;
+use App\Http\Controllers\OrangtuaController;
+use App\Http\Controllers\PaymentControlller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/absen/get', [AbsenApiController::class, 'absenGet'])
     ->middleware('auth:sanctum')->name('api.absenGet');
 });
+
+//callback midtrans
+Route::post('/user/payment/callback', [OrangtuaController::class, 'callback'])->name('ortu.callback');
+
+//cron job autosend invoice
+Route::get('/payment/send-invoices', [PaymentControlller::class, 'kirimTagihanApi'])->name('paymen.kirimTagihanApi');
 
 Route::post('/absen/post', [AbsenApiController::class, 'post'])->name('api.post')->middleware('auth:sanctum');
 

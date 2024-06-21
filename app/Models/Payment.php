@@ -22,6 +22,8 @@ class Payment extends Model
         'payment_fee',
         'status',
         'deskripsi',
+        'check_list',
+        'due_date',
     ];
 
     protected static function boot()

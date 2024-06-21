@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->id('idiv');
+            $table->uuid('idiv')->primary();
             $table->string('user_id');
             $table->string('jenis_transaksi');
             $table->string('tipe_transaksi');
@@ -23,9 +23,11 @@ return new class extends Migration
             $table->string('invoice_date');
             $table->string('amount');
             $table->string('invoice_status');
+            $table->string('payment_type')->nullable();
             $table->string('description');
             $table->string('campus_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -36,6 +38,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        } );
     }
 };

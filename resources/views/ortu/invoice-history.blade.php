@@ -38,9 +38,9 @@
                               Pembayaran {{$inv->jenis_transaksi}}
                             </div>
                             <span class="badge bg-secondary rounded-pill">{{$inv->invoice_date}}</span>
-                              @if($inv->invoice_status == 'Paid')<span class="badge bg-success rounded-pill">{{$inv->invoice_status}}</span>@endif
+                              @if($inv->invoice_status == 'Paid')<span class="badge bg-success rounded-pill">Lunas</span>@endif
                               @if($inv->invoice_status == 'Pending')<span class="badge bg-warning rounded-pill">{{$inv->invoice_status}}</span>@endif
-                              @if($inv->invoice_status == 'Unpaid')<span class="badge bg-danger rounded-pill">Unpaid</span>@endif
+                              @if($inv->invoice_status == 'Unpaid')<span class="badge bg-danger rounded-pill">{{$inv->invoice_status}}</span>@endif
                           </li>
                         </a>
                         @endforeach

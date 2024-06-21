@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_discount_users', function (Blueprint $table) {
+        Schema::create('payment_discount_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('campus_id');
-            $table->string('user_id');
+            $table->string('invoice_id');
             $table->string('discount_id');
-            $table->string('jenis');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_discount_users');
+        Schema::dropIfExists('payment_discount_invoices');
     }
 };

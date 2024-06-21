@@ -9,11 +9,11 @@
                     <tr>
                         <th>Id Transaksi</th>
                         <th>Tanggal</th>
+                        <th>Tipe</th>
                         <th>Jenis</th>
                         <th>Saldo Awal</th>
                         <th>Nominal</th>
                         <th>Saldo Akhir</th>
-                        <th>Keterangan</th>
                         <th>View</th>
                     </tr>
                 </thead>
@@ -22,14 +22,14 @@
                     <tr>
                         <td class="fw-bold">{{$mts->nomor_invoice}}</td>
                         <td>{{$mts->invoice_date}}</td>
-                        <td>{{$mts->tipe}}</td>
+                        <td>{{$mts->tipe_transaksi}}</td>
+                        <td>{{$mts->jenis_transaksi}}</td>
                         <td>{{number_format($mts->saldo_awal)}}</td>
                         <td>{{number_format($mts->amount)}}</td>
                         <td>{{number_format($mts->saldo_akhir)}}</td>
-                        <td>{{substr($mts->description, 0, 50)}}...</td>
                         <td>
                             <button type="button" class="btn btn-primary btn-xs" 
-                            onclick="modalViewMutasi('{{$mts->kode_transaksi}}', '{{$mts->invoice_date}}', '{{$mts->tipe}}', '{{$mts->jenis_transaksi}}',
+                            onclick="modalViewMutasi('{{$mts->kode_transaksi}}', '{{$mts->invoice_date}}', '{{$mts->tipe_transaksi}}', '{{$mts->jenis_transaksi}}',
                             '{{$mts->amount}}', '{{$mts->invoice_status}}', '{{$mts->description}}')">
                                 <i class="bi bi-eye"></i>
                             </button>

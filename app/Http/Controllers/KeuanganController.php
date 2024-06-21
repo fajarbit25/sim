@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Confirmpayment;
 use App\Models\Invoice;
 use App\Models\Mutation;
+use App\Models\PaymentDiscountInvoice;
 use App\Models\Tipetransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +27,10 @@ class KeuanganController extends Controller
     public function index():view
     {
         $data = [
-            'title'     => 'Keuangan',
-            'mutasi'    => Invoice::orderBy('idiv', 'DESC')->limit(10)->get(),
-            'saldo'     => Mutation::where('campus_id', Auth::user()->campus_id)->orderBy('idmt', 'DESC')->first(),
+            'title'             => 'Keuangan',
+            'mutasi'            => Invoice::orderBy('idiv', 'DESC')->limit(10)->get(),
+            'saldo'             => Mutation::where('campus_id', Auth::user()->campus_id)->orderBy('idmt', 'DESC')->first(),
+            'saldoMidtrans'     => Mutation::where('campus_id', Auth::user()->campus_id)->orderBy('idmt', 'DESC')->first(),
         ];
         return view('keuangan.index',$data);
     }
@@ -37,10 +39,10 @@ class KeuanganController extends Controller
     public function table_transaksi():view
     {
         $data = [
-            'mutasi'    => Invoice::orderBy('idiv', 'DESC')
-                                    ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')
+            'mutasi'    => Invoice::orderBy('invoice_date', 'DESC')
                                     ->where('invoices.campus_id', Auth::user()->campus_id)
-                                    ->where('invoices.invoice_status', 'PAID')
+                                    ->where('invoices.invoice_status', 'Paid')
+                                    ->where('payment_type', 'sims-iqis')
                                     ->limit(10)->get(),
         ];
         return view('keuangan.table_transaksi',$data); 
@@ -119,20 +121,20 @@ class KeuanganController extends Controller
         if($request->jenis == 'ALL'){
             // $mutasix = Invoice::where('invoice_date', '>=', $mulai)->where('invoice_date', '<=', $sampai)->get();
             $mutasi = Mutation::join('invoices', 'invoices.nomor_invoice', '=', 'mutations.inv_id')
-                                ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')
                                 ->where('invoices.invoice_date', '>=', $mulai)
                                 ->where('invoices.invoice_date', '<=', $sampai)
-                                ->where('invoices.invoice_status', 'PAID')
-                                ->where('mutations.campus_id', Auth::user()->campus_id)->get();
+                                ->where('invoices.invoice_status', 'Paid')
+                                ->where('mutations.campus_id', Auth::user()->campus_id)
+                                ->orderBy('invoices.updated_at', 'DESC')->get();
         }else{
             // $mutasi = Invoice::where('invoice_date', '>=', $mulai)->where('invoice_date', '<=', $sampai)->where('jenis_transaksi', $request->jenis)->get();
             $mutasi = Mutation::join('invoices', 'invoices.nomor_invoice', '=', 'mutations.inv_id')
-                                ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')
                                 ->where('invoices.invoice_date', '>=', $mulai)
                                 ->where('invoices.invoice_date', '<=', $sampai)
                                 ->where('invoices.tipe_transaksi', $request->jenis)
-                                ->where('invoices.invoice_status', 'PAID')
-                                ->where('mutations.campus_id', Auth::user()->campus_id)->get();
+                                ->where('invoices.invoice_status', 'Paid')
+                                ->where('mutations.campus_id', Auth::user()->campus_id)
+                                ->orderBy('invoices.updated_at', 'DESC')->get();
         }
 
         $data = [
@@ -216,8 +218,8 @@ class KeuanganController extends Controller
 
         $data = [
             'user_id'           => Auth::user()->id,
-            'jenis_transaksi'   => $request->jenis,
-            'tipe_transaksi'    => $request->tipe,
+            'jenis_transaksi'   => $request->tipe,
+            'tipe_transaksi'    => $request->jenis,
             'kode_transaksi'    => date('y').$middleCode.rand(1111, 9999),
             'nomor_invoice'     => date('y').rand(1111, 9999),
             'invoice_date'      => date('Y-m-d'),
@@ -225,9 +227,10 @@ class KeuanganController extends Controller
             'description'       => $request->keterangan,
             'campus_id'         => Auth::user()->campus_id,
             'amount'            => $nominal,
+            'payment_type'      => 'sims-iqis',
         ];
 
-        if($request->status == 'PAID'){
+        if($request->status == 'Paid'){
 
             $invoice = Invoice::create($data);
 
@@ -259,12 +262,16 @@ class KeuanganController extends Controller
      */
     public function invoice($id)
     {
+        $invoice = Invoice::where('kode_transaksi', $id)
+                    ->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->first();
         $data = [
             'title'     => 'Transaksi TXID'.$id,
-            'invoice'   => Invoice::where('kode_transaksi', $id)
-                            ->where('invoices.campus_id', Auth::user()->campus_id)
-                            ->join('tipetransactions', 'tipetransactions.idtt', '=', 'invoices.tipe_transaksi')
-                            ->first(),
+            'invoice'   => $invoice,
+            'discount'  => PaymentDiscountInvoice::join('payment_discounts', 'payment_discounts.id', '=', 'payment_discount_invoices.discount_id')
+                            ->where('invoice_id', $invoice->nomor_invoice)
+                            ->select('jenis_discount', 'total_discount')
+                            ->get(),
         ];
         return view('keuangan.invoice', $data);
     }

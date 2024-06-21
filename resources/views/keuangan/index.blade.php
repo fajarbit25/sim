@@ -39,6 +39,26 @@
 
               </div>
             </div><!-- End Sales Card -->
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Saldo Midtrans</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="ps-3 text-end">
+                      <h6>{{number_format($saldo->saldo_akhir)}}</h6>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
 
 
             <!-- Table Mutasi 5 Hari -->
