@@ -15,6 +15,9 @@ class MiddtransToken extends Model
        'merchant_id',
        'client_key',
        'server_key',
+       'admin_fee',
+       'midtrans_environment',
+       'chat_id_telegram',
        'status',
     ];
 

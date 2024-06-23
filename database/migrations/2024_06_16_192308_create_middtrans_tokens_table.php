@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('merchant_id');
             $table->string('client_key');
             $table->string('server_key');
+            $table->integer('admin_fee');
+            $table->string('midtrans_environment');
+            $table->string('chat_id_telegram')->nullable();
             $table->string('status');
             $table->timestamps();
         });

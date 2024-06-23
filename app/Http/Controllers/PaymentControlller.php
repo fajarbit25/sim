@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MiddtransToken;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\PaymentDiscountInvoice;
@@ -10,6 +11,7 @@ use App\Models\Semester;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Services\WhatsAppService;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentControlller extends Controller
@@ -70,8 +72,9 @@ class PaymentControlller extends Controller
         }
     }
 
+
     public function kirimTagihanApi()
-    {
+    {   
         $semester = Semester::where('is_active', 'true')->first();
         $ta = $semester->tahun_ajaran;
         $sm = $semester->semester_kode;
@@ -81,10 +84,13 @@ class PaymentControlller extends Controller
             $semesterKode = 'Genap';
         }
 
+        $periode = date('M-Y');
+        $today = date('d');
+
         $payment = Payment::join('users', 'users.id', '=', 'payments.user_id')
                     ->leftJoin('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('payment_jenis_tagihans', 'payment_jenis_tagihans.id', '=', 'payments.jenis')
-                    ->where('check_list', '1')->where('due_date', date('Y-m-d'))
+                    ->where('check_list', '1')->where('due_date', $today)
                     ->select('payments.id as kode_transaksi', 'total_price', 'payments.jenis', 'payments.campus_id',
                     'first_name', 'payments.user_id', 'payment_jenis_tagihans.jenis as jenis_transaksi', 'payment_jenis_tagihans.id as id_jenis_transakis')->get();
         foreach($payment as $item){
@@ -138,35 +144,94 @@ class PaymentControlller extends Controller
                 $paymentType = null;
             }
 
-            $invoice = Invoice::create([
-                'user_id'           => $item->user_id,
-                'jenis_transaksi'   => $item->jenis_transaksi,
-                'tipe_transaksi'    => 'IN',
-                'kode_transaksi'    => $item->kode_transaksi,
-                'nomor_invoice'     => "0".$item->id_jenis_transakis.$item->campus_id."00".$countInvoice."/INV/IQIS".$campusName."/".$bulan."/".date('Y'),
-                'invoice_date'      => date('Y-m-d'),
-                'amount'            => $item->total_price,
-                'invoice_status'    => $status,
-                'description'       => "Tagihan ".$item->jenis_transaksi." Semester ".$semesterKode.", Tahun ajaran ".$ta.", Siswa ".$item->first_name." Ibnul Qayyim Islamic School",
-                'campus_id'         => $item->campus_id,
-                'payment_type'      => $paymentType,
+            $cekTagihan = Invoice::where('user_id', $item->user_id)->where('jenis_transaksi', $item->jenis_transaksi)
+                                    ->where('periode', $periode)->count();
+            if($cekTagihan == 0){
+
+                $invoice = Invoice::create([
+                    'user_id'           => $item->user_id,
+                    'jenis_transaksi'   => $item->jenis_transaksi,
+                    'tipe_transaksi'    => 'IN',
+                    'kode_transaksi'    => $item->kode_transaksi,
+                    'nomor_invoice'     => "0".$item->id_jenis_transakis.$item->campus_id."00".$countInvoice."/INV/IQIS".$campusName."/".$bulan."/".date('Y'),
+                    'invoice_date'      => date('Y-m-d'),
+                    'amount'            => $item->total_price,
+                    'invoice_status'    => $status,
+                    'description'       => "Tagihan ".$item->jenis_transaksi." Semester ".$semesterKode.", Tahun ajaran ".$ta.", Siswa ".$item->first_name." Ibnul Qayyim Islamic School",
+                    'campus_id'         => $item->campus_id,
+                    'payment_type'      => $paymentType,
+                    'periode'           => $periode,
+                ]);
+
+                /**insert data diskon per invoice */
+                $userDiscount = PaymentDiscountUser::where('user_id', $item->user_id)->get();
+                foreach($userDiscount as $item){
+                    PaymentDiscountInvoice::create([
+                        'invoice_id'    => $invoice->nomor_invoice,
+                        'discount_id'   => $item->discount_id,
+                    ]);
+                }
+            }
+            //Endif
+        }
+        //Endforeach
+
+        $cekStatusSend = Invoice::whereDate('created_at', date('Y-m-d'))->where('campus_id', $payment->campus_id)->get();
+        if($cekStatusSend->count() == 0){
+
+            foreach($cekStatusSend->groupBy('campus_id') as $campus => $item){
+
+                //Get Token
+                $token = MiddtransToken::where('campus_id', $campus)->first();
+
+                $telegramToken = env('TELEGRAM_TOKEN');
+                $telegramChatId = $token->chat_id_telegram;
+                $periodeText = $periode; // Anda harus memiliki ini terdefinisi sebelumnya
+                $telegramMessage = "Notifikasi Sistem! \nTerdapat ".$cekStatusSend->count()." tagihan, Periode ".$periodeText." Berhasil dikirim!";
+
+                $client = new Client();
+                $url = "https://api.telegram.org/{$telegramToken}/sendMessage";
+
+                try {
+                    $response = $client->post($url, [
+                        'form_params'   => [
+                            'chat_id'   => $telegramChatId,
+                            'text'      => $telegramMessage,
+                        ],
+                    ]);
+
+                    $responseBody = json_decode($response->getBody(), true);
+
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Tagihan dikirim!',
+                        'data' => $responseBody,
+                    ], 200);
+
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'status' => 500,
+                        'message' => 'Gagal mengirim notifikasi',
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
+            }//endforach
+
+        }else{
+            return response()->json([
+                'status'    => 200,
+                'message'   => 'Success'
             ]);
 
-            /**insert data diskon per invoice */
-            $userDiscount = PaymentDiscountUser::where('user_id', $item->user_id)->get();
-            foreach($userDiscount as $item){
-                PaymentDiscountInvoice::create([
-                    'invoice_id'    => $invoice->nomor_invoice,
-                    'discount_id'   => $item->discount_id,
-                ]);
-            }
- 
-        }
+        }//cek status
 
-        return response()->json([
-            'status'    => 200,
-            'message'   => 'Tagihan dikirim!'
-        ], 200);
+    }
 
+    public function paymentHistory(): View
+    {
+        $data = [
+            'title'     => 'History Pembayaran',
+        ];
+        return view('payment.payment-history', $data);
     }
 }

@@ -24,6 +24,7 @@ class Invoice extends Model
         'amount',
         'invoice_status', //[PAID, PENDING, UNPAID, CANCEL]
         'payment_type',
+        'periode',
         'description',
         'campus_id',
     ];

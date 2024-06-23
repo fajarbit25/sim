@@ -1,35 +1,34 @@
 <div class="col-sm-12">
     <div class="row">
         <div class="col-sm-12">
-            <div class="card">
+             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">
                         <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                        Tagihan belum dikonfirmasi
-                    </h3>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-funnel"></i> Filter</span>
+                        Riwayat Pembayaran Siswa
+                     </h3>
+                     <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        <input type="date" class="form-control" wire:model="start">
+                        <input type="date" class="form-control" wire:model="end">
+                    </div>
+                     <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-funnel"></i></span>
                         <select aria-label="Filter" class="form-control" wire:model="jenis">
-                            <option value="All">-Pilih Jenis Tagihan</option>
                             <option value="All">Semua</option>
                             @foreach ($dataJenis as $item)
                                 <option value="{{$item->jenis}}">{{$item->jenis}}</option>
                             @endforeach
                         </select>
                         <select aria-label="Filter" class="form-control" wire:model="kelas">
-                            <option value="All">-Pilih Jenis Kelas</option>
                             <option value="All">Semua</option>
                             @foreach ($dataKelas->groupBy('tingkat') as $tingkat => $item)
                                 <option value="{{$tingkat}}">Kelas {{$tingkat}}</option>
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-primary" wire:click="getDataTagihan()">
-                            <i class="bi bi-search"></i> 
-                            Cari
-                        </button>
                     </div>
                 </div>
-            </div>
+             </div>
         </div>
         <div class="col-sm-12">
             <div class="card">
@@ -47,7 +46,7 @@
                                     <th>Kelas</th>
                                     <th>Jenis</th>
                                     <th>Jumlah</th>
-                                    <th>Tanggal Invoice</th>
+                                    <th>Metode</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,7 +65,7 @@
                                     <td> {{$items->tingkat.' '.$items->kode_kelas}} </td>
                                     <td> {{$items->jenis_transaksi}} </td>
                                     <td> Rp.{{number_format($items->amount)}},- </td>
-                                    <td>{{$items->invoice_date}}</td>
+                                    <td>{{$items->payment_type}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -81,7 +80,6 @@
             </div>
         </div>
     </div>
-
 
     @if($detailTransaksi)
     <!-- Modal -->
@@ -138,14 +136,13 @@
                         <th>Status</th>
                         <td>: {{$detailTransaksi->invoice_status}}</td>
                     </tr>
+                    <tr>
+                        <th style="white-space: nowrap;">Metode Pembayaran</th>
+                        <td>: {{$detailTransaksi->payment_type}}</td>
+                    </tr>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" wire:click="confirmDelete('{{$detailTransaksi->idiv}}')">Hapus Invoice</button>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" wire:click="confirmPaid('{{$detailTransaksi->idiv}}')">
-                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                    Tandai Lunas
-                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -153,65 +150,6 @@
     </div>
     @endif
 
-
-    <!-- Modal -->
-    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm!</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <div class="row">
-                <div class="col-8">
-                    <span class="fw-bold fst-italic">Yakin ingin menghapus?</span>
-                </div>
-                <div class="col-4">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-danger" wire:click="deteleInvoice()">
-                        <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                        Hapus
-                    </button>
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modalPaid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm!</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <div class="row">
-                <div class="col-12">
-                    <span class="fw-bold fst-italic">
-                        Informasi, 
-                    </span>
-                    <span class="fw-bold fst-italic">
-                        Pembayaran akan dianggap lunas & Saldo akan bertambah.
-                    </span>
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-success" wire:click="markPaid()">
-                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                    Lanjutkan
-                </button>
-            </div>
-        </div>
-        </div>
-    </div>
 
     @push('scripts')
     <script>
@@ -221,19 +159,6 @@
                 $('#modalDetailTransaksi').modal('show')
             }); //membuka modal
 
-            Livewire.on('modalDelete', function () {
-                $('#modalDelete').modal('show')
-            }); //membuka modal
-
-            Livewire.on('modalPaid', function () {
-                $('#modalPaid').modal('show')
-            }); //membuka modal
-
-            Livewire.on('closeModal', function () {
-                $('#modalAdd').modal('hide')
-                $('#modalDelete').modal('hide')
-                $('#modalPaid').modal('hide')
-            }); //menutup modal
 
             Livewire.on('showAlert', function (data) {
                 if(data.type === 200){

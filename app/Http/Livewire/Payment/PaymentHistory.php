@@ -3,43 +3,67 @@
 namespace App\Http\Livewire\Payment;
 
 use App\Models\Invoice;
-use App\Models\Mutation;
 use App\Models\PaymentJenisTagihan;
 use App\Models\Room;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class PaymentUnpaid extends Component
+class PaymentHistory extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $loading = false;
-    public $notif;
-    public $jenis;
-    public $kelas;
-    public $idDelete;
-    public $idPaid;
+    public $loading;
+    public $jenis = 'All';
+    public $kelas = 'All';
+    public $start;
+    public $end;
 
+    public $dataJenis;
+    public $dataKelas;
     protected $dataTagihan;
     public $detailTransaksi;
-    public $dataKelas;
-    public $dataJenis;
 
     public function loadAll()
     {
-        $this->getDataTagihan();
         $this->getDataJenis();
         $this->getDataKelas();
+        $this->getDataTagihan();
+    }
+
+    public function mount()
+    {
+        $thisMonth = date('Y-m');
+        $startDate = $thisMonth . "-01";
+        
+        // Menggunakan DateTime untuk mendapatkan tanggal akhir bulan ini
+        $date = new \DateTime($startDate);
+        $date->modify('last day of this month');
+        $endDate = $date->format('Y-m-d');
+        
+        $this->start = $startDate;
+        $this->end = $endDate;
+
     }
 
     public function render()
     {
         $this->loadAll();
-
-        return view('livewire.payment.payment-unpaid', [
+        return view('livewire.payment.payment-history', [
             'dataTagihan'   => $this->dataTagihan,
         ]);
+    }
+
+    public function getDataJenis()
+    {
+        $jenis = PaymentJenisTagihan::where('campus_id', Auth::user()->campus_id)->get();
+        $this->dataJenis = $jenis;
+    }
+
+    public function getDataKelas()
+    {
+        $kelas = Room::where('campus_id', Auth::user()->campus_id)->get();
+        $this->dataKelas = $kelas;
     }
 
     public function getDataTagihan()
@@ -48,43 +72,48 @@ class PaymentUnpaid extends Component
             $data = Invoice::join('users', 'users.id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
-                    ->where('invoice_status', '!=', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode',
+                    ->where('invoice_status', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->whereBetween('invoices.updated_at', [$this->start, $this->end])
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'rooms.tingkat', 'rooms.kode_kelas')
                     ->orderBy('first_name', 'ASC')->paginate(10);
         }elseif($this->jenis == 'All' && $this->kelas != 'All'){
             $data = Invoice::join('users', 'users.id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
-                    ->where('invoice_status', '!=', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->where('invoice_status', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
                     ->where('rooms.tingkat', $this->kelas) //kondisi filter
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode',
+                    ->whereBetween('invoices.updated_at', [$this->start, $this->end])
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'rooms.tingkat', 'rooms.kode_kelas')
                     ->orderBy('first_name', 'ASC')->paginate(10);
         }elseif($this->jenis != 'All' && $this->kelas == 'All'){
             $data = Invoice::join('users', 'users.id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
-                    ->where('invoice_status', '!=', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->where('invoice_status', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
                     ->where('jenis_transaksi', $this->jenis) //kondisi filter
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode',
+                    ->whereBetween('invoices.updated_at', [$this->start, $this->end])
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'rooms.tingkat', 'rooms.kode_kelas')
                     ->orderBy('first_name', 'ASC')->paginate(10);
         }elseif($this->jenis != 'All' && $this->kelas != 'All'){
             $data = Invoice::join('users', 'users.id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
-                    ->where('invoice_status', '!=', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
-                    ->where('rooms.tingkat', $this->kelas)->where('jenis_transaksi', $this->jenis)
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode',
+                    ->where('invoice_status', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->where('rooms.tingkat', $this->kelas)->where('jenis_transaksi', $this->jenis) //kondisi filter
+                    ->whereBetween('invoices.updated_at', [$this->start, $this->end])
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'rooms.tingkat', 'rooms.kode_kelas')
                     ->orderBy('first_name', 'ASC')->paginate(10);
         }else{
             $data = Invoice::join('users', 'users.id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
-                    ->where('invoice_status', '!=', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode',
+                    ->where('invoice_status', 'Paid')->where('invoices.campus_id', Auth::user()->campus_id)
+                    ->whereBetween('invoices.updated_at', [$this->start, $this->end])
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'periode', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'rooms.tingkat', 'rooms.kode_kelas')
                     ->orderBy('first_name', 'ASC')->paginate(10);
         }
@@ -106,82 +135,9 @@ class PaymentUnpaid extends Component
                     ->join('registers', 'registers.user_id', '=', 'invoices.user_id')
                     ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->where('kode_transaksi', $id)
-                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'rooms.tingkat', 'rooms.kode_kelas', 'description', 
+                    ->select('first_name', 'nis', 'nomor_invoice', 'invoice_date', 'rooms.tingkat', 'rooms.kode_kelas', 'description', 'payment_type',
                     'amount', 'invoices.invoice_status', 'jenis_transaksi', 'kode_transaksi', 'users.email', 'users.phone', 'invoices.idiv')
                     ->first();
         $this->detailTransaksi = $data;
-    }
-
-    public function confirmPaid($id)
-    {
-        $this->idPaid = $id;
-        $this->emit('modalPaid');
-    }
-
-    public function markPaid()
-    {
-        $load = Invoice::findOrFail($this->idPaid);
-        $load->update([
-            'invoice_status'    => 'Paid',
-            'payment_type'      => 'sims-iqis',
-        ]);
-
-        $saldo = Mutation::where('campus_id', Auth::user()->campus_id)->orderBy('idmt', 'DESC')->first();
-        /**Insert data mutasi */
-        $mutasi = [
-            'inv_id'        => $load->nomor_invoice,
-            'nominal'       => $load->amount,
-            'saldo_awal'    => $saldo->saldo_akhir,
-            'saldo_akhir'   => $saldo->saldo_akhir+$load->amount,
-            'campus_id'     => Auth::user()->campus_id,
-            'trx_by'        => Auth::user()->id,
-        ];
-        Mutation::create($mutasi);
-        $this->emit('closeModal');
-        $this->notif = [
-            'status'    => 200,
-            'message'   => 'Tagihan Lunas!',
-        ];
-        $this->showAlert();
-    }
-
-    public function getDataKelas()
-    {
-        $data = Room::where('campus_id', Auth::user()->campus_id)->get();
-        $this->dataKelas = $data;
-    }
-
-    public function getDataJenis()
-    {
-        $data = PaymentJenisTagihan::where('campus_id', Auth::user()->campus_id)->get();
-        $this->dataJenis = $data;
-    }
-
-    public function confirmDelete($id)
-    {
-        $this->idDelete = $id;
-        $this->emit('modalDelete');
-    }
-
-    public function deteleInvoice()
-    {
-        $invoice = Invoice::findOrFail($this->idDelete);
-        $invoice->delete();
-        $this->notif = [
-            'status'    => 500,
-            'message'   => 'Data Dihapus!',
-        ];
-        $this->idDelete = "";
-        $this->emit('closeModal');
-        $this->showAlert();
-    }
-
-    public function showAlert()
-    {
-        // Panggil JavaScript untuk menampilkan popup SweatAlert
-        $this->emit('showAlert', [
-            'type' => $this->notif['status'],
-            'message' => $this->notif['message'],
-        ]);
     }
 }

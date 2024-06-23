@@ -72,6 +72,7 @@ class PaymentMaster extends Component
 
     public function createInvoice()
     {
+        $this->due_date = "0000-00-00";
         $this->validate();
         $dataSiswa = User::join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                             ->where('users.level', '4')->where('users.campus_id', Auth::user()->campus_id)
@@ -106,7 +107,7 @@ class PaymentMaster extends Component
     public function setAutoSend()
     {
         $this->validate([
-            'due_date'  => 'required',
+            'due_date'  => 'required|integer|min:1|max:31',
         ]);
         Payment::join('users', 'users.id', '=', 'payments.user_id')
                 ->leftJoin('rooms', 'rooms.idkelas', '=', 'users.kelas')
@@ -118,7 +119,7 @@ class PaymentMaster extends Component
                 ]);
         $this->notif = [
             'status'    => 200,
-            'message'   => 'Invoice akan dikirim pada tanggal '.$this->due_date,
+            'message'   => 'Invoice akan dikirim pada tanggal '.$this->due_date. ' setiap Bulan',
         ];
         $this->closeModal();
         $this->showAlert();
@@ -305,6 +306,7 @@ class PaymentMaster extends Component
         foreach($payment as $item){
             Payment::where('id', $item->kode_transaksi)->update(['due_date', date('Y-m-d')]);
             $countInvoice = Invoice::where('campus_id', Auth::user()->campus_id)->count();
+
             if(date('m') == '01'){
                 $bulan = 'I';
             }elseif(date('m') == '02'){
@@ -389,6 +391,28 @@ class PaymentMaster extends Component
     public function createAutoSend()
     {
         $this->emit('modalAutoSend');
+    }
+
+    public function confirmDeleteSelected()
+    {
+        $this->emit('confirmDelete');
+    }
+
+    public function deleteSelected()
+    {
+        Payment::join('users', 'users.id', '=', 'payments.user_id')
+                ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
+                ->where('rooms.tingkat', $this->kelas)
+                ->where('jenis', $this->jenis)
+                ->where('check_list', '1')
+                ->delete();
+        
+        $this->emit('closeModal');
+        $this->notif = [
+            'status'    => 500,
+            'message'   => 'Data Dihapus!',
+        ];
+        $this->showAlert();
     }
 
     public function closeModal()

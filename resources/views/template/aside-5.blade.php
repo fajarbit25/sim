@@ -14,18 +14,13 @@
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-cash-coin">
-            </i>Keuangan &nbsp; <i id="finance-notif-up"></i>
+            </i>Catatan Keuangan &nbsp; <i id="finance-notif-up"></i>
           </span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="/keuangan">
               <i class="bi bi-circle"></i><span>Keuangan</span>
-            </a>
-          </li>
-          <li>
-            <a href="/finance/payment-unpaid">
-              <i class="bi bi-circle"></i><span>Unpaid</span>
             </a>
           </li>
           <li>
@@ -38,11 +33,7 @@
               <i class="bi bi-circle"></i><span>Mutasi</span>
             </a>
           </li>
-          <li>
-            <a href="/finance/payment-master">
-              <i class="bi bi-circle"></i><span>Data Siswa</span>
-            </a>
-          </li>
+          
           <li>
             <a href="/finance/confirm">
               <i class="bi bi-circle"></i>
@@ -53,9 +44,32 @@
       </li><!-- End Icons Nav -->
 
       <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#invoice-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-receipt"></i> Tagihan &nbsp; <i id="finance-notif-up"></i>
+          </span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="invoice-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="/finance/payment-master">
+              <i class="bi bi-circle"></i><span>Database Siswa</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/payment-unpaid">
+              <i class="bi bi-circle"></i><span>Belum Terbayar</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/payment-history">
+              <i class="bi bi-circle"></i><span>Riwayat</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Icons Nav -->
+
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-cash-coin">
-            </i>Setting &nbsp; <i id="finance-notif-up"></i>
+          <i class="bi bi-gear-wide-connected"></i> Setting &nbsp; <i id="finance-notif-up"></i>
           </span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">

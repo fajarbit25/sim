@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('token');
             $table->string('keterangan');
             $table->string('user_id');
+            $table->string('chat_id_telegram')->nullable();
             $table->timestamps();
         });
     }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('amount');
             $table->string('invoice_status');
             $table->string('payment_type')->nullable();
+            $table->string('periode');
             $table->string('description');
             $table->string('campus_id');
             $table->timestamps();

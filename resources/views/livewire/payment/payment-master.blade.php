@@ -124,8 +124,13 @@
                         @if($dataTagihan)
                         <div class="col-sm-12 text-end">
                             <button type="button" class="btn btn-info btn-sm" wire:click="checkAll()"><i class="bi bi-check2-square"></i> Checklist Semua</button>
-                            <button type="button" class="btn btn-primary btn-sm" wire:click="createAutoSend()"><i class="bi bi-clock-history"></i> Atur Tanggal Pengiriman </button>
-                            <button type="button" class="btn btn-success btn-sm" wire:click="kirimTagihan()"><i class="bi bi-send"></i> Kirim Manual</button>
+                            @php
+                                $countCheck = $dataTagihan->where('check_list', '1')->count();
+                            @endphp
+                            @if($countCheck != 0)
+                            <button type="button" class="btn btn-danger btn-sm" wire:click="confirmDeleteSelected()"><i class="bi bi-trash"></i> Hapus ({{$countCheck}})</button>
+                            <button type="button" class="btn btn-primary btn-sm" wire:click="createAutoSend()"><i class="bi bi-clock-history"></i> Atur Tanggal Pengiriman ({{$countCheck}})</button>
+                            @endif
                         </div>
                         @endif
                     </div>
@@ -149,7 +154,7 @@
                         <select class="form-select" id="inputGroupSelect04" wire:model="discount">
                           <option value="">Pilih Jenis Potongan...</option>
                           @foreach ($paymentDiscount as $item)    
-                          <option value="{{$item->id}}">{{$item->jenis_discount}}</option>
+                          <option value="{{$item->id}}">{{$item->jenis_discount}} | {{number_format($item->total_discount)}}</option>
                           @endforeach
                         </select>
                         <button class="btn btn-outline-secondary" type="button" wire:click="addDiscount()">
@@ -264,9 +269,12 @@
                 <div class="col-sm-12">
                     <div class="mb-3">
                         <label for="tanggalBroadcast" class="form-label">Tanggal Penagihan</label>
-                        <input type="date" class="form-control @error('due_date') is-invalid @enderror" 
+                        <input type="number" class="form-control @error('due_date') is-invalid @enderror" 
                         id="tanggalBroadcast" aria-describedby="tanggalBroadcastHelp" wire:model="due_date">
-                        <div id="tanggalBroadcastHelp" class="form-text">Invoice akan dikirimkan sesuai tanggal yang ditentukan.</div>
+                        <div id="tanggalBroadcastHelp" class="form-text">
+                            Rentang Pengisian (1-31). <br/>
+                            Invoice akan dikirimkan sesuai tanggal yang ditentukan.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -276,6 +284,34 @@
                     <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
                     Simpan
                 </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm!</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+                <div class="col-8">
+                    <span class="fw-bold fst-italic">Yakin ingin menghapus?</span>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" wire:click="deleteSelected()">
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
+                        Hapus
+                    </button>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
         </div>
@@ -291,6 +327,9 @@
             Livewire.on('modalJenis', function () {
                 $('#modalJenis').modal('show')
             }); //membuka modal
+            Livewire.on('confirmDelete', function () {
+                $('#confirmDelete').modal('show')
+            }); //membuka modal
 
             Livewire.on('modalAutoSend', function () {
                 $('#modalAutoSend').modal('show')
@@ -298,6 +337,7 @@
 
             Livewire.on('closeModal', function () {
                 $('#modalAutoSend').modal('hide')
+                $('#confirmDelete').modal('hide')
             }); //membuka modal
 
             Livewire.on('showAlert', function (data) {

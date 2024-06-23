@@ -498,5 +498,6 @@ Route::controller(PaymentControlller::class)->group(function () {
     Route::get('/finance/potongan-tagihan', 'potonganTagihan')->middleware('auth', 'finance')->name('finance.potonganTagihan');
     Route::get('/finance/payment-master', 'paymentMaster')->middleware('auth', 'finance')->name('finance.paymentMaster');
     Route::get('/finance/payment-unpaid', 'paymentUnpaid')->middleware('auth', 'finance')->name('finance.paymentUnpaid');
+    Route::get('/finance/payment-history', 'paymentHistory')->middleware('auth', 'finance')->name('finance.paymentHistory');
     Route::get('/finance/send-notifikasi-wa', 'sendNotifikasiWA')->middleware('auth')->name('finance.sendNotifikasiWA');
 });

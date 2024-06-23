@@ -12,5 +12,6 @@ class Apitoken extends Model
         'token',
         'keterangan',
         'user_id',
+        'chat_id_telegram',
     ];
 }
