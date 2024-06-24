@@ -57,6 +57,7 @@
                   </div>
                 </div>
               </div>
+            </div>
               @endif
 
             @if($ppdb->status == 1)
@@ -139,6 +140,10 @@
             @endif
 
             @if($user->kelas != 0)
+
+            @if(Auth::user()->campus_id == 2)
+              @livewire('tk.report.today-activity')
+            @endif
 
             {{-- Line Chart --}}
 

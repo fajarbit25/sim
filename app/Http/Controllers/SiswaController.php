@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Imports\ImportSiswa;
+use App\Models\Ppdb;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
@@ -208,11 +209,20 @@ class SiswaController extends Controller
             'ipa'           => NULL,
         ];
         Register::create($register);
-
-
-        
+    
         Alamat::create($alamat);
         Student::create($dataStudent);
+
+        $dataPpbd = [
+            'user_id'           => $user->id,
+            'nomor_pendaftaran' => time(),
+            'lokasi_pendaftaran'=> 'Sekolah',
+            'nomor_formulir'    => '-',
+            'jalur'             => 'Zonasi',
+            'jenjang'           => '-',
+            'status'            => 200,
+        ];
+        Ppdb::create($dataPpbd);
 
         return redirect()->intended('/siswa')->with(['success' => 'Data berhasil disimpan']);
     }
