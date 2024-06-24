@@ -63,4 +63,12 @@ class RaportController extends Controller
         return view('raport.km.print', $data);
         //return response()->json($data);
     }
+
+    public function raportTahsin()
+    {
+        $data = [
+            'title'     => 'Penilaian Tahsin',
+        ];
+        return view('raport.km.tahsin', $data);
+    }
 }

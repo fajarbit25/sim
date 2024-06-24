@@ -74,6 +74,12 @@
             </a>
           </li>
           <li>
+            <li>
+              <a href="{{url('/raport/km/raport-tahsin')}}">
+                <i class="bi bi-circle"></i><span>Raport Tahsin</span>
+              </a>
+            </li>
+            <li>
             @if(Auth::user()->campus_id == 3)
             <a href="{{url('/raport/sd/penilaian')}}">
               <i class="bi bi-circle"></i><span>Form Penilaian</span>
