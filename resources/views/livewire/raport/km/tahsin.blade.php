@@ -56,9 +56,9 @@
                             @if($dataNilai)
                             @if($dataNilai->count() == 0)
                             <button type="button" class="btn btn-primary btn-sm" wire:click="modalKd()"><i class="bi bi-clipboard-data-fill"></i> Kompetensi Dasar</button>
-                            <button type="button" class="btn btn-success btn-sm" wire:click="createForm()"><i class="bi bi-clipboard2-plus-fill"></i> Buat Form Penilaian</button>
                             @endif
                             @endif
+                            <button type="button" class="btn btn-success btn-sm" wire:click="createForm()"><i class="bi bi-clipboard2-plus-fill"></i> Generate Form</button>
                         </div>
                         @endif
                     </div>
@@ -71,6 +71,28 @@
                     <h3 class="card-title">
                         Tabel Penilaian
                     </h3>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            @if(Auth::user()->level == 1)
+                                @if($guruTahsin->count() < 2)
+                                    <a href="javascript:void(0)" class="text-success" wire:click="addGuruTahsin()"> <i class="bi bi-person-plus-fill"></i> </a><br/>
+                                @endif
+                            @endif
+                            @foreach($guruTahsin as $item)
+                            Guru Tahsin-{{$loop->iteration}} : {{$item->first_name}}  <a href="javascript:void(0)" class="text-danger" wire:click="deleteGuruTahsin({{$item->id}})"> <i class="bi bi-x-lg"></i> </a> <br/>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4">
+                            @if($dataNilai)
+                            <label for="tanggalRaportForm">Tanggal Rapor : {{$tanggalRaport}}</label>
+                            <div class="input-group mb-3" id="tanggalRaportForm">
+                                <input type="date" class="form-control" wire:model="tanggalRaportNew">
+                                <button type="button" class="btn btn-outline-secondary" wire:click="updateTanggalRaport()">Update</button>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -85,15 +107,21 @@
                                         @endif
                                     </th>
                                     @endif
-                                    <th rowspan="2" class="text-center">Rata-Rata <br/> (PH)</th>
+                                    <th rowspan="2" class="text-center">Rata-Rata <br/> ({{$jenis}})</th>
                                     <th rowspan="2" class="text-center bg-light">NA</th>
-                                    <th rowspan="2" class="text-center">Cetak</th>
+                                    <th rowspan="2" class="text-center bg-light">Saran Guru</th>
+                                    @if(Auth::user()->level == 1)
+                                    <th rowspan="2" class="text-center bg-light">Cetak</th>
+                                    @endif
 
                                 </tr>
                                 <tr>
                                     @if($dataNilai)
-                                    @foreach($dataNilai->groupBy('kd_id') as $kd_id => $items)
-                                    <th> {{$items->first()->arabic}} </th>
+                                    @php
+                                        $sortedDataNilai = $dataNilai->sortBy('kd_id');
+                                    @endphp
+                                    @foreach($sortedDataNilai->groupBy('kd_id') as $kd_id => $items)
+                                        <th> {{$items->first()->arabic}} </th>
                                     @endforeach
                                     @endif
                                 </tr>
@@ -104,7 +132,11 @@
                                 <tr>
                                     <td> {{$loop->iteration}} </td>
                                     <td> {{$items->first()->first_name}} </td>
-                                    @foreach($items as $item)
+                                    
+                                    @php
+                                        $sortedItems = $items->sortBy('kd_id');
+                                    @endphp
+                                    @foreach($sortedItems as $item)
                                     <td>
                                         <a class="icon" href="javascript:void(0)" data-bs-toggle="dropdown">
                                             {{$item->nilai}}
@@ -126,11 +158,26 @@
                                         @php
                                             $na = $dataNilaiAkhir->where('id', $userid)->avg('nilai');
                                         @endphp
-                                        {{number_format($na)}}
+                                        <span class="@if($na < 60) text-danger @endif">{{number_format($na)}}</span>
+                                        
                                     </th>
-                                    <td class="text-center">
-                                        <a href="" class="text-warning" target="_blank"><i class="bi bi-printer-fill"></i></a>
+
+                                    <td>
+                                        @php
+                                            $dataCatatan = $catatanTahsin->where('user_id', $userid)->first();
+                                        @endphp
+                                        @if($dataCatatan->catatan == "-")
+                                            <a href="javascript:void(0)" class="text-success" wire:click="modalSaran({{$dataCatatan->id}})"> <i class="bi bi-pencil-fill"></i> Buat Saran</a> 
+                                        @else 
+                                            <a href="javascript:void(0)" class="fst-italic" style="font-size: 12px;" wire:click="modalSaran({{$dataCatatan->id}})"> {{substr($dataCatatan->catatan, 0, 50)}}... </a>
+                                        @endif
                                     </td>
+
+                                    @if(Auth::user()->level == 1)
+                                    <td class="text-center bg-light">
+                                        <a href="/raport/km/{{$item->id_nilai}}/tahsin" class="text-warning" target="_blank"><i class="bi bi-printer-fill"></i></a>
+                                    </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                                 @else
@@ -180,6 +227,12 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
+                                    <label for="arabic">KKM <span class="text-danger">*</span> </label>
+                                    <input type="text" class="form-control @error('kkm') is-invalid @enderror" wire:model="kkm">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 text-end">
+                                <div class="form-group">
                                     <br/>
                                     @if($idEditKd == '0')
                                    <button type="button" class="btn btn-primary" wire:click="saveKd">
@@ -225,6 +278,7 @@
                                     <th>Kode</th>
                                     <th>KD - Bahasa</th>
                                     <th>KD - Arabic</th>
+                                    <th>KKM</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -236,6 +290,7 @@
                                     <td> {{$item->kode}} </td>
                                     <td> {{$item->bahasa}} </td>
                                     <td> {{$item->arabic}} </td>
+                                    <td> {{$item->kkm}} </td>
                                     <td>
                                         <a href="javascript:void(0)" class="text-danger" wire:click="confirmDeleteKd({{$item->id}})"> <i class="bi bi-x-lg"></i> </a>
                                         &nbsp;
@@ -257,6 +312,64 @@
     </div>
     @endif
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalGuruTahsin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambahkan Guru Tahsin</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="col-sm-12">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="guruTahsin"><i class="bi bi-person-plus-fill"></i></label>
+                    <select class="form-select @error('idGuruTahsin') is-invalid @enderror" id="guruTahsin" wire:model="idGuruTahsin">
+                      <option value="">Pilih Guru...</option>
+                      @foreach($dataGuru as $item)
+                      <option value="{{$item->id}}"> {{$item->first_name}} </option>
+                      @endforeach
+                    </select>
+                  </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" wire:click="savaGuruTahsin()">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
+                    Tambahkan
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalSaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Saran Guru</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <textarea class="form-control @error('saran') is-invalid @enderror" rows="4" wire:model="saran"></textarea>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" wire:click="updateSaran">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
+                    Simpan Saran
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
         document.addEventListener('livewire:load', function () {
@@ -265,9 +378,20 @@
                 $('#modalKd').modal('show')
             }); //membuka modal
 
+            Livewire.on('modalGuruTahsin', function () {
+                $('#modalGuruTahsin').modal('show')
+            }); //membuka modal
+
+            Livewire.on('modalSaran', function () {
+                $('#modalSaran').modal('show')
+            }); //membuka modal
+
             Livewire.on('closeModal', function () {
                 $('#modalKd').modal('hide')
+                $('#modalGuruTahsin').modal('hide')
+                $('#modalSaran').modal('hide')
             }); //menutup modal
+            
 
             Livewire.on('showAlert', function (data) {
                 if(data.type === 200){

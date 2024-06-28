@@ -109,19 +109,25 @@
               <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
             </a>
           </li>
-          @if(Auth::user()->campus_id > 3)
+          @if(Auth::user()->campus_id == 4 || Auth::user()->campus_id == 5)
           <li>
             <a href="{{url('/raport/kurikulum-merdeka')}}">
               <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
-          @else
+          @endif
+          @if(Auth::user()->campus_id == 3)
           <li>
             <a href="{{url('/raport/sd')}}">
               <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
           @endif
+          <li>
+            <a href="{{url('/raport/km/raport-tahsin-admin')}}">
+              <i class="bi bi-circle"></i><span>Raport Tahsin</span>
+            </a>
+          </li>
 
         </ul>
       </li><!-- End Forms Nav -->

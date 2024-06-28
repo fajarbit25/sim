@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Raport\Km;
 
 use App\Models\Room;
 use App\Models\Semester;
+use App\Models\TahsinCatatan;
+use App\Models\TahsinGuru;
 use App\Models\TahsinKd;
 use App\Models\TahsinNilai;
 use App\Models\User;
@@ -13,13 +15,17 @@ use Livewire\Component;
 class Tahsin extends Component
 {
     public $loading = false;
+    public $notif;
     public $kode;
     public $bahasa;
     public $arabic;
+    public $kkm;
     public $ta;
     public $semester;
     public $jenis;
     public $kelas;
+    public $saran;
+    public $idSaran;
 
     public $dataSemester;
     public $dataKelas;
@@ -29,16 +35,25 @@ class Tahsin extends Component
     public $idEditKd = '0';
     public $idDeleteKd = '0';
     public $nilai;
+    public $idGuruTahsin;
+    public $dataGuru;
+    public $guruTahsin;
+    public $catatanTahsin;
+    public $tanggalRaport;
+    public $tanggalRaportNew;
 
 
     public function loadAll()
     {
         $this->getDataSemester();
+        $this->getGuruTahsin();
         $this->getDataKelas();
+        $this->getDataGuru();
         if($this->ta && $this->semester && $this->jenis && $this->kelas){
             $this->getDataNilai();
             $this->getDataNilaiAkhir();
             $this->getDataKd();
+            $this->getCatatanTahsin();
         }
     }
 
@@ -87,6 +102,7 @@ class Tahsin extends Component
             'kode'          => $this->kode,
             'arabic'        => $this->arabic,
             'bahasa'        => $this->bahasa,
+            'kkm'           => $this->kkm,
         ]);
 
         $this->getDataKd();
@@ -100,7 +116,7 @@ class Tahsin extends Component
         $kd = TahsinKd::where('campus_id', Auth::user()->campus_id)
                     ->where('ta', $this->ta)->where('semester', $this->semester)
                     ->where('tingkat', $kelas->tingkat)
-                    ->select('id', 'kode', 'bahasa', 'arabic')->get();
+                    ->select('id', 'kode', 'bahasa', 'arabic', 'kkm')->get();
         $this->dataKd = $kd;
     }
 
@@ -113,6 +129,7 @@ class Tahsin extends Component
         $this->kode = $kd->kode;
         $this->bahasa = $kd->bahasa;
         $this->arabic = $kd->arabic;
+        $this->kkm = $kd->kkm;
     }
 
     public function confirmDeleteKd($id)
@@ -124,6 +141,7 @@ class Tahsin extends Component
         $this->kode = $kd->kode;
         $this->bahasa = $kd->bahasa;
         $this->arabic = $kd->arabic;
+        $this->kkm = $kd->kkm;
     }
 
     public function destroyKd()
@@ -154,12 +172,14 @@ class Tahsin extends Component
             'kode'      => 'required',
             'bahasa'    => 'required',
             'arabic'    => 'required',
+            'kkm'       => 'required',
         ]);
 
         $data = [
             'kode' => $this->kode,
             'bahasa' => $this->bahasa,
             'arabic' => $this->arabic,
+            'kkm'   => $this->kkm,
         ];
 
         $kd = TahsinKd::findOrFail($this->idEditKd);
@@ -186,17 +206,40 @@ class Tahsin extends Component
                         ->where('ta', $this->ta)->where('semester', $this->semester)
                         ->where('tingkat', $kelas->tingkat)->select('id')->get();
             foreach($kd as $item){
-                TahsinNilai::create([
+
+                //Cek Nilai
+                $cekNilai = TahsinNilai::where('ta', $this->ta)->where('semester', $this->semester)
+                                ->where('kelas', $this->kelas)->where('user_id', $user->id)
+                                ->where('jenis_penilaian', $this->jenis)->where('kd_id', $item->id)
+                                ->count();
+                if($cekNilai == 0){
+                    TahsinNilai::create([
+                        'ta'        => $this->ta,
+                        'semester'  => $this->semester,
+                        'kelas'     => $this->kelas,
+                        'user_id'   => $user->id,
+                        'nilai'     => 0,
+                        'kd_id'     => $item->id,
+                        'jenis_penilaian' => $this->jenis,
+                        'campus_id' => Auth::user()->campus_id, 
+                    ]);
+                }
+            }
+
+            //Cek Catatan
+            $cekCatatan = TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)
+                                ->where('kelas', $this->kelas)->where('user_id', $user->id)->count();
+            if($cekCatatan == 0){
+                TahsinCatatan::create([
                     'ta'        => $this->ta,
                     'semester'  => $this->semester,
                     'kelas'     => $this->kelas,
                     'user_id'   => $user->id,
-                    'nilai'     => 0,
-                    'kd_id'     => $item->id,
-                    'jenis_penilaian' => $this->jenis,
-                    'campus_id' => Auth::user()->campus_id, 
+                    'catatan'   => '-',
+                    'tanggal_rapor' => date('Y-m-d'),
                 ]);
             }
+
         }
 
         $this->getDataNilai();
@@ -212,7 +255,7 @@ class Tahsin extends Component
                     ->where('tahsin_nilais.ta', $this->ta)->where('tahsin_nilais.semester', $this->semester)
                     ->where('tahsin_nilais.kelas', $this->kelas)->select('tahsin_nilais.id')
                     ->where('jenis_penilaian', $this->jenis)
-                    ->select('users.id', 'first_name', 'nis', 'nilai', 'arabic', 'tahsin_nilais.kd_id', 'tahsin_nilais.id as id_nilai')
+                    ->select('users.id', 'first_name', 'nis', 'nilai', 'arabic', 'tahsin_nilais.kd_id', 'tahsin_nilais.id as id_nilai', 'kode')
                     ->get();
         $this->dataNilai = $nilai;
     }
@@ -247,5 +290,112 @@ class Tahsin extends Component
         $this->kode = "";
         $this->bahasa = "";
         $this->arabic = "";
+        $this->kkm = "";
+    }
+
+    public function getDataGuru()
+    {
+        $data = User::where('level', 2)->where('campus_id', Auth::user()->campus_id)
+                    ->select('id', 'first_name')->get();
+        $this->dataGuru = $data;
+    }
+
+    public function savaGuruTahsin()
+    {
+        $this->validate([
+            'idGuruTahsin'      => 'required',
+        ]);
+
+        $cek = TahsinGuru::where('campus_id', Auth::user()->campus_id)->where('user_id', $this->idGuruTahsin)->count();
+
+        if($cek == 0){
+            TahsinGuru::create([
+                'campus_id'     => Auth::user()->campus_id,
+                'user_id'       => $this->idGuruTahsin,
+            ]);
+            $this->emit('closeModal');
+            $this->notif = [
+                'status'    => 200,
+                'message'   => 'Guru ditambahkan!',
+            ];
+        }else{
+            $this->notif = [
+                'status'    => 500,
+                'message'   => 'Guru telah didaftarkan!',
+            ];
+        }
+        
+        $this->showAlert();
+
+    }
+
+    public function addGuruTahsin()
+    {
+        $this->emit('modalGuruTahsin');
+    }
+
+    public function getGuruTahsin()
+    {
+        $guru = TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                        ->where('users.campus_id', Auth::user()->campus_id)
+                        ->select('tahsin_gurus.id', 'first_name')->get();
+        $this->guruTahsin = $guru;
+    }
+
+    public function deleteGuruTahsin($id)
+    {
+        $guru = TahsinGuru::findOrFail($id);
+        $guru->delete();
+    }
+
+    public function getCatatanTahsin()
+    {
+        $data = TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)->where('kelas', $this->kelas)
+                    ->select('user_id', 'catatan', 'id', 'tanggal_rapor')->get();
+        $tanggal = TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)->where('kelas', $this->kelas)
+                    ->select('user_id', 'catatan', 'id', 'tanggal_rapor')->first();
+        $this->catatanTahsin = $data;
+        $this->tanggalRaport = $tanggal->tanggal_rapor ?? '0000-00-00';
+    }
+
+    public function updateTanggalRaport()
+    {
+        TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)
+        ->where('kelas', $this->kelas)
+        ->update([
+            'tanggal_rapor'     => $this->tanggalRaportNew,
+        ]);
+
+        $this->notif = [
+            'status'    => 200,
+            'message'   => 'Tanggal Rapor Diubah menjadi '.$this->tanggalRaportNew,
+        ];
+        $this->showAlert();
+    }
+
+    public function showAlert()
+    {
+        // Panggil JavaScript untuk menampilkan popup SweatAlert
+        $this->emit('showAlert', [
+            'type' => $this->notif['status'],
+            'message' => $this->notif['message'],
+        ]);
+    }
+
+    public function modalSaran($id)
+    {
+        $this->idSaran = $id;
+        $getSaran = TahsinCatatan::findOrFail($this->idSaran);
+        $this->saran = $getSaran->catatan;
+        $this->emit('modalSaran');
+    }
+
+    public function updateSaran()
+    {
+        $saran = TahsinCatatan::findOrFail($this->idSaran);
+        $saran->update([
+            'catatan'   => $this->saran,
+        ]);
+        $this->emit('closeModal');
     }
 }

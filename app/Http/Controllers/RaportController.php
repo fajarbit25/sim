@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Livewire\Raport\Km\Tahsin;
+use App\Models\Campu;
 use App\Models\Room;
 use App\Models\SdNilaiPelajaran;
+use App\Models\TahsinCatatan;
+use App\Models\TahsinGuru;
+use App\Models\TahsinNilai;
 use App\Models\User;
 use App\Models\Wali;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RaportController extends Controller
 {
@@ -70,5 +76,42 @@ class RaportController extends Controller
             'title'     => 'Penilaian Tahsin',
         ];
         return view('raport.km.tahsin', $data);
+    }
+
+    public function raportTahsinAdmin()
+    {
+        $data = [
+            'title'     => 'Penilaian Tahsin',
+        ];
+        return view('raport.km.tahsin-admin', $data);
+    }
+
+    public function raportTahsinPrint($id): View
+    {
+        $load = TahsinNilai::findOrFail($id);
+        $siswa = User::where('id', $load->user_id)->select('first_name')->first();
+        $data = [
+            'title'         => 'Raport Tahsin',
+            'tahsin'        => TahsinNilai::join('tahsin_kds', 'tahsin_kds.id', '=', 'tahsin_nilais.kd_id')
+                                    ->where('tahsin_nilais.ta', $load->ta)->where('tahsin_nilais.semester', $load->semester)
+                                    ->where('tahsin_nilais.kelas', $load->kelas)->where('tahsin_nilais.user_id', $load->user_id)
+                                    ->select('kd_id', 'bahasa', 'nilai', 'kkm', 'arabic')
+                                    ->get(),
+            'catatan'       => TahsinCatatan::where('ta', $load->ta)->where('semester', $load->semester)
+                                    ->where('kelas', $load->kelas)->where('user_id', $load->user_id)
+                                    ->select('catatan')->first(),
+            'semester'      => $load->semester,
+            'ta'            => $load->ta,
+            'siswa'         => $siswa,
+            'kelas'         => Room::findOrFail($load->kelas),
+            'guru1'         => TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                                ->join('kepegawaian_teachers', 'kepegawaian_teachers.user_id', '=', 'users.id')
+                                ->select('first_name', 'niy')->first(),
+            'guru2'         => TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                                ->join('kepegawaian_teachers', 'kepegawaian_teachers.user_id', '=', 'users.id')
+                                ->select('first_name', 'niy')->skip(1)->first(),
+            'kepsek'        => Campu::findOrFail(Auth::user()->campus_id),
+        ];
+        return view('raport.km.tahsin-print', $data);
     }
 }

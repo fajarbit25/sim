@@ -13,16 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tahsin_kds', function (Blueprint $table) {
+        Schema::create('tahsin_gurus', function (Blueprint $table) {
             $table->id();
             $table->string('campus_id');
-            $table->string('ta');
-            $table->string('semester');
-            $table->string('tingkat');
-            $table->string('kode');
-            $table->string('arabic');
-            $table->string('bahasa');
-            $table->integer('kkm');
+            $table->string('user_id');
             $table->timestamps();
         });
     }
@@ -34,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tahsin_kds');
+        Schema::dropIfExists('tahsin_gurus');
     }
 };

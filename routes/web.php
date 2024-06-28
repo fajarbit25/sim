@@ -491,6 +491,8 @@ Route::controller(RaportController::class)->group(function(){
     Route::get('/raport/kurikulum-merdeka', 'index')->middleware('auth', 'smpsmkadmin')->name('raportKm.index');
     Route::get('/raport/kurikulum-merdeka/{id}/print', 'printRaport')->middleware('auth', 'smpsmkadmin')->name('raportKm.printRaport');
     Route::get('/raport/km/raport-tahsin', 'raportTahsin')->middleware('auth', 'allguru')->name('raportKm.raportTahsin');
+    Route::get('/raport/km/raport-tahsin-admin', 'raportTahsinAdmin')->middleware('auth', 'admin')->name('raportKm.raportTahsinAdmin');
+    Route::get('/raport/km/{id}/tahsin', 'raportTahsinPrint')->middleware('auth', 'admin')->name('raportKm.raportTahsinPrint');
 });
 
 Route::controller(PaymentControlller::class)->group(function () {
