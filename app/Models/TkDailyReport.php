@@ -11,8 +11,17 @@ class TkDailyReport extends Model
     protected $fillable = [
         'foto',
         'tanggal',
-        'keterangan',
-        'tab_submenu',
+        'topik',
+        'subtopik',
+        'menghafal',
+        'menulis',
+        'murojaah',
+        'sentra',
+        'subsentra',
+       'bahasa',
+        'inggris',
+        'arab',
         'updated_by',
+        'kelas',
     ];
 }

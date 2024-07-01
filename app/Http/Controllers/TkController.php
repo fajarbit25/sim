@@ -30,13 +30,6 @@ class TkController extends Controller
     {
         $data = [
             'title'         => 'Daily Report',
-            'countFoto'     => TkDailyReport::where('tanggal', date('Y-m-d'))
-                                            ->where('foto', '!=', '0')->count(),
-            'dailyReport'   => TkDailyReport::where('tanggal', date('Y-m-d'))
-                                            ->where('foto', '!=', '0')->first(),
-            'riwayat'       => TkDailyReport::where('tanggal', '!=', date('Y-m-d'))
-                                            ->where('foto', '!=', '0')
-                                            ->orderBy('id', 'DESC')->limit(20)->get(),
         ];
         return view('tk.daily-report', $data);
     }

@@ -139,7 +139,7 @@
         <ul id="admin-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{{url('/campus')}}">
-              <i class="bi bi-circle"></i><span>Data Kampus</span>
+              <i class="bi bi-circle"></i><span>Satuan Pendidikan</span>
             </a>
           </li>
           <li>

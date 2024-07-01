@@ -6,6 +6,7 @@ use App\Models\BulanKaldik;
 use App\Models\Campu;
 use App\Models\Score;
 use App\Models\Mapel;
+use App\Models\Modulp5;
 use App\Models\Prosem;
 use App\Models\Prota;
 use App\Models\Room;
@@ -775,10 +776,19 @@ class ScoreController extends Controller
         return view('nilai.pb.prosem', $data);
     }
 
+    public function pbP5($campus, $ta): View
+    {
+        $data = [
+            'p5'       => Modulp5::where('campus_id', $campus)->where('ta', $ta)->first(),
+            'countP5'  => Modulp5::where('campus_id', $campus)->where('ta', $ta)->count(),
+        ];
+        return view('nilai.pb.p5', $data);
+    }
+
     public function pbUpload(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file'          => 'required|file|mimes:png,jpg,jpeg,svg|max:500',
+            'file'          => 'required|file|mimes:pdf|max:5000',
             'campus_id'     => 'required',
             'ta'            => 'required',
         ]);
@@ -816,6 +826,8 @@ class ScoreController extends Controller
                 Prota::create($data);
             }elseif($table == 'Prosem'){
                 Prosem::create($data);
+            }elseif($table == 'Modulp5'){
+                Modulp5::create($data);
             }
 
             return response()->json([
@@ -848,6 +860,9 @@ class ScoreController extends Controller
         }elseif($request->table == 'Silabus'){
             $silabus = Silabus::findOrFail($id);
             $silabus->delete();
+        }elseif($request->table == 'p5'){
+            $p5 = Modulp5::findOrFail($id);
+            $p5->delete();
         }
 
         return response()->json([

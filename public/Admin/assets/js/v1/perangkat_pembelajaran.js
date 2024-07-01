@@ -27,16 +27,26 @@ function loadProsem()
     $("#v-pills-prosem").load(url)
 }
 
+function loadP5()
+{
+    var ta = $("#tahunAjaran").val()
+    var campus = $("#campus").val()
+    var url = "/pb/" + campus + "/" + ta + "/p5";
+    $("#v-pills-p5").load(url)
+}
+
 $("#tahunAjaran").change(function(){
     loadSilabus()
     loadProta()
     loadProsem()
+    loadP5();
 });
 
 $("#campus").change(function(){
     loadSilabus()
     loadProta()
     loadProsem()
+    loadP5()
 });
 
 
@@ -71,6 +81,7 @@ function uploadSilabus()
             loadSilabus()
             loadProsem()
             loadProta()
+            loadP5()
             /**Alert */
             Swal.fire({
                 icon: 'success',
@@ -147,6 +158,7 @@ function uploadProta()
             loadSilabus()
             loadProsem()
             loadProta()
+            loadP5()
             /**Alert */
             Swal.fire({
                 icon: 'success',
@@ -223,6 +235,7 @@ function uploadProsem()
             loadSilabus()
             loadProsem()
             loadProta()
+            loadP5()
             /**Alert */
             Swal.fire({
                 icon: 'success',
@@ -255,6 +268,86 @@ function uploadProsem()
             } else {
                 $("#inputGroupFileAddonProsem").attr('disabled', false)
                 $("#inputGroupFileAddonProsem").html('<i class="bi bi-upload"></i> Upload')
+
+                // Tanggapan kesalahan lainnya
+                console.error(xhr.responseText);
+                /**Alert */
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Oops...',
+                    text: 'Upload Gagal,',
+                });
+
+            }
+        }
+    });
+
+}
+
+function uploadP5()
+{
+    $("#inputGroupFileAddonP5").attr('disabled', true)
+    $("#inputGroupFileAddonP5").html('<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Loading...')
+
+    var campus_id = $("#campus").val()
+    var fileInput = document.getElementById('inputGroupFileP5');
+    var file = fileInput.files[0];
+    var ta = $("#tahunAjaran").val();
+    var table = 'Modulp5';
+    var url ="/pb/upload";
+
+    var formData = new FormData();
+    formData.append('campus_id', campus_id);
+    formData.append('file', file);
+    formData.append('ta', ta);
+    formData.append('table', table);
+
+    $.ajax({
+        url:url,
+        type:'POST',
+        cache:false,
+        processData:false,
+        contentType:false,
+        data:formData,
+        success:function(response){
+            $("#inputGroupFileAddonP5").attr('disabled', false)
+            $("#inputGroupFileAddonP5").html('<i class="bi bi-upload"></i> Upload')
+            loadSilabus()
+            loadProsem()
+            loadProta()
+            loadP5()
+            /**Alert */
+            Swal.fire({
+                icon: 'success',
+                title: 'Congrats...',
+                text: response.message,
+            });
+        },
+        error:function(xhr, status, error){
+            $("#inputGroupFileAddonP5").attr('disabled', false)
+            $("#inputGroupFileAddonP5").html('<i class="bi bi-upload"></i> Upload')
+
+            // Tanggapan kesalahan dari server
+            if (xhr.status === 422) {
+                // Tanggapan status 422 (Unprocessable Entity)
+                // Menampilkan pesan kesalahan validasi
+                var errors = xhr.responseJSON.errors;
+                var errorMessages = "";
+                $.each(errors, function(key, value) {
+                    errorMessages += value;
+
+                });
+
+                /**Alert */
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Oops...',
+                    text: errorMessages,
+                });
+                
+            } else {
+                $("#inputGroupFileAddonP5").attr('disabled', false)
+                $("#inputGroupFileAddonP5").html('<i class="bi bi-upload"></i> Upload')
 
                 // Tanggapan kesalahan lainnya
                 console.error(xhr.responseText);

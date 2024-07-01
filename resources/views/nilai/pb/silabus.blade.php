@@ -11,7 +11,7 @@
         </div>
         @else 
         <div class="col-sm-12">
-            <img src="{{asset('storage/pb/'.$silabus->file)}}" alt="Img..." style="width: 100%;" />
+            <object data="{{asset('storage/pb/'.$silabus->file)}}" width="800" height="800"></object>
         </div>
         <div class="col-sm-12 my-3 text-end">
             <button type="button" class="btn btn-danger" onclick="confirmDeletePb('{{$silabus->id}}', 'Silabus')">

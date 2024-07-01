@@ -342,6 +342,7 @@ Route::controller(ScoreController::class)->group(function(){
     Route::get('/pb/{campus}/{ta}/silabus', 'pbSilabus')->middleware('auth')->name('pp.pbSilabus');
     Route::get('/pb/{campus}/{ta}/prota', 'pbProta')->middleware('auth')->name('pp.pbProta');
     Route::get('/pb/{campus}/{ta}/prosem', 'pbProsem')->middleware('auth')->name('pp.pbProsem');
+    Route::get('/pb/{campus}/{ta}/p5', 'pbP5')->middleware('auth')->name('pp.pbP5');
     Route::post('/pb/upload', 'pbUpload')->middleware('auth')->name('pp.pbUpload');
     Route::post('/pb/delete', 'pbDelete')->middleware('auth')->name('pp.pbDelete');
 

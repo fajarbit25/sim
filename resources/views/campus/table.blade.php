@@ -22,7 +22,12 @@
         <td>{{$camp->campus_contact}}</td>
         <td>{{$camp->email_campus}}</td>
         <td>
-          <a href="#" class="text-success" onclick="modalEdit({{$camp->idcampus}})"><i class="bi bi-pencil-square"></i></a>&nbsp;
+          @if($camp->idcampus == Auth::user()->campus_id)
+            <a href="#" class="text-success" onclick="modalEdit({{$camp->idcampus}})"><i class="bi bi-pencil-square"></i></a>&nbsp;
+          @endif
+          @if(Auth::user()->level == 0)
+            <a href="#" class="text-success" onclick="modalEdit({{$camp->idcampus}})"><i class="bi bi-pencil-square"></i></a>&nbsp;
+          @endif
         </td>
       </tr>
       @endforeach

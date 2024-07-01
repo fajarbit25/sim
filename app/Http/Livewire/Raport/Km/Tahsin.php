@@ -222,6 +222,7 @@ class Tahsin extends Component
                         'kd_id'     => $item->id,
                         'jenis_penilaian' => $this->jenis,
                         'campus_id' => Auth::user()->campus_id, 
+                        'tanggal_raport' => date('Y-m-d'),
                     ]);
                 }
             }

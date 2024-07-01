@@ -221,18 +221,9 @@
                 $('#modalDetailTransaksi').modal('show')
             }); //membuka modal
 
-            Livewire.on('modalDelete', function () {
-                $('#modalDelete').modal('show')
-            }); //membuka modal
-
-            Livewire.on('modalPaid', function () {
-                $('#modalPaid').modal('show')
-            }); //membuka modal
 
             Livewire.on('closeModal', function () {
-                $('#modalAdd').modal('hide')
-                $('#modalDelete').modal('hide')
-                $('#modalPaid').modal('hide')
+                $('#modalDetailTransaksi').modal('hide')
             }); //menutup modal
 
             Livewire.on('showAlert', function (data) {

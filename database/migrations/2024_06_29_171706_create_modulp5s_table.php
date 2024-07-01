@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tk_subdaily_reports', function (Blueprint $table) {
+        Schema::create('modulp5s', function (Blueprint $table) {
             $table->id();
-            $table->string('kelas');
-            $table->string('tanggal_report');
-            $table->enum('tipe', ['kegiatan', 'kata', 'foto']);
-            $table->string('deskripsi');
-            $table->string('updated_by');
-            $table->string('foto')->nullable();
+            $table->string('campus_id');
+            $table->string('ta');
+            $table->string('file');
+            $table->string('update_by');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tk_subdaily_reports');
+        Schema::dropIfExists('modulp5s');
     }
 };

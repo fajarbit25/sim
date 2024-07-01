@@ -44,23 +44,45 @@ class DashboardController extends Controller
 {
     public function index():view
     {
-            
-            $data = [
-                'title'         => 'Dashboard',
-                'news'          => News::join('users', 'users.id', '=', 'news.user_id')->get(),
-                //'cat'           => Absen_chart::orderBy('tanggal_absen', 'ASC')->limit(6)->get(),
-                'ppdb'          => Ppdb::where('user_id', Auth::user()->id)->first(),
-                'ppdb_master'   => Ppdbmaster::where('idpm', 1)
-                                        ->join('semesters', 'semesters.tahun_ajaran', '=', 'ppdbmasters.tahun_id')
-                                        ->first(),
-                'user'          => User::find(Auth::user()->id),
-                'count_campus'  => Campu::count(),
-                'count_siswa'   => User::where('status', 1)->where('level', 4)->count(),
-                'count_guru'    => User::where('status', 1)->where('level', '<', 4)->count(),
-                'kelas'         => Room::where('campus_id', Auth::user()->campus_id)->get(),
-                'guru'          => User::where('status', 1)->where('level', 2)
-                                        ->where('campus_id', Auth::user()->campus_id)->get(),
-            ];
+            if(Auth::user()->level == 0){
+                $data = [
+                    'title'         => 'Dashboard',
+                    'news'          => News::join('users', 'users.id', '=', 'news.user_id')->get(),
+                    //'cat'           => Absen_chart::orderBy('tanggal_absen', 'ASC')->limit(6)->get(),
+                    'ppdb'          => Ppdb::where('user_id', Auth::user()->id)->first(),
+                    'ppdb_master'   => Ppdbmaster::where('idpm', 1)
+                                            ->join('semesters', 'semesters.tahun_ajaran', '=', 'ppdbmasters.tahun_id')
+                                            ->first(),
+                    'user'          => User::find(Auth::user()->id),
+                    'count_campus'  => Campu::count(),
+                    'count_siswa'   => User::where('status', 1)->where('level', 4)->count(),
+                    'count_guru'    => User::where('status', 1)->where('level', '<', 4)->count(),
+                    'kelas'         => Room::where('campus_id', Auth::user()->campus_id)->get(),
+                    'guru'          => User::where('status', 1)->where('level', 2)
+                                            ->where('campus_id', Auth::user()->campus_id)->get(),
+                ];
+                return View('dashboard.dashboard', $data); 
+            }
+
+            if(Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 3 || Auth::user()->level == 5){
+                $data = [
+                    'title'         => 'Dashboard',
+                    'news'          => News::join('users', 'users.id', '=', 'news.user_id')->get(),
+                    //'cat'           => Absen_chart::orderBy('tanggal_absen', 'ASC')->limit(6)->get(),
+                    'ppdb'          => Ppdb::where('user_id', Auth::user()->id)->first(),
+                    'ppdb_master'   => Ppdbmaster::where('idpm', 1)
+                                            ->join('semesters', 'semesters.tahun_ajaran', '=', 'ppdbmasters.tahun_id')
+                                            ->first(),
+                    'user'          => User::find(Auth::user()->id),
+                    'count_campus'  => Campu::count(),
+                    'count_siswa'   => User::where('status', 1)->where('level', 4)->where('campus_id', Auth::user()->campus_id)->count(),
+                    'count_guru'    => User::where('status', 1)->where('level', '<', 4)->where('campus_id', Auth::user()->campus_id)->count(),
+                    'kelas'         => Room::where('campus_id', Auth::user()->campus_id)->where('campus_id', Auth::user()->campus_id)->get(),
+                    'guru'          => User::where('status', 1)->where('level', 2)
+                                            ->where('campus_id', Auth::user()->campus_id)->get(),
+                ];
+                return View('dashboard.dashboard', $data); 
+            }
 
             if(Auth::user()->level == 4){
                 $id = Auth::user()->id;
@@ -69,6 +91,7 @@ class DashboardController extends Controller
                 $ta = $semester->tahun_ajaran;
                 
                 $datasiswa = [
+                    'title'     => 'Dashboard',
                     'campus'    => Campu::where('idcampus', Auth::user()->campus_id)->first(),
                     'students'  => Student::where('user_id', $id)->first(),
                     'nilai'     => Score::where('siswa_id', $id)->where('semester', $semesterKode)->where('ta', $ta)
@@ -76,10 +99,10 @@ class DashboardController extends Controller
                     'logs'      => Siswalog::where('user_id', $id)->where('tanggal', date('Y-m-d'))
                                     ->join('mapels', 'mapels.idmapel', '=', 'siswalogs.mapel_id')->get(),
                     'countInv'  => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Unpaid')->count(),
+                    'user'      => User::find(Auth::user()->id),
+                    'ppdb'      => Ppdb::where('user_id', Auth::user()->id)->first(),
                 ];
-                return view('dashboard.orang_tua', $data, $datasiswa); 
-            }else{
-                return View('dashboard.dashboard', $data);   
+                return view('dashboard.orang_tua', $datasiswa); 
             }
     }
 

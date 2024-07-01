@@ -32,27 +32,9 @@ class SiswaController extends Controller
 
     public function index():view
     {
-        $campus_id = Auth::user()->campus_id;
-        if($campus_id == 1){
-            $siswa  = User::where('level', 4)->where('status', 1)
-                        ->where('kelas', '!=', 'Tamat')
-                        ->join('students', 'students.user_id', '=', 'users.id')
-                        ->join('rooms', 'rooms.idkelas', '=', 'users.kelas', 'left')
-                        ->join('registers', 'registers.user_id', '=', 'users.id')
-                        ->orderBy('id', 'DESC')->get();
-        }else{
-            $siswa  = User::where('level', 4)->where('status', 1)
-                        ->where('kelas', '!=', 'Tamat')
-                        ->where('users.campus_id', $campus_id)
-                        ->join('students', 'students.user_id', '=', 'users.id')
-                        ->join('rooms', 'rooms.idkelas', '=', 'users.kelas', 'left')
-                        ->join('registers', 'registers.user_id', '=', 'users.id')
-                        ->orderBy('id', 'DESC')->get();
-        }
         $data = [
             'title'     => 'Siswa',
-            'kelas'     => Room::where('campus_id', $campus_id)->get(),
-            'siswa'     => $siswa,
+            'kelas'     => Room::where('campus_id', Auth::user()->campus_id)->get(),
         ];
         return view('siswa.index', $data);
     }

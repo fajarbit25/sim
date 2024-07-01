@@ -28,7 +28,7 @@
         <div class="col-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Kelas {{$kelas->kode_kelas}}</h5>
+                    <h5 class="card-title">Kelas {{$kelas->tingkat.' '.$kelas->kode_kelas}}</h5>
                     <div class="table-responsive" id="alocated"></div>
                 </div>
             </div>

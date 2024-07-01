@@ -151,8 +151,18 @@ class CampusController extends Controller
             'ig'              => $request->ig,
             'tele'            => $request->tele,
             'email_campus'    => $request->email_campus,
+            'npsn'            => $request->npsn,
         ];
-        $update = Campu::where('idcampus', $id)->update($data);
+        if(Auth::user()->level == 1 && Auth::user()->campus_id == $id){
+            Campu::where('idcampus', $id)->update($data);
+        }else{
+            return redirect('/campus')->with(['warning' => 'Perubahan data Satuan Pendidikan Tidak Diizinkan!.']);
+        }
+        if(Auth::user()->level == 0){
+            Campu::where('idcampus', $id)->update($data);
+        }else{
+            return redirect('/campus')->with(['warning' => 'Perubahan data Satuan Pendidikan Tidak Diizinkan!.']);
+        }
         return response(['success' => 'Data updated']);
     }
 

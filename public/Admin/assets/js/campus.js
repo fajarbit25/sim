@@ -23,6 +23,7 @@ function modalEdit(id)
         success:function(data){
             //isi data pada pada modal edit
             $("#campus_initial_edit").val(data.campus_initial);
+            $("#npsn_edit").val(data.npsn)
             $("#campus_name_edit").val(data.campus_name);
             $("#campus_tingkat_edit").val(data.campus_tingkat);
             $("#campus_kepsek_edit").val(data.campus_kepsek);
@@ -52,6 +53,7 @@ function updateCampus()
     var campus_alamat = $("#campus_alamat_edit").val();
     var email_campus = $("#email_campus_edit").val();
     var niy_kepsek = $("#niy_kepsek_edit").val();
+    var npsn = $("#npsn_edit").val();
 
     var yt = $("#ytEdit").val();
     var fb = $("#fbEdit").val();
@@ -78,6 +80,7 @@ function updateCampus()
             tele:tele,
             email_campus:email_campus,
             idcampus:idcampus,
+            npsn:npsn,
         }, success:function(response){
             Swal.fire({
                 icon: 'success',

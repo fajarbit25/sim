@@ -69,15 +69,21 @@
 
                   <button class="nav-link active" id="v-pills-silabus-tab" data-bs-toggle="pill" 
                   data-bs-target="#v-pills-silabus" type="button" role="tab" aria-controls="v-pills-silabus" 
-                  aria-selected="true">SILABUS</button>
+                  aria-selected="true">@if(Auth::user()->campus_id == 2) MATRIKS @else SILABUS @endif</button>
 
                   <button class="nav-link" id="v-pills-prota-tab" data-bs-toggle="pill" 
                   data-bs-target="#v-pills-prota" type="button" role="tab" aria-controls="v-pills-prota" 
-                  aria-selected="false" onclick="loadProta()">PROTA</button>
+                  aria-selected="false" onclick="loadProta()">@if(Auth::user()->campus_id == 2) MODUL AJAR @else PROTA @endif</button>
+
+                  @if(Auth::user()->campus_id == 2)
+                  <button class="nav-link" id="v-pills-p5-tab" data-bs-toggle="pill" 
+                  data-bs-target="#v-pills-p5" type="button" role="tab" aria-controls="v-pills-p5" 
+                  aria-selected="false" onclick="loadP5()">MODUL P5</button>
+                  @endif
 
                   <button class="nav-link" id="v-pills-prosem-tab" data-bs-toggle="pill" 
                   data-bs-target="#v-pills-prosem" type="button" role="tab" aria-controls="v-pills-prosem" 
-                  aria-selected="false" onclick="loadProsem()">MODUL AJAR</button>
+                  aria-selected="false" onclick="loadProsem()">PROSEM</button>
 
                 </div>
                 <div class="tab-content" id="v-pills-tabContent">
@@ -87,6 +93,8 @@
                   <div class="tab-pane fade" id="v-pills-prota" role="tabpanel" aria-labelledby="v-pills-prota-tab"></div>
 
                   <div class="tab-pane fade" id="v-pills-prosem" role="tabpanel" aria-labelledby="v-pills-prosem-tab"></div>
+
+                  <div class="tab-pane fade" id="v-pills-p5" role="tabpanel" aria-labelledby="v-pills-p5-tab"></div>
 
                 </div>
               </div>
@@ -196,5 +204,5 @@
     });
 </script>
 
-<script src="{{asset('Admin/assets/js/v1/perangkat_pembelajaran.js')}}"></script>
+<script src="{{asset('Admin/assets/js/v1/perangkat_pembelajaran.js?v.1')}}"></script>
 @endsection

@@ -15,10 +15,18 @@ return new class extends Migration
     {
         Schema::create('tk_daily_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('foto');
+            $table->string('kelas');
             $table->string('tanggal');
-            $table->string('keterangan');
-            $table->string('tab_submenu');
+            $table->string('topik');
+            $table->string('subtopik');
+            $table->string('menghafal');
+            $table->string('menulis');
+            $table->string('murojaah');
+            $table->string('sentra');
+            $table->string('subsentra');
+            $table->string('bahasa');
+            $table->string('inggris');
+            $table->string('arab');
             $table->string('updated_by');
             $table->timestamps();
         });

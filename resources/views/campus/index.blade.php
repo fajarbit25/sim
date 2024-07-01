@@ -15,7 +15,7 @@
   <div class="row">
     <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Data Kampus <span>Yayasan Ibnul Qayyim Makassar</span></h5>
+          <h5 class="card-title">Data Satuan Pendidikan <span>Ibnul Qayyim Islamic School Foundation</span></h5>
           <div class="row">
             <div class="col-lg-6">
               <div class="input-group mb-3">
@@ -122,16 +122,20 @@
       <form method="">
         @csrf
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-pencil"></i> Edit Kampus</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-pencil"></i> Edit Satuan Pendidikan</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="form-group mb-3">
-            <label for="campus_initial_edit">Kode Kampus <span class="text-danger">*</span></label>
+            <label for="campus_initial_edit">Kode Satuan Pendidikan <span class="text-danger">*</span></label>
             <input type="text" name="campus_initial_edit" id="campus_initial_edit" class="form-control @error('campus_initial_edit') is-invalid @enderror" required autocomplete="off">
           </div>
           <div class="form-group mb-3">
-            <label for="campus_name_edit">Nama Kampus <span class="text-danger">*</span></label>
+            <label for="npsn_edit">NPSN <span class="text-danger">*</span></label>
+            <input type="text" name="npsn_edit" id="npsn_edit" class="form-control @error('npsn_edit') is-invalid @enderror" required autocomplete="off">
+          </div>
+          <div class="form-group mb-3">
+            <label for="campus_name_edit">Nama Satuan Pendidikan <span class="text-danger">*</span></label>
             <input type="text" name="campus_name_edit" id="campus_name_edit" class="form-control @error('campus_name_edit') is-invalid @enderror" required autocomplete="off">
           </div>
           <div class="form-group mb-3">
@@ -195,7 +199,7 @@
         <div class="modal-footer">
           <input type="hidden" name="idcampus" id="idcampus" required/>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" onclick="updateCampus()" class="btn btn-success">Update </button>
+            <button type="button" onclick="updateCampus()" class="btn btn-success">Update </button>
         </div>
       </form>
     </div>
@@ -203,5 +207,5 @@
 </div>
 
 
-<script src="{{url('Admin/assets/js/campus.js')}}"></script>
+<script src="{{url('Admin/assets/js/campus.js?v.2')}}"></script>
 @endsection

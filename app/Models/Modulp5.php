@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TkSubdailyReport extends Model
+class Modulp5 extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'tanggal_report',
-        'kelas',
-        'tipe',
-        'deskripsi',
-        'updated_by',
-        'foto',
+        'campus_id',
+        'ta',
+        'file',
+        'update_by',
     ];
 }
