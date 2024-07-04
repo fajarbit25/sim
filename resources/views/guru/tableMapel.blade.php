@@ -2,8 +2,13 @@
     <thead>
         <tr>
             <th>#</th>
+            @if(Auth::user()->campus_id == 2)
+            <th>Kelompok</th>
+            <th>Sentra</th>
+            @else 
             <th>Kelas</th>
             <th>Mata Pelajaran</th>
+            @endif
             <th>Remove</th>
         </tr>
     </thead>

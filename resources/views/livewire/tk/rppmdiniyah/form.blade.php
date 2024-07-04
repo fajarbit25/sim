@@ -2,7 +2,16 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title">RPPM Diniyah</h3>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="card-title">RPPM Diniyah</h3>
+                    </div>
+                    <div class="col-sm-6 text-end">
+                        <a href="/tk/rppm-diniyah-master" class="btn btn-success btn-sm m-3"> 
+                            <i class="bi bi-database-add"></i> Database <i class="bi bi-chevron-compact-right"></i>
+                        </a>
+                    </div>
+                </div>
 
                 <div class="row">
 

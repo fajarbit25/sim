@@ -4,7 +4,11 @@
         <th scope="col">#</th>
         <th scope="col">Jenis</th>
         <th scope="col">Kode</th>
+        @if(Auth::user()->campus_id == 2)
+        <th scope="col">Sentra</th>
+        @else 
         <th scope="col">Mata Pelajaran</th>
+        @endif
         <th scope="col">KKM</th>
         <th scope="col">Manage</th>
       </tr>

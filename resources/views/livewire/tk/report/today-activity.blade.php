@@ -9,7 +9,7 @@
                 @foreach($dataSub->where('tipe', 'foto') as $item)
                 <div class="col-6 mb-2">
                     <div style="width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                        <img src="{{ asset('/storage/tk-daily/'.$item->foto) }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Image">
+                        <img src="{{ asset('/storage/tk-daily/'.$item->foto) }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Image" wire:click="modalFoto('{{$item->foto}}')">
                     </div>
                 </div>
                 @endforeach
@@ -51,4 +51,53 @@
             
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalFoto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Foto Kegiatan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($image)
+                    <img src="{{ asset('/storage/tk-daily/'.$image) }}" alt="foto-kegiatan" style="width:100%; height:auto;">
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('livewire:load', function () {
+
+            Livewire.on('modalFoto', function () {
+                $('#modalFoto').modal('show')
+            }); //membuka modal
+
+            Livewire.on('closeModal', function () {
+                $('#modalFoto').modal('hide')
+            }); //menutup modal
+
+            Livewire.on('showAlert', function (data) {
+                if(data.type === 200){
+                    var icons = 'success'
+                }else if(data.type === 500){
+                    var icons = 'warning'
+                }
+                Swal.fire({
+                    icon: icons,
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        });
+    </script>
+    @endpush
 </div>

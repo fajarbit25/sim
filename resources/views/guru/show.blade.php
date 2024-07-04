@@ -24,7 +24,11 @@
               </li>
               @if(Auth::user()->level ==1)
               <li class="nav-item">
+                @if(Auth::user()->campus_id == 2)
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-mapel">Sentra</button>
+                @else 
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-mapel">Mata Pelajaran</button>
+                @endif
               </li>
               @endif
             </ul>

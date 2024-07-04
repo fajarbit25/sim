@@ -27,9 +27,10 @@ class TodayActivity extends Component
         return view('livewire.tk.report.today-activity');
     }
 
-    public function getImage($foto)
+    public function modalFoto($foto)
     {
         $this->image = $foto;
+        $this->emit('modalFoto');
     }
 
     public function getDataActivity()

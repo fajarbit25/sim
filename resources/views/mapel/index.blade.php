@@ -17,7 +17,11 @@
     <div class="col-sm-8">
       <div class="card">
         <div class="card-body">
+          @if(Auth::user()->campus_id == 2)
+          <h5 class="card-title">Sentra</h5>
+          @else
           <h5 class="card-title">Mata Pelajaran</h5>
+          @endif
           <div class="row">
             <div class="col-lg-6">
               <div class="input-group mb-3">
@@ -31,9 +35,11 @@
       </div>
     </div>
     
+    @if(Auth::user()->campus_id != 2)
     <div class="col-sm-4">
       @livewire('mapel-kkm')
     </div>
+    @endif
 
   </div>
 </main>
@@ -69,7 +75,8 @@
           </div>
           <div class="form-group mb-3">
             <label for="kkm">KKM</label>
-            <input type="number" name="kkm" id="kkm" class="form-control @error('kkm') is-invalid @enderror" required autocomplete="off">
+            <input type="number" name="kkm" id="kkm" class="form-control @error('kkm') is-invalid @enderror" 
+            required autocomplete="off" @if(Auth::user()->campus_id == 2) value="99" @disabled(true) @endif>
           </div>
         </div>
         <div class="modal-footer">
@@ -111,10 +118,13 @@
             <input type="text" name="nama_mapel" id="nama_mapel_edit" class="form-control @error('nama_mapel') is-invalid @enderror" required autocomplete="off">
           </div>
 
+          @if(Auth::user()->campus_id != 2)
           <div class="form-group mb-3">
             <label for="kkm_edit">KKM</label>
             <input type="number" name="kkm_edit" id="kkm_edit" class="form-control @error('kkm_edit') is-invalid @enderror" required autocomplete="off">
           </div>
+          @endif
+
 
         </div>
         <div class="modal-footer">
@@ -146,5 +156,5 @@
     </div>
   </div>
 </div>
-<script src="{{url('Admin/assets/js/mapel.js')}}"></script>
+<script src="{{url('Admin/assets/js/mapel.js?v.1.2')}}"></script>
 @endsection

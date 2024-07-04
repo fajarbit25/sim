@@ -51,17 +51,6 @@
             </a>
           </li>
           @endif
-          
-          <li>
-            <a href="{{url('/nilai/kaldik')}}">
-              <i class="bi bi-circle"></i><span>Kalender Pendidikan</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('/nilai/perangkat-pembelajaran')}}">
-              <i class="bi bi-circle"></i><span>Perangkat Pembelajaran</span>
-            </a>
-          </li>
           <li>
             <a href="{{url('/mapel')}}">
               <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
@@ -122,6 +111,16 @@
           </li>
             <a href="{{url('/kelas')}}">
               <i class="bi bi-circle"></i><span>Kelas</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/nilai/kaldik')}}">
+              <i class="bi bi-circle"></i><span>Kalender Pendidikan</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/nilai/perangkat-pembelajaran')}}">
+              <i class="bi bi-circle"></i><span>Perangkat Pembelajaran</span>
             </a>
           </li>
           <li>

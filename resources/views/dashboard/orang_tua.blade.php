@@ -153,23 +153,15 @@
                   <h5 class="card-title">Recent Activity <span>| today</span></h5>
                   <div class="activity">
 
-                    @foreach($logs as $log)
+                    @foreach($logs->groupBy('tipe') as $tipe => $log)
                     <div class="activity-item d-flex">
-                      <div class="activite-label"><i class="bi bi-clock-history"></i> {{$log->jam}} </div>
+                      <div class="activite-label"><i class="bi bi-clock-history"></i> {{$log->first()->jam}} </div>
                       <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                       <div class="activity-content">
-                        {{$log->tipe}} Mata pelajaran  <br/> <span class="fw-bold text-dark"> {{$log->nama_mapel}} </span>
+                        {{$log->first()->tipe}} <br/> <span class="fw-bold text-dark"> {{$log->first()->mapel_id}} </span>
                       </div>
                     </div><!-- End activity item-->
                     @endforeach
-
-                    {{-- <div class="activity-item d-flex">
-                      <div class="activite-label"><i class="bi bi-clock-history"></i> 06:30</div>
-                      <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                      <div class="activity-content">
-                        Absensi mata pelajaran <span class="fw-bold text-dark">Bahasa Indonesia</span>
-                      </div>
-                    </div> --}}
 
                   </div>
                 </div>

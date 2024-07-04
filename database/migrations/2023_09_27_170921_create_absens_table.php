@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('absens', function (Blueprint $table) {
             $table->id('idabsen');
-            $table->string('kode_absen');
+            $table->string('ta');
             $table->string('semester');
             $table->string('kelas');
             $table->string('mapel');

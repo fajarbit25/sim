@@ -7,16 +7,16 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/tk/rppm-diniyah">RPPM Diniyah</a></li>
           <li class="breadcrumb-item">{{$title}}</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
+
     <section class="section">
-      <div class="row">
-
-        @livewire('absen.wali-kelas-report')
-
-      </div>
+        @livewire('tk.rppmdiniyah.master')
     </section>
 </main>
+
+
 @endsection

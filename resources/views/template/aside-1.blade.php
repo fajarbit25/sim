@@ -93,22 +93,19 @@
             </a>
           </li>
           @endif
-
+          @if(Auth::user()->campus_id == 2) 
           <li>
-            <a href="{{url('/nilai/kaldik')}}">
-              <i class="bi bi-circle"></i><span>Kalender Pendidikan</span>
+            <a href="{{url('/mapel')}}">
+              <i class="bi bi-circle"></i><span>Sentra</span>
             </a>
           </li>
-          <li>
-            <a href="{{url('/nilai/perangkat-pembelajaran')}}">
-              <i class="bi bi-circle"></i><span>Perangkat Pembelajaran</span>
-            </a>
-          </li>  
+          @else 
           <li>
             <a href="{{url('/mapel')}}">
               <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
             </a>
           </li>
+          @endif
           @if(Auth::user()->campus_id == 4 || Auth::user()->campus_id == 5)
           <li>
             <a href="{{url('/raport/kurikulum-merdeka')}}">
@@ -147,6 +144,16 @@
               <i class="bi bi-circle"></i><span>Kelas</span>
             </a>
           </li>
+          <li>
+            <a href="{{url('/nilai/kaldik')}}">
+              <i class="bi bi-circle"></i><span>Kalender Pendidikan</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/nilai/perangkat-pembelajaran')}}">
+              <i class="bi bi-circle"></i><span>Perangkat Pembelajaran</span>
+            </a>
+          </li> 
           <li>
             <a href="{{url('/level')}}">
               <i class="bi bi-circle"></i><span>Level User</span>

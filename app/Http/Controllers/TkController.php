@@ -362,4 +362,12 @@ class TkController extends Controller
         return view('tk.raport-mid.print ', $data);
     }
 
+    public function rppmDiniyahMaster(): View
+    {
+        $data = [
+            'title'         => 'RPPM Diniyah Databsas'
+        ];
+        return view('tk.rppm-diniyah.master', $data);
+    }
+
 }

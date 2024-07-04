@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Absen extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idabsen';
     protected $fillable = [
-        'kode_absen',
+        'ta',
         'semester',
         'kelas',
         'mapel',

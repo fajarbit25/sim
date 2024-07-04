@@ -202,7 +202,7 @@ class SiswaController extends Controller
             'nomor_formulir'    => '-',
             'jalur'             => 'Zonasi',
             'jenjang'           => '-',
-            'status'            => 200,
+            'status'            => 0,
         ];
         Ppdb::create($dataPpbd);
 

@@ -273,22 +273,8 @@ Route::controller(MapelController::class)->group(function(){
 });
 
 Route::controller(AbsenController::class)->group(function(){
-    Route::get('/absen', 'index')->middleware('auth')->name('absen');
-    Route::get('/absensi', 'edit')->middleware('auth')->name('absensi');
-    Route::get('/absen/form', 'form')->middleware('auth')->name('absen.form');
-    Route::get('/absen/{key}/form', 'formSearch')->middleware('auth')->name('absen.formSearch');
-    Route::get('/absen/submit', 'submit')->middleware('auth')->name('absen.submit');
-    Route::post('/absen', 'store')->middleware('auth')->name('absen.store');
-    Route::post('/absen/update', 'update')->middleware('auth')->name('absen.update');
-    Route::get('/absen/{id}/show', 'show')->middleware('auth')->name('absen.show');
-    Route::get('/absen/report', 'report')->middleware('auth')->name('absen.report');
-    Route::get('/absen/show', 'tabel_report')->middleware('auth')->name('absen.table_report');
-
-    /**Ajax URL */
-    Route::get('/absen/{kelas}/{mapel}/{tanggal}/{campus}/show', 'tableAbsen')->middleware('auth')->name('absen.tableAbsen');
-    Route::get('/absen/{kelas}/{tanggal}/{campus}/show', 'listAbsen')->middleware('auth')->name('absen.listAbsen');
-
-    Route::get('/absen/testing/json', 'testing')->middleware('auth')->name('absen.testing');
+    Route::get('/absen', 'index')->middleware('auth', 'guru')->name('absen');
+    Route::get('/absen/report', 'report')->middleware('auth', 'admin')->name('absenReport');
 
     /**Absen Guru&Staff */
     Route::get('/absen/guru/report', 'absenGuru')->middleware('auth')->name('absen.absenGuru');
@@ -456,6 +442,7 @@ Route::controller(AddressController::class)->group(function(){
 Route::controller(TkController::class)->group(function(){
     Route::get('/tk/daily/report', 'dailyReport')->middleware('auth')->name('tk.dailyReport');
     Route::get('/tk/rppm-diniyah', 'rppmDiniyah')->middleware('auth')->name('tk.rppmDiniyah');
+    Route::get('/tk/rppm-diniyah-master', 'rppmDiniyahMaster')->middleware('auth')->name('tk.rppmDiniyahMaster');
     Route::get('/tk/rppm-diniyah/{id}/print', 'rppmDiniyahPrint')->middleware('auth')->name('tk.rppmDiniyahPrint');
 
     Route::get('/tk/raport-semester', 'raportSemester')->middleware('auth')->name('tk.raportSemester');

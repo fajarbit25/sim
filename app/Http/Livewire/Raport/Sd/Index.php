@@ -115,7 +115,7 @@ class Index extends Component
                                 ->where('users.kelas', $this->kelas)
                                 ->select('tanggal_raport')
                                 ->first();
-        $this->dataTanggalraport = $data->tanggal_raport;
+        $this->dataTanggalraport = $data->tanggal_raport ?? "";
     }
 
     public function updateTanggalRaport()

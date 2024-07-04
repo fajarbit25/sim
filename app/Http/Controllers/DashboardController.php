@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\URL;
 
 class DashboardController extends Controller
 {
-    public function index():view
+    public function index()//:view
     {
             if(Auth::user()->level == 0){
                 $data = [
@@ -68,7 +68,6 @@ class DashboardController extends Controller
                 $data = [
                     'title'         => 'Dashboard',
                     'news'          => News::join('users', 'users.id', '=', 'news.user_id')->get(),
-                    //'cat'           => Absen_chart::orderBy('tanggal_absen', 'ASC')->limit(6)->get(),
                     'ppdb'          => Ppdb::where('user_id', Auth::user()->id)->first(),
                     'ppdb_master'   => Ppdbmaster::where('idpm', 1)
                                             ->join('semesters', 'semesters.tahun_ajaran', '=', 'ppdbmasters.tahun_id')
@@ -96,8 +95,7 @@ class DashboardController extends Controller
                     'students'  => Student::where('user_id', $id)->first(),
                     'nilai'     => Score::where('siswa_id', $id)->where('semester', $semesterKode)->where('ta', $ta)
                                     ->join('mapels', 'mapels.idmapel', '=', 'scores.mapel')->get(),
-                    'logs'      => Siswalog::where('user_id', $id)->where('tanggal', date('Y-m-d'))
-                                    ->join('mapels', 'mapels.idmapel', '=', 'siswalogs.mapel_id')->get(),
+                    'logs'      => Siswalog::where('user_id',$id)->where('tanggal', date('Y-m-d'))->orderBy('id', 'DESC')->get(),
                     'countInv'  => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Unpaid')->count(),
                     'user'      => User::find(Auth::user()->id),
                     'ppdb'      => Ppdb::where('user_id', Auth::user()->id)->first(),
