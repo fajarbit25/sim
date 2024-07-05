@@ -94,7 +94,7 @@ class OrangtuaController extends Controller
     {
         $data = [
             'title'     => 'Invoice',
-            'invoice'   => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', 'Unpaid')->get(),
+            'invoice'   => Invoice::where('user_id', Auth::user()->id)->where('invoice_status', '!=', 'Paid')->get(),
         ];
         return view('ortu.invoice', $data);
     }
@@ -267,6 +267,15 @@ class OrangtuaController extends Controller
             }
 
         }
+    }
+
+    public function manualPayment($id): View
+    {
+        $data = [
+            'title'     => 'Konfirmasi Pembayaran',
+            'txid'      => $id,
+        ];
+        return view('ortu.manual-payment', $data);
     }
 
 

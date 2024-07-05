@@ -364,6 +364,7 @@ Route::controller(OrangtuaController::class)->group(function(){
     Route::get('/user/invoice', 'invoice')->middleware('auth')->name('siswa.invoice');
     Route::get('/user/{id}/tahfidz', 'tahfidz')->middleware('auth')->name('siswa.tahfidz');
     Route::get('/user/invoice/{id}/show', 'showInvoice')->middleware('auth')->name('siswa.showInvoice');
+    Route::get('/user/invoice/{id}/manual-payment', 'manualPayment')->middleware('auth')->name('siswa.manualPayment');
     Route::get('/user/invoice/{id}/evidence', 'showEviden')->middleware('auth')->name('siswa.showEviden');
     Route::post('/user/invoice/checkout', 'checkout')->middleware('auth')->name('ortu.checkout');
     Route::get('/user/history-pembayaran', 'invoiceHistory')->middleware('auth')->name('ortu.invoiceHistory');

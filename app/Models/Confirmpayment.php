@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Confirmpayment extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idcp';
     protected $fillable = [
         'invoice_id',
         'amount',

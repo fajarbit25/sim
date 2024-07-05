@@ -88,11 +88,13 @@ class PaymentControlller extends Controller
         $today = date('d');
 
         $payment = Payment::join('users', 'users.id', '=', 'payments.user_id')
-                    ->leftJoin('rooms', 'rooms.idkelas', '=', 'users.kelas')
+                    ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
                     ->join('payment_jenis_tagihans', 'payment_jenis_tagihans.id', '=', 'payments.jenis')
-                    ->where('check_list', '1')->where('due_date', $today)
+                    ->where('check_list', '1')
+                    ->where('due_date', number_format($today))
                     ->select('payments.id as kode_transaksi', 'total_price', 'payments.jenis', 'payments.campus_id',
-                    'first_name', 'payments.user_id', 'payment_jenis_tagihans.jenis as jenis_transaksi', 'payment_jenis_tagihans.id as id_jenis_transakis')->get();
+                    'first_name', 'payments.user_id', 'payment_jenis_tagihans.jenis as jenis_transaksi', 'payment_jenis_tagihans.id as id_jenis_transakis')
+                    ->get();
         foreach($payment as $item){
             $countInvoice = Invoice::where('campus_id', $item->campus_id)->withTrashed()->count();
             //generate bulan ke romawi
@@ -176,8 +178,9 @@ class PaymentControlller extends Controller
         }
         //Endforeach
 
-        $cekStatusSend = Invoice::whereDate('created_at', date('Y-m-d'))->where('campus_id', $payment->campus_id)->get();
-        if($cekStatusSend->count() == 0){
+        $cekStatusSend = Invoice::whereDate('created_at', date('Y-m-d'))->get();
+
+        if($cekStatusSend->count() != 0){
 
             foreach($cekStatusSend->groupBy('campus_id') as $campus => $item){
 
