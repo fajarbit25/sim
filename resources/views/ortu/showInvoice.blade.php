@@ -109,7 +109,7 @@
         </div>
         <div class="modal-body">
           @if($invoice->invoice_status == 'Unpaid')
-          <div class="col-sm-12 m-3">
+          <div class="col-sm-12 p-3">
               <span class="fw-bold">Informasi.</span><br/>
               <div class="alert alert-info">
                 <span class="fw-bold">Pembayaran Instant Via Virtual Account, Merchant & E-Wallet.</span><br/>

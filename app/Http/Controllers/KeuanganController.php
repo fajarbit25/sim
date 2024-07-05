@@ -53,8 +53,8 @@ class KeuanganController extends Controller
     {
         $data = [
             'title'     => 'Pembayaran Perlu Dikonfirmasi',
-            'confirm'   => Confirmpayment::join('invoices', 'invoices.idiv', '=', 'confirmpayments.invoice_id')
-                                            ->where('confirm_status', '0')->where('confirm_by', NULL)
+            'confirm'   => Confirmpayment::join('invoices', 'invoices.nomor_invoice', '=', 'confirmpayments.invoice_id')
+                                            ->where('confirm_status', '0')->where('confirm_by', 0)
                                             ->where('confirmpayments.campus_id', Auth::user()->campus_id)->get(),
         ];
         return view('keuangan.admin_confirm_payment', $data);
@@ -65,29 +65,39 @@ class KeuanganController extends Controller
     {
         $data = [
             'title'     => 'Verifikasi Pembayaran',
-            'verif'     => Invoice::where('kode_transaksi', $id)->join('confirmpayments','confirmpayments.invoice_id', '=', 'invoices.idiv')->first(),
+            'verif'     => Invoice::where('kode_transaksi', $id)
+                            ->join('confirmpayments','confirmpayments.invoice_id', '=', 'invoices.nomor_invoice')
+                            ->join('users', 'users.id', '=', 'invoices.user_id')
+                            ->join('students', 'students.user_id', '=', 'users.id')
+                            ->join('registers', 'registers.user_id', '=', 'users.id')
+                            ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
+                            ->select('name', 'account_id', 'bank_name', 'description', 'confirmpayments.amount', 'evidence', 'first_name',
+                            'nomor_invoice', 'nis', 'nisn', 'tingkat', 'kode_kelas', 'kode_transaksi')
+                            ->first(),
         ];
         return view('keuangan.admin_verify_payment', $data);
     }
 
     /** Verify Action */
-    public function confirm_verify(Request $request):RedirectResponse
+    public function confirm_verify(Request $request)//:RedirectResponse
     {
         $request->validate([
             'status'            => 'required',
             'kode_transaksi'    => 'required',
         ]);
+
         $kode = $request->kode_transaksi;
         $loadInvoice = Invoice::where('kode_transaksi', $kode)->first();
-        $idiv = $loadInvoice->idiv;
+        $idiv = $loadInvoice->nomor_invoice;
         $loadConfirm = Confirmpayment::where('invoice_id', $idiv)->first();
         $idcp = $loadConfirm->idcp;
+
 
         /** Load Saldo Mutasi */
         $saldo = Mutation::where('campus_id', Auth::user()->campus_id)->orderBy('idmt', 'DESC')->first();
 
         Confirmpayment::where('idcp', $idcp)->update(['confirm_status' => 1, 'confirm_by' => Auth::user()->id]);
-        Invoice::where('idiv', $idiv)->update(['invoice_status' => $request->status]);
+        Invoice::where('idiv', $loadInvoice->idiv)->update(['invoice_status' => $request->status]);
 
         /**Insert data mutasi */
         $mutasi = [

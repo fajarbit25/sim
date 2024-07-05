@@ -51,6 +51,7 @@
             </a>
           </li>
           @endif
+          
           <li>
             <a href="{{url('/mapel')}}">
               <i class="bi bi-circle"></i><span>Mata Pelajaran</span>
@@ -62,11 +63,13 @@
               <i class="bi bi-circle"></i><span>Kompetensi Dasar</span>
             </a>
           </li>
+          @if(Auth::user()->campus_id == 3)
           <li>
               <a href="{{url('/raport/km/raport-tahsin')}}">
                 <i class="bi bi-circle"></i><span>Raport Tahsin</span>
               </a>
           </li>
+          @endif
           <li>
             @if(Auth::user()->campus_id == 3)
             <a href="{{url('/raport/sd/penilaian')}}">

@@ -119,12 +119,12 @@
               <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
-          @endif
           <li>
             <a href="{{url('/raport/km/raport-tahsin-admin')}}">
               <i class="bi bi-circle"></i><span>Raport Tahsin</span>
             </a>
           </li>
+          @endif
 
         </ul>
       </li><!-- End Forms Nav -->

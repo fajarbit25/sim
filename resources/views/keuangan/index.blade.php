@@ -51,7 +51,7 @@
                       <i class="bi bi-cash-stack"></i>
                     </div>
                     <div class="ps-3 text-end">
-                      <h6>{{number_format($saldo->saldo_akhir)}}</h6>
+                      <h6>{{number_format(0)}}</h6>
 
                     </div>
                   </div>

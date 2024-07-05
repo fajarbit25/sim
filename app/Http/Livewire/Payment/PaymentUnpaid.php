@@ -2,17 +2,20 @@
 
 namespace App\Http\Livewire\Payment;
 
+use App\Models\Confirmpayment;
 use App\Models\Invoice;
 use App\Models\Mutation;
 use App\Models\PaymentJenisTagihan;
 use App\Models\Room;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class PaymentUnpaid extends Component
 {
     use WithPagination;
+    use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     public $loading = false;
     public $notif;
@@ -25,6 +28,12 @@ class PaymentUnpaid extends Component
     public $detailTransaksi;
     public $dataKelas;
     public $dataJenis;
+
+    public $evidence;
+    public $name;
+    public $bank;
+    public $norek;
+    public $nomorInvoice;
 
     public function loadAll()
     {
@@ -118,8 +127,22 @@ class PaymentUnpaid extends Component
         $this->emit('modalPaid');
     }
 
+    public function updatedevidence()
+    {
+        $this->validate([
+            'evidence' => 'image|max:1024', // 1MB Max
+        ]);
+    }
+
     public function markPaid()
     {
+        $this->validate([
+            'evidence'      => 'required|image|max:1024', // 1MB Max
+            'name'          => 'required',
+            'norek'         => 'required',
+            'bank'          => 'required',
+        ]);
+
         $load = Invoice::findOrFail($this->idPaid);
         $load->update([
             'invoice_status'    => 'Paid',
@@ -136,13 +159,31 @@ class PaymentUnpaid extends Component
             'campus_id'     => Auth::user()->campus_id,
             'trx_by'        => Auth::user()->id,
         ];
+
+        /**Create Table Konfirmasi */
+        $filename   = $this->evidence->getClientOriginalName();
+        $this->evidence->storeAs('public/confirm-payment', $filename);
+
+        Confirmpayment::create([
+            'invoice_id'    => $load->nomor_invoice,
+            'amount'        => $load->amount,
+            'name'          => $this->name,
+            'account_id'    => $this->norek,
+            'bank_name'     => $this->bank,
+            'confirm_status'=> 1,
+            'confirm_by'    => Auth::user()->id,
+            'evidence'      => $filename,
+            'campus_id'     => Auth::user()->id,
+        ]);
+
         Mutation::create($mutasi);
-        $this->emit('closeModal');
+        $this->emit('closeModalPaid');
         $this->notif = [
             'status'    => 200,
             'message'   => 'Tagihan Lunas!',
         ];
         $this->showAlert();
+
     }
 
     public function getDataKelas()

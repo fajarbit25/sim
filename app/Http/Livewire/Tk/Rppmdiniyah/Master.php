@@ -14,6 +14,9 @@ class Master extends Component
     public $materi;
     public $isActive = 0;
 
+    public $inputMateri;
+    public $inputKegiatan;
+
     public function mount()
     {
         $this->getDataMateri();
@@ -42,6 +45,46 @@ class Master extends Component
     {
         $data = RppmdiniyahMaster::where('materi', $this->materi)->get();
         $this->dataKegiatan = $data;
+    }
+
+    public function modalMateri()
+    {
+        $this->emit('modalMateri');
+    }
+
+    public function modalKegiatan()
+    {
+        $this->emit('modalKegiatan');
+    }
+
+    public function saveMateri()
+    {
+        $this->validate([
+            'inputMateri'       => 'required',
+        ]);
+        $materi = RppmdiniyahMateri::create([
+            'materi'    => $this->inputMateri,
+        ]);
+        $this->inputMateri = "";
+        $this->emit('closeModal');
+        $this->getDataMateri();
+        $this->getDataKegiatan();
+        $this->isActive = $materi->id;
+    }
+
+    public function saveKegiatan()
+    {
+        $this->validate([
+            'inputKegiatan'             => 'required',
+        ]);
+        RppmdiniyahMaster::create([
+            'materi'        => $this->materi,
+            'kegiatan'      => $this->inputKegiatan,
+        ]);
+        $this->emit('closeModal');
+        $this->getDataMateri();
+        $this->getDataKegiatan();
+
     }
 
 }

@@ -14,7 +14,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-cash-coin">
-            </i>Catatan Keuangan &nbsp; <i id="finance-notif-up"></i>
+            </i>Catatan Keuangan
           </span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -31,13 +31,6 @@
           <li>
             <a href="/finance/mutasi">
               <i class="bi bi-circle"></i><span>Mutasi</span>
-            </a>
-          </li>
-          
-          <li>
-            <a href="/finance/confirm">
-              <i class="bi bi-circle"></i>
-              <span>Konfirmasi</span> &nbsp; <span id="finance-notif-down"></span>
             </a>
           </li>
         </ul>
@@ -62,6 +55,12 @@
           <li>
             <a href="/finance/payment-history">
               <i class="bi bi-circle"></i><span>Riwayat</span>
+            </a>
+          </li>
+          <li>
+            <a href="/finance/confirm">
+              <i class="bi bi-circle"></i>
+              <span>Konfirmasi Pembayaran</span> &nbsp; <span id="finance-notif-down"></span>
             </a>
           </li>
         </ul>

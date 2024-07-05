@@ -183,32 +183,70 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="modalPaid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalPaid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm!</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form wire:submit.prevent="markPaid">
             <div class="modal-body">
             <div class="row">
                 <div class="col-12">
-                    <span class="fw-bold fst-italic">
-                        Informasi, 
-                    </span>
-                    <span class="fw-bold fst-italic">
-                        Pembayaran akan dianggap lunas & Saldo akan bertambah.
-                    </span>
+                    <div class="alert alert-info">
+                        <span class="fw-bold fst-italic">
+                            Informasi, 
+                        </span><br/>
+                        <span class="fw-bold fst-italic">
+                            Pembayaran akan dianggap lunas & Saldo akan bertambah.
+                        </span>
+                    </div>
+                        <div class="form-group mb-3">
+                            <label for="nama">Nama Bank <span class="text-danger"><i class="bi bi-asterisk"></i></span> </label>
+                            <select wire:model.lazy="bank" class="form-control @error('bank') is-invalid @enderror">
+                                <option value="">-Pilih Bank</option>
+                                <option value="BSI">BSI</option>
+                                <option value="BRI">BRI</option>
+                                <option value="Mandiri">Mandiri</option>
+                                <option value="BNI">BNI</option>
+                                <option value="BTN">BTN</option>
+                                <option value="BCA">BCA</option>
+                                <option value="BPD">BPD</option>
+                                <option value="Panin Bank">Panin Bank</option>
+                                <option value="Danamon">Danamon</option>
+                                <option value="Permata">Permata</option>
+                                <option value="MAYBANK">MAYBANK</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            @error('bank') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="name">Nama Di Rekening Pengirim <span class="text-danger"><i class="bi bi-asterisk"></i></span> </label>
+                            <input type="text" wire:model.lazy="name" class="form-control @error('name') is-invalid @enderror"/>
+                            @error('name') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="norek">Nomor Rekening Pengirim <span class="text-danger"><i class="bi bi-asterisk"></i></span> </label>
+                            <input type="text" wire:model.lazy="norek" class="form-control @error('norek') is-invalid @enderror"/>
+                            @error('norek') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="evidence">Bukti Pengiriman / Bukti Transfer <span class="text-danger"><i class="bi bi-asterisk"></i></span> </label>
+                            <input type="file" wire:model.lazy="evidence" class="form-control @error('evidence') is-invalid @enderror"/>
+                            @error('evidence') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-success" wire:click="markPaid()">
+                <button type="submit" class="btn btn-success">
                     <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
                     Lanjutkan
                 </button>
             </div>
+            </form>
         </div>
         </div>
     </div>
@@ -221,10 +259,18 @@
                 $('#modalDetailTransaksi').modal('show')
             }); //membuka modal
 
+            Livewire.on('modalPaid', function () {
+                $('#modalPaid').modal('show')
+            }); //membuka modal
+
 
             Livewire.on('closeModal', function () {
                 $('#modalDetailTransaksi').modal('hide')
             }); //menutup modal
+
+            Livewire.on('closeModalPaid', function () {
+                $("#modalPaid").modal('hide')
+            });
 
             Livewire.on('showAlert', function (data) {
                 if(data.type === 200){

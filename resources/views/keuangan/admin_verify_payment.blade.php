@@ -38,24 +38,22 @@
                             <span class="fw-bold">Nama Bank : </span> {{$verif->bank_name}} <br/>
                         </p>
                         <hr>
-                        <span class="fw-bold"> Untuk Pembayaran : </span> {{$verif->description}} <br/>
+                        <span class="fw-bold"> NIS / NISN : </span> <span>{{$verif->nis}} / {{$verif->nisn}}</span> <br/>
+                        <span class="fw-bold"> Nama Siswa : </span> <span>{{$verif->first_name}}</span> <br/>
+                        <span class="fw-bold"> Kelas : </span> <span>{{$verif->tingkat.' '.$verif->kode_kelas}}</span> <br/>
+                        <span class="fw-bold"> Periode Tagihan : </span> <span>{{$verif->first_name}}</span> <br/>
+                        <span class="fw-bold"> Keterangan : </span> {{$verif->description}} <br/>
                         <span class="fw-bold"> Jumlah Uang : </span>
                         <h4 class="alert-heading">Rp.{{number_format($verif->amount)}}</h4>
+
                         <hr>
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modaVerify">
                           <i class="bi bi-check-circle"></i> Verifkasi
                         </button>
-                        <button type="button" class="btn btn-info" onclick="loadEvidence()">
+                        <button type="button" class="btn btn-info" onclick="modalEvidence()">
                           <i class="bi bi-image"></i> Lihat Bukti Transfer
                       </button>
                     </div>
-                </div>
-
-                <div class="col-md-12" id="evidence">
-                  <h4 class="card-title">Bukti Transaksi</h4>
-                  <hr>
-                  <img src="{{asset('storage/confirm-payment/'.$verif->evidence)}}" alt="foto-bukti" style="max-width: 100%;">
-                  <hr>
                 </div>
 
               </div>
@@ -88,8 +86,8 @@
             <label for="status">Pilih Aksi</label>
             <select name="status" id="status" class="form-control">
                 <optgroup label="Pilih Status">
-                    <option value="PAID">Terima Pembayaran</option>
-                    <option value="CANCELLED">Tolak Pembayaran</option>
+                    <option value="Paid">Terima Pembayaran</option>
+                    <option value="Cancelled">Tolak Pembayaran</option>
                 </optgroup>
             </select>
           </div>
@@ -100,6 +98,27 @@
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalEvidence" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Bukti Transaksi</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="col-sm-12">
+            <img src="{{asset('storage/confirm-payment/'.$verif->evidence)}}" alt="foto-bukti" style="width: 100%;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -122,9 +141,9 @@
             });
   }
 
-  function loadEvidence()
+  function modalEvidence()
   {
-    $("#evidence").show();
+    $("#modalEvidence").modal('show')
   }
 
 </script>

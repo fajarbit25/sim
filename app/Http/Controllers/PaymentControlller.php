@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Confirmpayment;
 use App\Models\MiddtransToken;
 use App\Models\Invoice;
 use App\Models\Payment;
@@ -137,17 +138,21 @@ class PaymentControlller extends Controller
                 $campusName = "-SMKIT";
             }
 
+            //load Data Invoice
+            $cekTagihan = Invoice::where('user_id', $item->user_id)->where('jenis_transaksi', $item->jenis_transaksi)
+                                    ->where('periode', $periode)->count();
+
             //set status apabila tagihan 0
             if($item->total_price == 0){
                 $status = 'Paid';
-                $paymentType = 'iqis';
+                $paymentType = 'sims-iqis';
+
             }else{
                 $status = 'Unpaid';
                 $paymentType = null;
             }
 
-            $cekTagihan = Invoice::where('user_id', $item->user_id)->where('jenis_transaksi', $item->jenis_transaksi)
-                                    ->where('periode', $periode)->count();
+        
             if($cekTagihan == 0){
 
                 $invoice = Invoice::create([
