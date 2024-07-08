@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(ApiController::class)->group(function(){
     Route::get('/tracert-study/{sekolah}/{id}/{tanggal_lahir}/json', 'getDataTracertStudy')
             ->middleware('auth:sanctum')->name('api.getDataTracertStudy');
+    
+    Route::post('/send-wa', 'sendMessage')->name('api.sendMessage');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

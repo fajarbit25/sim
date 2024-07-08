@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
             'email'             => 'admins-smpit@iqis.sch.id',
             'level'             => 1,
             'status'            => 2,
-            'phone'             => '081000000004',
+            'phone'             => '081000000003',
             'telephone'         => NULL,
             'photo'             => 'https://sim.iqis.sch.id/storage/photo-users/user.png',
             'campus_id'         => 4,
@@ -151,7 +151,7 @@ class DatabaseSeeder extends Seeder
             'tempat_lahir'  => NULL,
             'tanggal_lahir' => NULL,
             'ibu_kandung'   => 'nama-ibu',
-            'nik'           => '0000000000000004'
+            'nik'           => '0000000000000003'
         ]);
 
         BiodataTeacher::create(['user_id'=> 4,]);
@@ -160,6 +160,37 @@ class DatabaseSeeder extends Seeder
         KepegawaianTeacher::create(['user_id'   => 4,]);
         KompetensiKhususTeacher::create(['user_id' => 4,]);
         PenugasanTeacher::create(['user_id' => 4,]);
+
+        /**Admin TK */
+        User::create([
+            'first_name'        => 'Admin SMKIT',
+            'email'             => 'admins-smkit@iqis.sch.id',
+            'level'             => 1,
+            'status'            => 2,
+            'phone'             => '081000000004',
+            'telephone'         => NULL,
+            'photo'             => 'https://sim.iqis.sch.id/storage/photo-users/user.png',
+            'campus_id'         => 5,
+            'email_verified_at' => '2023-09-02',
+            'password'          => Hash::make('iqis@2024'),
+            'kelas'             => 0,
+        ]);
+
+        Teacher::create([
+            'user_id'       => 5,
+            'jenis_kelamin' => 'Laki-Laki',
+            'tempat_lahir'  => NULL,
+            'tanggal_lahir' => NULL,
+            'ibu_kandung'   => 'nama-ibu',
+            'nik'           => '0000000000000004'
+        ]);
+
+        BiodataTeacher::create(['user_id'=> 5,]);
+        Alamat::create(['user_id'   => 5,]);
+        SchoolTeacher::create(['user_id'   => 5,]);
+        KepegawaianTeacher::create(['user_id'   => 5,]);
+        KompetensiKhususTeacher::create(['user_id' => 5,]);
+        PenugasanTeacher::create(['user_id' => 5,]);
 
         Tipetransaction::create(['campus_id' => 1, 'tipe' => 'PPDB']);
         Tipetransaction::create(['campus_id' => 2, 'tipe' => 'PPDB']);

@@ -13,19 +13,19 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="ta">Tahun Ajaran</label>
                                 <input type="text" class="form-control" disabled wire:model="ta"/>
                             </div>
                         </div>
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="semester">Semester</label>
                                 <input type="text" class="form-control" value="@if($semester == 1) Ganjil @elseif($semester == 2) Genap @endif" disabled>
                             </div>
                         </div>
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="kelas">Kelas</label>
                                 <select name="kelas" id="kelas" class="form-control @error('kelas') is-invalid @enderror" 
@@ -39,7 +39,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="mapel">Mata Pelajaran</label>
                                 <select class="form-control @error('mapel') is-invalid @enderror " 
@@ -53,16 +53,30 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-4 mb-3">
+                            <div class="form-group">
+                                <label for="jenis">Jenis Penilaian</label>
+                                <select name="jenis" id="jenis" class="form-control @error('jenis') is-invalid @enderror" 
+                                wire:model="jenis" @if(count($dataMapel) == 0) disabled @endif>
+                                    <option value="0">-Pilih Tipe Penilaian--</option>
+                                    <option value="PH">PH</option>
+                                    <option value="PTS">PTS</option>
+                                    <option value="PAS">PAS</option>
+                                </select>
+                            </div>
+                        </div>  
+                        <div class="col-sm-4 mb-3">
                             <div class="form-group">
                                 <label for="aspek">Aspek Penilaian</label>
                                 <select name="aspek" id="aspek" class="form-control @error('aspek') is-invalid @enderror" 
                                 wire:model="aspek" @if(count($dataMapel) == 0) disabled @endif>
                                     <option value="0">-Pilih Aspek Penilaian--</option>
                                     <option value="Formatif">Formatif</option>
+                                    <option value="Sumatif">Sumatif</option>
                                 </select>
                             </div>
                         </div>
+                        
                         @if(count($dataNilai) == 0)
                         <div class="col-sm-12 mb-3">
                             <button type="submit" class="btn btn-primary btn-sm" wire:loading.attr="disabled" wire:click="createFormNilai()">
@@ -96,6 +110,9 @@
                                     <th class="bg-light">Predikat</th>
                                     <th class="bg-light">Max</th>
                                     <th class="bg-light">Min</th>
+                                    @if($jenis != 'PAS')
+                                    <th class="bg-light">saran</th>
+                                    @endif
                                     <th>Capaian Kompetensi Upper/Lower</th>
                                 </tr>
                             </thead>
@@ -136,50 +153,75 @@
                                         </span>
                                     </th>
                                     <th rowspan="2" class="bg-light">
-                                        @foreach($dataPredikat as $predikat)
-                                            @if($predikat->nilai_min <= number_format($items->avg('nilai'), 0) && $predikat->nilai_max >= number_format($items->avg('nilai'), 0))
-                                                {{$predikat->deskripsi}}
-                                            @endif
-                                        @endforeach
+                                            @php
+                                                $nilai = number_format($items->avg('nilai'));
+                                                $getPredikat = $dataPredikat->where('nilai_min', '<=', $nilai)->where('nilai_max', '>=', $nilai)->first();
+                                                $predikat = $getPredikat->deskripsi;
+                                            @endphp
+                                            {{$predikat}}
                                     </td>
                                     <td rowspan="2" class="bg-light">{{ $items->max('nilai') }}</td>
                                     <td rowspan="2" class="bg-light">{{ $items->min('nilai') }}</td>
-                                    <td>
-                                        <span>{{$items->first()->nick_name}} </span>
-
-                                        @foreach($dataCapaian as $capaian)
-                                        @if($capaian->nilai_min <= $items->max('nilai') && $capaian->nilai_max >= $items->max('nilai'))
-                                        <span class="fw-bold"> {{$capaian->deskripsi}} </span>
-                                        @endif
-                                        @endforeach
-
-                                        <span>dalam </span>
-
-                                        @foreach ($dataKd as $kd)
-                                            @if($kd->id == $items->where('nilai', $items->max('nilai'))->first()->idkd)
-                                            <span class="fw-bold">{{$kd->deskripsi}} </span>
+                                    @if($jenis != 'PAS')
+                                    <td style="white-space: nowrap;" rowspan="2" class="bg-light">
+                                        @if($dataSaran)
+                                            @if($dataSaran->where('user_id', $siswaId)->count() <= 0)
+                                                <a href="javascript:void(0)" class="fst-italic fw-bold" wire:click="modalSaran({{$siswaId}})">
+                                                    <i class="bi bi-pencil-fill"></i>saran
+                                                </a>
+                                            @else
+                                                @php
+                                                    $saran = $dataSaran->where('user_id', $siswaId)->first();
+                                                    $idSaran = $saran->id;
+                                                @endphp
+                                                <a href="javascript:void(0)" class="fst-italic fw-bold" wire:click="modalSaranEdit({{$idSaran}})">
+                                                <span class="fst-italic" style="font-size: 11px;">
+                                                    {{substr($saran->saran, 0, 20)}}...
+                                                </span>
+                                                </a>
                                             @endif
-                                        @endforeach
-                                        .
+                                        @endif
+                                    </td>
+                                    @endif
+                                    <td>
+                                        @if($aspek == 'Formatif' && $jenis == 'PAS')
+                                            <span>{{$items->first()->nick_name}} </span>
+
+                                            @foreach($dataCapaian as $capaian)
+                                            @if($capaian->nilai_min <= $items->max('nilai') && $capaian->nilai_max >= $items->max('nilai'))
+                                            <span class="fw-bold"> {{$capaian->deskripsi}} </span>
+                                            @endif
+                                            @endforeach
+
+                                            <span>dalam </span>
+
+                                            @foreach ($dataKd as $kd)
+                                                @if($kd->id == $items->where('nilai', $items->max('nilai'))->first()->idkd)
+                                                <span class="fw-bold">{{$kd->deskripsi}} </span>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span>{{$items->first()->nick_name}} </span>
+                                        @if($aspek == 'Formatif' && $jenis == 'PAS')
+                                            <span>{{$items->first()->nick_name}} </span>
 
-                                        @foreach($dataCapaian as $capaian)
-                                        @if($capaian->nilai_min <= $items->min('nilai') && $capaian->nilai_max >= $items->min('nilai'))
-                                        <span class="fw-bold"> {{$capaian->deskripsi}} </span>
-                                        @endif
-                                        @endforeach
-
-                                        <span>dalam </span>
-
-                                        @foreach ($dataKd as $kd)
-                                            @if($kd->id == $items->where('nilai', $items->min('nilai'))->first()->idkd)
-                                            <span class="fw-bold">{{$kd->deskripsi}}, </span>
+                                            @foreach($dataCapaian as $capaian)
+                                            @if($capaian->nilai_min <= $items->min('nilai') && $capaian->nilai_max >= $items->min('nilai'))
+                                            <span class="fw-bold"> {{$capaian->deskripsi}} </span>
                                             @endif
-                                        @endforeach
+                                            @endforeach
+
+                                            <span>dalam </span>
+
+                                            @foreach ($dataKd as $kd)
+                                                @if($kd->id == $items->where('nilai', $items->min('nilai'))->first()->idkd)
+                                                <span class="fw-bold">{{$kd->deskripsi}}, </span>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -216,6 +258,56 @@
     </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalSaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Saran-Saran</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="saran">Masukkan Saran <span class="text-danger">*</span> </label>
+                    <textarea class="form-control @error('saran') is-invalid @enderror" rows="4" wire:model="saran"></textarea>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="createSaran()">
+                   <span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> </span> Simpan
+                </button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Modal -->
+    <div class="modal fade" id="modalSaranEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Saran-Saran</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="saranEdit">Saran-Saran <span class="text-danger">*</span> </label>
+                    <textarea class="form-control @error('saranEdit') is-invalid @enderror" rows="4" wire:model="saranEdit"></textarea>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" wire:loading.attr="disabled" wire:click="updateSaran()">
+                   <span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> </span> Simpan
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+
 
     @push('scripts')
     <script>
@@ -225,9 +317,19 @@
                 $('#modalNickName').modal('show')
             }); //membuka modalodal('show')
 
+            Livewire.on('modalSaranEdit', function () {
+                $("#modalSaranEdit").modal('show')
+            });
+
+            Livewire.on('modalSaran', function () {
+                $('#modalSaran').modal('show')
+            }); //membuka modalodal('show')
+
 
             Livewire.on('closeModal', function () {
                 $('#modalNickName').modal('hide')
+                $('#modalSaran').modal('hide')
+                $("#modalSaranEdit").modal('hide')
             }); //menutup semua modal
 
 

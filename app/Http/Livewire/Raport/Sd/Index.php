@@ -28,6 +28,7 @@ class Index extends Component
     public $dataPredikat;
     public $dataKd;
     public $dataMapel;
+    public $jenis;
 
     public $detailSemester;
     public $detailKelas;
@@ -101,7 +102,7 @@ class Index extends Component
                             ->leftJoin('kompetensi_dasars', 'kompetensi_dasars.id', '=', 'sd_nilai_pelajarans.kd')
                             ->where('sd_nilai_pelajarans.ta', $this->detailSemester->tahun_ajaran)
                             ->where('sd_nilai_pelajarans.semester', $this->detailSemester->semester_kode)
-                            ->where('users.kelas', $this->kelas)
+                            ->where('users.kelas', $this->kelas)->where('sd_nilai_pelajarans.jenis', $this->jenis)
                             ->select('users.id as iduser', 'first_name', 'nick_name', 'nilai', 'mapel_id', 'sd_nilai_pelajarans.id as idraport')
                             ->get();
         $this->dataNilai = $data;

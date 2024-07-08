@@ -19,7 +19,7 @@
         "midtrans/midtrans-php": "^2.5",
         "nesbot/carbon": "^2.72",
         "simplesoftwareio/simple-qrcode": "~4",
-        "twilio/sdk": "^8.1"
+        "twilio/sdk": "^8.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",

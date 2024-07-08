@@ -473,6 +473,7 @@ Route::controller(RaportSdController::class)->group(function(){
     Route::get('/raport/sd/penilaian', 'penilaian')->middleware('auth', 'sdguru')->name('raportSd.penilaian');
     Route::get('/raport/sd', 'raport')->middleware('auth', 'sdadmin')->name('raportSd.raport');
     Route::get('/raport/sd/{public_token}/cetak', 'raportCetak')->middleware('auth', 'sdadmin')->name('raportSd.raport-cetak');
+    Route::get('/raport/sd/{public_token}/cetak-pts', 'raportCetakPts')->middleware('auth', 'sdadmin')->name('raportSd.raport-cetak=pts');
 });
 
 Route::controller(RaportController::class)->group(function(){

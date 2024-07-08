@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campu;
 use App\Models\KompetensiDasar;
 use App\Models\Predikat;
 use App\Models\Priodik;
 use App\Models\Room;
 use App\Models\SdNilaiPelajaran;
 use App\Models\Semester;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -43,7 +45,7 @@ class RaportSdController extends Controller
         return view('raport.sd.index', $data);
     }
 
-    public function raportCetak($id)
+    public function raportCetak($id):View
     {
         $load = SdNilaiPelajaran::join('users', 'users.id', '=', 'sd_nilai_pelajarans.user_id')
                                 ->join('campus', 'campus.idcampus', '=', 'users.campus_id')
@@ -64,7 +66,7 @@ class RaportSdController extends Controller
                                     ->where('sd_nilai_pelajarans.user_id', $load->user_id)
                                     ->select('users.id as iduser', 'first_name', 'nick_name', 'nilai', 'mapel_id',
                                     'nama_mapel', 'sd_nilai_pelajarans.id as idraport', 'kd', 'mapels.jenis')
-                                    ->get(),
+                                    ->orderBy('mapel_id', 'ASC')->get(),
             'load'          => $load,
             'dataCapaian'   => Predikat::where('campus_id', Auth::user()->campus_id)
                                     ->where('jenis', 'Capaian')->get(),
@@ -75,5 +77,42 @@ class RaportSdController extends Controller
             'priodik'       => Priodik::where('user_id', $load->user_id)->orderBy('created_at', 'DESC')->first(),
         ];
         return view('raport.sd.print', $data);
+    }
+
+    public function raportCetakPts($id)//: View
+    {
+        $rapor = SdNilaiPelajaran::findOrFail($id);
+        $user  = User::join('registers', 'registers.user_id', '=', 'users.id')
+                    ->join('rooms', 'rooms.idkelas', '=', 'users.kelas')
+                    ->where('users.id', $rapor->user_id)
+                    ->select('first_name', 'nis', 'tingkat', 'kode_kelas', 'idkelas')->first();
+        $data = [
+            'title'     => 'Raport Mid Semester',
+            'user'      => $user,
+            'campus'    => Campu::join('users', 'users.campus_id', '=', 'campus.idcampus')
+                                ->where('users.id', $rapor->user_id)
+                                ->select('campus_name', 'campus_alamat')
+                                ->first(),
+            'semester'  => $rapor->semester,
+            'ta'        => $rapor->ta,
+            'tanggal'   => $rapor->tanggal_raport,
+            'wali'      => Room::join('users', 'users.id', '=', 'rooms.wali_kelas')
+                                ->join('kepegawaian_teachers', 'kepegawaian_teachers.user_id', '=', 'users.id')
+                                ->where('idkelas', $user->idkelas)->select('first_name as wali_kelas', 'niy')->first(),
+            'nilai'     => SdNilaiPelajaran::join('mapels', 'mapels.idmapel', '=', 'sd_nilai_pelajarans.mapel_id')
+                                ->where('user_id', $rapor->user_id)->where('sd_nilai_pelajarans.ta', $rapor->ta)
+                                ->where('sd_nilai_pelajarans.semester', $rapor->semester)->where('mapels.jenis', 'Reguler')
+                                ->where('sd_nilai_pelajarans.jenis', '!=', 'PAS')->where('mapel_campus', Auth::user()->campus_id)
+                                ->select('nilai', 'nama_mapel', 'mapel_id')->get(),
+            'nilai_ml'   => SdNilaiPelajaran::join('mapels', 'mapels.idmapel', '=', 'sd_nilai_pelajarans.mapel_id')
+                                ->where('user_id', $rapor->user_id)->where('sd_nilai_pelajarans.ta', $rapor->ta)
+                                ->where('sd_nilai_pelajarans.semester', $rapor->semester)->where('mapels.jenis', 'Muatan Lokal')
+                                ->where('sd_nilai_pelajarans.jenis', '!=', 'PAS')->where('mapel_campus', Auth::user()->campus_id)
+                                ->select('nilai', 'nama_mapel', 'mapel_id')->get(),
+            'predikat'  => Predikat::where('campus_id', Auth::user()->campus_id)->where('jenis', 'Predikat')->get(),
+
+        ];
+        //return response()->json($data);
+        return view('raport.sd.print-pts', $data);
     }
 }

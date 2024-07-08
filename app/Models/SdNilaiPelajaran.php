@@ -17,6 +17,7 @@ class SdNilaiPelajaran extends Model
        'aspek',
        'kd',
        'nilai',
+       'jenis',
        'tampil',
        'non_test',
         'test',

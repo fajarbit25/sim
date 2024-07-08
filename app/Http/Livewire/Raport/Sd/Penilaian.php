@@ -7,6 +7,7 @@ use App\Models\KompetensiDasar;
 use App\Models\Mapel;
 use App\Models\Predikat;
 use App\Models\Room;
+use App\Models\Saran;
 use App\Models\SdNilaiPelajaran;
 use App\Models\Semester;
 use App\Models\User;
@@ -23,7 +24,12 @@ class Penilaian extends Component
     public $aspek;
     public $nilai;
     public $kkm;
-
+    public $saran;
+    public $saranEdit;
+    public $idEditSaran;
+    public $siswaIdSaran;
+    
+    public $dataSaran;
     public $dataKelas;
     public $dataSiswa;
     public $dataMapel;
@@ -31,6 +37,7 @@ class Penilaian extends Component
     public $dataKd;
     public $dataPredikat;
     public $dataCapaian;
+    public $jenis;
 
     public $nick_name;
     public $name;
@@ -94,6 +101,61 @@ class Penilaian extends Component
         $this->dataKelas = $data;
     }
 
+    public function getDataSaran()
+    {
+        $data = Saran::where('jenis', 'rapor-mid-sd')->where('ta', $this->ta)
+                    ->where('semester', $this->semester)
+                    ->select('id', 'user_id', 'saran')
+                    ->get();
+        $this->dataSaran = $data;
+    }
+
+    public function createSaran()
+    {
+        $this->validate([
+            'saran'     => 'required',
+        ]);
+        Saran::create([
+            'jenis'     => 'rapor-mid-sd',
+            'ta'        => $this->ta,
+            'semester'  => $this->semester,
+            'user_id'   => $this->siswaIdSaran,
+            'saran'     => $this->saran,
+        ]);
+
+        $this->saran = "";
+        $this->siswaIdSaran = "";
+        $this->getDataNilai();
+        $this->emit('closeModal');
+    }
+
+    public function modalSaran($id)
+    {
+        $this->siswaIdSaran = $id;
+        $this->emit('modalSaran');
+    }
+
+    public function modalSaranEdit($id)
+    {
+        $this->idEditSaran = $id;
+        $saran = Saran::findOrFail($this->idEditSaran);
+        $this->saranEdit = $saran->saran;
+        $this->emit('modalSaranEdit');
+    }
+
+    public function updateSaran()
+    {
+        $saran = Saran::findOrFail($this->idEditSaran);
+        $saran->update([
+            'saran'     => $this->saranEdit,
+        ]);
+
+        $this->idEditSaran = "";
+        $this->saranEdit = "";
+        $this->emit('closeModal');
+        $this->getDataNilai();
+    }
+
     public function createFormNilai()
     {
         $this->validate();
@@ -116,6 +178,7 @@ class Penilaian extends Component
                         'aspek'         => $this->aspek,
                         'kd'            => $item->id,
                         'nilai'         => 0,
+                        'jenis'          => $this->jenis,
                         'non_test'      => 0,
                         'test'          => 0,
                         'tampil'        => 0,
@@ -132,10 +195,11 @@ class Penilaian extends Component
                         ->join('kompetensi_dasars', 'kompetensi_dasars.id', 'sd_nilai_pelajarans.kd')
                         ->where('sd_nilai_pelajarans.ta', $this->ta)->where('sd_nilai_pelajarans.semester', $this->semester)
                         ->where('mapel_id', $this->mapel)->where('sd_nilai_pelajarans.aspek', $this->aspek)
-                        ->where('users.kelas', $this->kelas)
+                        ->where('users.kelas', $this->kelas)->where('sd_nilai_pelajarans.jenis', $this->jenis)
                         ->select('first_name', 'nick_name', 'nis', 'kode', 'nilai', 'users.id as idsiswa',  
                         'sd_nilai_pelajarans.id as id_nilai', 'sd_nilai_pelajarans.kd as idkd')->get();
         $this->dataNilai = $data;
+        $this->getDataSaran();
     }
 
     public function getDataKd()

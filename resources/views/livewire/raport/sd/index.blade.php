@@ -6,7 +6,7 @@
                     <span wire:loading> <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> 
                 </h3>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="ta">Tahun Ajaran / Semester</label>
                             <select class="form-control" wire:model="ta">
@@ -17,7 +17,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-3">
+                    <div class="col-sm-4 mb-3">
                         <div class="form-group">
                             <label for="kelas">Kelas</label>
                             <select class="form-control @error('kelas') is-invalid @enderror" 
@@ -28,6 +28,17 @@
                                 <option value="{{$item->idkelas}}">Kelas {{$item->tingkat. ' '.$item->kode_kelas}}</option>
                                 @endforeach
                                 @endif
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <div class="form-group">
+                            <label for="jenis"> Jenis Penilaian <span class="text-danger">*</span> </label>
+                            <select class="form-control" wire:model="jenis">
+                                <option value="">-Pilih Jenis Penilaian</option>
+                                <option value="PH">PH</option>
+                                <option value="PTS">PTS</option>
+                                <option value="PAS">PAS</option>
                             </select>
                         </div>
                     </div>
@@ -77,42 +88,54 @@
                                         <th rowspan="2" class="bg-light">No.</th>
                                         <th rowspan="2" class="bg-light">Nama Siswa</th>
                                         <th rowspan="2" class="bg-light">Panggilan</th>
-                                        <th colspan="{{count($dataMapel)}}" class="bg-light">Nilai Akhir</th>
-                                        <th rowspan="2" class="bg-light">Rata-Rata</th>
-                                        <th rowspan="2" class="bg-light">Jumlah</th>
-                                        <th rowspan="2" class="bg-light">Rank</th>
-                                        <th rowspan="2" class="bg-light">Kriteria</th>
+                                        <th colspan="{{count($dataMapel)}}" class="bg-light text-center">Nilai Akhir</th>
+                                        <th rowspan="2" class="bg-light text-center">Rata-Rata<br/>({{$jenis}})</th>
+                                        <th rowspan="2" class="bg-light text-center">NA</th>
+                                        <th rowspan="2" class="bg-light text-center">Jumlah</th>
+                                        <th rowspan="2" class="bg-light text-center">Rank</th>
+                                        <th rowspan="2" class="bg-light text-center">Kriteria</th>
                                         @if(Auth::user()->level <= 1)
                                         <th rowspan="2" class="bg-light">Cetak</th>
                                         @endif
                                     </tr>
                                     <tr>
                                         @foreach($dataMapel as $item)
-                                        <th> {{$item->kode_mapel}} </th>
+                                        <th class="text-center"> {{$item->kode_mapel}} </th>
                                         @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($dataNilai->groupBy('first_name') as $firstName => $items)
+                                    @foreach($dataNilai->groupBy('iduser') as $iduser => $items)
                                     <tr>
                                         <td> {{$loop->iteration}} </td>
-                                        <td> {{$firstName}} </td>
+                                        <td> {{$items->first()->first_name}} </td>
                                         <td> {{$items->first()->nick_name}} </td>
                                         @foreach($dataMapel as $item)
-                                        <td>
+                                        <td class="text-center">
+                                            {{-- NA Mapel --}}
                                             @php
                                                 $avgNilai = $items->where('mapel_id', $item->idmapel)->avg('nilai');
                                             @endphp
-                                            {{number_format($avgNilai, 2)}}
+                                            @if($avgNilai <= 0)
+                                                <span class="text-danger fw-bold">{{number_format($avgNilai, 2)}}</span>
+                                            @else 
+                                                <span>{{number_format($avgNilai, 2)}}</span>
+                                            @endif
                                         </td>
                                         @endforeach
-                                        <td>
+                                        <td class="text-center">
+                                            {{-- Rata-rata --}}
                                             {{number_format($dataNilai->where('iduser', $items->first()->iduser)->avg('nilai'), 2)}}
                                         </td>
-                                        <td>
-                                            {{$dataNilai->where('iduser', $items->first()->iduser)->sum('nilai')}}
+                                        <td class="text-center">
+                                            {{-- jumlah --}}
+                                            {{number_format($dataNilai->where('iduser', $items->first()->iduser)->avg('nilai'), 2)}} 
                                         </td>
-                                        <td> 
+                                        <td class="text-center">
+                                            {{-- jumlah --}}
+                                            {{$dataNilai->where('iduser', $items->first()->iduser)->sum('nilai')}} 
+                                        </td>
+                                        <td class="text-center"> 
 
                                             @php
                                                 // Mengelompokkan dataNilai berdasarkan iduser
@@ -143,24 +166,30 @@
                                             @endforeach
 
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             @php
                                                 $avgKriteria = $dataNilai->where('iduser', $items->first()->iduser)->avg('nilai');
                                             @endphp
 
                                             @if($avgKriteria > 0 && $avgKriteria < 80)
                                                 <span>Cukup Memuaskan</span>
-                                            @elseif($avgKriteria > 80 && $avgKriteria < 90)
+                                            @elseif($avgKriteria >= 80 && $avgKriteria < 90)
                                                 <span>Memuaskan</span>
-                                            @elseif($avgKriteria > 90 && $avgKriteria < 100)
+                                            @elseif($avgKriteria >= 90 && $avgKriteria < 100)
                                                 <span>Sangat Memuaskan</span>
                                             @endif
                                         </td>
                                         @if(Auth::user()->level <= 1)
-                                        <td class="bg-light">
+                                        <td class="bg-light" style="white-space: nowrap;">
+                                            @if($jenis == 'PAS')
                                             <a href="/raport/sd/{{$items->first()->idraport}}/cetak" class="btn btn-warning btn-xs" target="_blank">
-                                                <i class="bi bi-printer-fill"></i> Cetak
+                                                <i class="bi bi-printer-fill"></i> PAS
                                             </a>
+                                            @else
+                                            <a href="/raport/sd/{{$items->first()->idraport}}/cetak-pts" class="btn btn-info btn-xs" target="_blank">
+                                                <i class="bi bi-printer-fill"></i> PTS
+                                            </a>
+                                            @endif
                                         </td>
                                         @endif
                                     </tr>

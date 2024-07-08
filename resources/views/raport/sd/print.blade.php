@@ -256,7 +256,7 @@
 
                         @foreach($dataCapaian as $capaian)
                         @if($capaian->nilai_min <= $maxNilai && $capaian->nilai_max >= $maxNilai)
-                        <span> {{$capaian->deskripsi}} </span>
+                            <span> {{$capaian->deskripsi}} </span>
                         @endif
                         @endforeach
 

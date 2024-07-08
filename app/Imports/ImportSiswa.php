@@ -35,7 +35,7 @@ class ImportSiswa implements ToCollection
                 'campus_id'     => Auth::user()->campus_id,
                 'email_verified_at'=> date('Y-m-d'),
                 'kelas'         => 0,
-                'password'      => Hash::make($col[66]),
+                'password'      => Hash::make('iqis@2024'),
                 'rfid'          => NULL,      
             ]);
 

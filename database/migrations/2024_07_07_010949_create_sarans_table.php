@@ -13,20 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sd_nilai_pelajarans', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('sarans', function (Blueprint $table) {
+            $table->id();
+            $table->string('jenis');
             $table->string('ta');
             $table->string('semester');
             $table->string('user_id');
-            $table->string('mapel_id');
-            $table->string('aspek');
-            $table->string('kd');
-            $table->integer('nilai');
-            $table->string('jenis');
-            $table->integer('non_test');
-            $table->integer('test');
-            $table->string('tampil');
-            $table->string('tanggal_raport')->nullable();
+            $table->string('saran');
             $table->timestamps();
         });
     }
@@ -38,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sd_nilai_pelajarans');
+        Schema::dropIfExists('sarans');
     }
 };
