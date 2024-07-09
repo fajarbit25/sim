@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Apitoken;
 use App\Models\Attendance;
 use App\Models\Campu;
+use App\Models\Room;
 use App\Models\TracertStudy;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -105,27 +106,16 @@ class ApiController extends Controller
         return json_decode($response->getBody(), true);
     }
 
-    public function dataTkit()
+    public function dataSekolah($id)
     {
-        $data = Campu::findOrFail(2);
+
+        $data = [
+            'sekolah'   => Campu::findOrFail(2),
+            'siswa'     => User::where('level', 4)->where('campus_id', $id)->count(),
+            'guru'      => User::where('level', 2)->where('campus_id', $id)->count(),
+            'kelas'     => Room::where('campus_id', $id)->count(),
+        ];
         return response()->json($data);
     }
 
-    public function dataSdit()
-    {
-        $data = Campu::findOrFail(3);
-        return response()->json($data);
-    }
-
-    public function dataSmpit()
-    {
-        $data = Campu::findOrFail(4);
-        return response()->json($data);
-    }
-
-    public function dataSmkit()
-    {
-        $data = Campu::findOrFail(5);
-        return response()->json($data);
-    }
 }
