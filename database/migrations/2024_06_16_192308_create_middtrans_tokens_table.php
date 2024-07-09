@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('admin_fee');
             $table->string('midtrans_environment');
             $table->string('chat_id_telegram')->nullable();
+            $table->string('whatsapp_key');
             $table->string('status');
             $table->timestamps();
         });

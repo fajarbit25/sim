@@ -16,6 +16,7 @@ class MiddtransToken extends Component
     public $chat_id_telegram;
     public $admin_fee;
     public $midtransEnvironment;
+    public $waToken;
 
     protected $rules = [
         'merchant'  => 'required',
@@ -45,6 +46,7 @@ class MiddtransToken extends Component
         $this->admin_fee = $data->admin_fee ?? 0;
         $this->chat_id_telegram = $data->chat_id_telegram ?? "";
         $this->midtransEnvironment = $data->midtrans_environment ?? "";
+        $this->waToken = $data->whatsapp_key ?? "";
     }
 
     public function submitToken()
@@ -60,6 +62,7 @@ class MiddtransToken extends Component
             'admin_fee'         => $this->admin_fee,
             'midtrans_environment'   => $this->midtransEnvironment,
             'chat_id_telegram'  => $this->chat_id_telegram,
+            'whatsapp_key'      => $this->waToken,
             'status'            => 'Active'
         ];
 

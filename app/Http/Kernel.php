@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CheckApiToken::class,
         ],
     ];
 
@@ -75,5 +76,6 @@ class Kernel extends HttpKernel
         'allguru' => \App\Http\Middleware\AllGuru::class,
         'sdadmin' => \App\Http\Middleware\Sdadmin::class,
         'smpsmkadmin' => \App\Http\Middleware\SmpSmkAdmin::class,
+        'api'   => \App\Http\Middleware\CheckApiToken::class,
     ];
 }

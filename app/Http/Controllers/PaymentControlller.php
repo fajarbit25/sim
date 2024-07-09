@@ -17,11 +17,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentControlller extends Controller
 {
-    protected $whatsappService;
+    protected $client;
 
-    public function __construct(WhatsAppService $whatsappService)
+
+    public function __construct()
     {
-        $this->whatsappService = $whatsappService;
+        $this->client = new Client();
     }
 
     public function apiSetting() : View
@@ -57,25 +58,9 @@ class PaymentControlller extends Controller
         return view('payment.payment-unpaid', $data);
     }
 
-    public function sendNotifikasiWA()
-    {
-        $to = '0895330078691';
-        $message = "Testing Notifikasi WA Gateway";
-        $send = $this->whatsappService->sendMessage($to, $message);
-        if($send){
-            return response()->json([
-                'message' => 'Berhasil Terkirim!'
-            ], 200);
-        }else{
-            return response()->json([
-                'message' => 'Gagal Terkirim!'
-            ], 401);
-        }
-    }
-
 
     public function kirimTagihanApi()
-    {   
+    {
         $semester = Semester::where('is_active', 'true')->first();
         $ta = $semester->tahun_ajaran;
         $sm = $semester->semester_kode;
@@ -93,7 +78,7 @@ class PaymentControlller extends Controller
                     ->join('payment_jenis_tagihans', 'payment_jenis_tagihans.id', '=', 'payments.jenis')
                     ->where('check_list', '1')
                     ->where('due_date', number_format($today))
-                    ->select('payments.id as kode_transaksi', 'total_price', 'payments.jenis', 'payments.campus_id',
+                    ->select('payments.id as kode_transaksi', 'total_price', 'payments.jenis', 'payments.campus_id', 'users.phone',
                     'first_name', 'payments.user_id', 'payment_jenis_tagihans.jenis as jenis_transaksi', 'payment_jenis_tagihans.id as id_jenis_transakis')
                     ->get();
         foreach($payment as $item){
@@ -151,9 +136,10 @@ class PaymentControlller extends Controller
                 $status = 'Unpaid';
                 $paymentType = null;
             }
-
         
             if($cekTagihan == 0){
+
+                $message = "Tagihan ".$item->jenis_transaksi." Semester ".$semesterKode.", Tahun ajaran ".$ta.", Siswa ".$item->first_name." Ibnul Qayyim Islamic School";
 
                 $invoice = Invoice::create([
                     'user_id'           => $item->user_id,
@@ -164,11 +150,28 @@ class PaymentControlller extends Controller
                     'invoice_date'      => date('Y-m-d'),
                     'amount'            => $item->total_price,
                     'invoice_status'    => $status,
-                    'description'       => "Tagihan ".$item->jenis_transaksi." Semester ".$semesterKode.", Tahun ajaran ".$ta.", Siswa ".$item->first_name." Ibnul Qayyim Islamic School",
+                    'description'       => $message,
                     'campus_id'         => $item->campus_id,
                     'payment_type'      => $paymentType,
                     'periode'           => $periode,
                 ]);
+
+                /**Send WhatsApp Via fonte */
+                $tokens = MiddtransToken::where('campus_id', $item->campus_id)->first();
+                $apiKey = $tokens->whatsapp_key;
+                
+                $response = $this->client->post('https://api.fonnte.com/send', [
+                    'headers' => [
+                        'Authorization' => $apiKey,
+                    ],
+                    'form_params' => [
+                        'target' => $item->phone,
+                        'message' => $message,
+                    ],
+                ]);
+
+                /**End Send WhatsApp Via fonte */
+
 
                 /**insert data diskon per invoice */
                 $userDiscount = PaymentDiscountUser::where('user_id', $item->user_id)->get();
@@ -183,7 +186,7 @@ class PaymentControlller extends Controller
         }
         //Endforeach
 
-        $cekStatusSend = Invoice::whereDate('created_at', date('Y-m-d'))->get();
+        $cekStatusSend = Invoice::whereDate('invoices.created_at', date('Y-m-d'))->get();
 
         if($cekStatusSend->count() != 0){
 
@@ -223,6 +226,7 @@ class PaymentControlller extends Controller
                         'error' => $e->getMessage(),
                     ], 500);
                 }
+
             }//endforach
 
         }else{

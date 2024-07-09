@@ -89,13 +89,20 @@
                 <td>
                     <div class="row">
                         <div class="col-12 text-center wrap-logo-sekolah">
-                            <img src="{{asset('storage/home-banner/SMPIT.png')}}" alt="logo-sdit" class="logo-sekolah">
+                            <img src="{{asset('storage/home-banner/tutwuri-handayani.png')}}" alt="logo-sdit" class="logo-sekolah">
                         </div>
                         <div class="col-12 text-center mb-5">
+                            @if(Auth::user()->campus_id = 4)
                             <h3>
-                                RAPORT <br/> PESERTA DIDIK <br/> SEKOLAH DASAR <br/> (SD)
+                                RAPORT <br/> PESERTA DIDIK <br/> SEKOLAH MENENGAH PERTAMA <br/> (SMP)
                             </h3>
-                        </div>
+                            @endif
+                            @if(Auth::user()->campus_id == 5) 
+                            <h3>
+                                RAPORT <br/> PESERTA DIDIK <br/> SEKOLAH MENENGAH KEJURUAN <br/> (SMK)
+                            </h3>
+                            @endif
+                        </div> 
                         <div class="col-2"></div>
                         <div class="col-8 text-center">
                             <p class="title-nama">Nama Peserta Didik :</p>

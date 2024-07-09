@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Apitoken;
 use App\Models\Attendance;
+use App\Models\Campu;
 use App\Models\TracertStudy;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TwilioService;
 use Illuminate\Routing\Controller;
+use GuzzleHttp\Client;
 
 class ApiController extends Controller
 {
     protected $twilio;
+    protected $client;
 
     public function __construct(TwilioService $twilio)
     {
+        $this->client = new Client();
         $this->twilio = $twilio;
     }
 
@@ -80,5 +84,48 @@ class ApiController extends Controller
         }
 
         return 'whatsapp:+' . $number;
+    }
+
+    public function sendWaMessage()
+    {
+        $apiKey = "#eGL+JB9heCZ2#T!WHan";
+        $target = "0895330078691";
+        $message = "Hello Guys!";
+        
+        $response = $this->client->post('https://api.fonnte.com/send', [
+            'headers' => [
+                'Authorization' => $apiKey,
+            ],
+            'form_params' => [
+                'target' => $target,
+                'message' => $message,
+            ],
+        ]);
+
+        return json_decode($response->getBody(), true);
+    }
+
+    public function dataTkit()
+    {
+        $data = Campu::findOrFail(2);
+        return response()->json($data);
+    }
+
+    public function dataSdit()
+    {
+        $data = Campu::findOrFail(3);
+        return response()->json($data);
+    }
+
+    public function dataSmpit()
+    {
+        $data = Campu::findOrFail(4);
+        return response()->json($data);
+    }
+
+    public function dataSmkit()
+    {
+        $data = Campu::findOrFail(5);
+        return response()->json($data);
     }
 }

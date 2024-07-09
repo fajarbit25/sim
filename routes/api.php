@@ -27,7 +27,14 @@ Route::controller(ApiController::class)->group(function(){
     Route::get('/tracert-study/{sekolah}/{id}/{tanggal_lahir}/json', 'getDataTracertStudy')
             ->middleware('auth:sanctum')->name('api.getDataTracertStudy');
     
+    /**API Satuan Pendidikan */
+    Route::get('/tkit/get', 'dataSmpit')->middleware('api')->name('api.dataTkit');
+    Route::get('/sdit/get', 'dataSmpit')->middleware('api')->name('api.dataSdit');
+    Route::get('/smpit/get', 'dataSmpit')->middleware('api')->name('api.dataSmpit');
+    Route::get('/smkit/get', 'dataSmpit')->middleware('api')->name('api.dataSmkit');
+    
     Route::post('/send-wa', 'sendMessage')->name('api.sendMessage');
+    Route::post('/wa/fonte/send', 'sendWaMessage')->name('api.sendWaMessage');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -18,6 +18,7 @@ class MiddtransToken extends Model
        'admin_fee',
        'midtrans_environment',
        'chat_id_telegram',
+       'whatsapp_key',
        'status',
     ];
 
