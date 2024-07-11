@@ -483,6 +483,8 @@ Route::controller(RaportController::class)->group(function(){
     Route::get('/raport/km/raport-tahsin', 'raportTahsin')->middleware('auth', 'allguru')->name('raportKm.raportTahsin');
     Route::get('/raport/km/raport-tahsin-admin', 'raportTahsinAdmin')->middleware('auth', 'admin')->name('raportKm.raportTahsinAdmin');
     Route::get('/raport/km/{id}/tahsin', 'raportTahsinPrint')->middleware('auth', 'admin')->name('raportKm.raportTahsinPrint');
+    Route::get('/raport/raport-tahfidz', 'raportTahfidz')->middleware('auth')->name('raportKm.raportTahfidz');
+    Route::get('/raport/tahfidz/database', 'databaseTahfidz')->middleware('auth')->name('raportKm.databaseTahfidz');
 });
 
 Route::controller(PaymentControlller::class)->group(function () {

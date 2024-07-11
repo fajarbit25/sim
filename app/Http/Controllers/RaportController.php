@@ -114,4 +114,20 @@ class RaportController extends Controller
         ];
         return view('raport.km.tahsin-print', $data);
     }
+
+    public function raportTahfidz(): View
+    {
+        $data = [
+            'title'         => 'Raport Tahfidz',
+        ];
+        return view('raport.km.tahfidz', $data);
+    }
+
+    public function databaseTahfidz(): View
+    {
+        $data = [
+            'title'         => 'Database Surah',
+        ];
+        return view('raport.km.tahfidz-database', $data);
+    }
 }

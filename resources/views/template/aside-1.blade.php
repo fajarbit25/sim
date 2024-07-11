@@ -112,6 +112,11 @@
               <i class="bi bi-circle"></i><span>Rapor</span>
             </a>
           </li>
+          <li>
+            <a href="{{url('/raport/raport-tahfidz')}}">
+              <i class="bi bi-circle"></i><span>Raport Tahfidz</span>
+            </a>
+          </li>
           @endif
           @if(Auth::user()->campus_id == 3)
           <li>
