@@ -9,6 +9,7 @@ use App\Models\TahfidzNilai;
 use App\Models\TahfidzObject;
 use App\Models\TahfidzSurah;
 use App\Models\TahsinCatatan;
+use App\Models\TahsinGuru;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -41,6 +42,8 @@ class Tahfidz extends Component
 
     public $tanggal;
     public $guru;
+    public $dataGuru;
+    public $keyGuru;
 
     public $notif;
 
@@ -56,6 +59,7 @@ class Tahfidz extends Component
             $this->getDataNilai();
             $this->getDataObjek();
             $this->getDataSaran();
+            $this->getGuruTahsin();
             if($this->tingkat == 7){
                 $this->getFaturrahman();
             }
@@ -94,6 +98,14 @@ class Tahfidz extends Component
     {
         $data = TahfidzSurah::where('bahasa', 'like', '%'.$this->key.'%')->get();
         $this->dataSurah = $data;
+    }
+
+    public function getGuruTahsin()
+    {
+        $data = TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                ->where('tahsin_gurus.campus_id', Auth::user()->campus_id)->where('tahsin_gurus.kelas', $this->kelas)
+                ->select('first_name')->first();
+        $this->guru = $data->first_name ?? "";
     }
 
     public function getDataKelas()
@@ -144,7 +156,7 @@ class Tahfidz extends Component
                             ->where('kelas', $this->kelas)->select('id', 'user_id', 'catatan', 'tanggal_rapor')
                             ->get();
         $this->dataSaran = $data;
-        $this->tanggal = $data->first()->tanggal_rapor;
+        $this->tanggal = $data->first()->tanggal_rapor ?? "";
     }
 
     public function updatedtanggal()
@@ -329,6 +341,48 @@ class Tahfidz extends Component
 
         $this->nilaiFaturrahman = "";
 
+    }
+
+    public function modalGuru()
+    {
+        $this->emit('modalGuru');
+    }
+
+    public function updatedkeyGuru()
+    {
+        $data = User::where('campus_id', Auth::user()->campus_id)->where('level', '<=', 2)
+                    ->where('first_name', 'like', '%'.$this->keyGuru.'%')->limit(10)->get();
+        $this->dataGuru = $data;
+    }
+
+    public function addGuruTahsin($id)
+    {
+        $cek = TahsinGuru::where('campus_id', Auth::user()->campus_id)->where('kelas', $this->kelas)->get();
+        if($cek->count() <= 0){
+            $data = [
+                'campus_id'     => Auth::user()->campus_id,
+                'kelas'         => $this->kelas,
+                'user_id'       => $id,
+            ];
+            TahsinGuru::create($data);
+        }else{
+            $load = TahsinGuru::where('campus_id', Auth::user()->campus_id)->where('kelas', $this->kelas)->first();
+            $data = [
+                'campus_id'     => Auth::user()->campus_id,
+                'kelas'         => $this->kelas,
+                'user_id'       => $id,
+            ];
+            $guru = TahsinGuru::findOrFail($load->id);
+            $guru->update($data);
+        }
+        
+        $this->emit('closeModal');
+        $this->getGuruTahsin();
+        $this->notif = [
+            'status'    => 200,
+            'message'   => 'Guru Tahsin Ditambahkan!',
+        ];
+        $this->showAlert();
     }
 
     public function showAlert()

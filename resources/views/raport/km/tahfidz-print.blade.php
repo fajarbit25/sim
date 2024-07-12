@@ -57,6 +57,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if($kelas->tingkat == '7')
                         <div class="col-12 bg-soft mt-3"> <span class="fw-bold" id="font-smk"> A. Bacaan Al-Qur'an Metode Nurul Bayan </span> </div>
                         <div class="col-12">
                             <table class="table table-bordered my-2">
@@ -82,8 +83,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        @endif
 
-                        <div class="col-12 bg-soft mt-3"> <span class="fw-bold" id="font-smk"> B. Tahfizh Al-Qu r'an </span> </div>
+                        <div class="col-12 bg-soft mt-3"> <span class="fw-bold" id="font-smk"> @if($kelas->tingkat == '7') B @else A @endif. Tahfizh Al-Qu r'an </span> </div>
                         @php
                             $count = $result->count();
                             $splitPoint = ceil($count / 2);

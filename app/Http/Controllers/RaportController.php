@@ -179,6 +179,7 @@ class RaportController extends Controller
                                 ->select('deskripsi', 'nilai')->first(),
             'catatan'       => $catatan,
             'guru_tahsin'   => TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                                ->where('tahsin_gurus.kelas', $kelas)
                                 ->where('tahsin_gurus.campus_id', Auth::user()->campus_id)->select('first_name as name')->first(),
         ];
         return view('raport.km.tahfidz-print', $data);

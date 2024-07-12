@@ -37,22 +37,26 @@
                             <a href="/raport/tahfidz/database" class="text-primary"> <i class="bi bi-database-fill-add"></i> Database Surah </a>
                         </div>
                         @if(Auth::user()->level == 1)
+                        @if($kelas)
                         <div class="col-sm-12 mb-3">
                             <div class="row">
+                                @if($dataNilai->count() != 0)
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="tanggal">Tanggal Rapor</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror" wire:model="tanggal">
                                     </div>
                                 </div>
+                                @endif
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="guru">Guru Tahsin</label>
-                                        <input type="text" class="form-control @error('guru') is-invalid @enderror" wire:model="guru" placeholder="Input Guru Tahsin.." readonly>
+                                        <input type="text" class="form-control @error('guru') is-invalid @enderror" value="{{$guru}}" wire:click="modalGuru" placeholder="Input Guru Tahsin.." readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endif
                         @endif
 
                         @if($dataNilai)
@@ -75,8 +79,9 @@
                                                 @if($tingkat == 7)
                                                 <th colspan="2" class="bg-light">Faturrahman</th>
                                                 @endif
-
+                                                @if(Auth::user()->level == 1)
                                                 <th rowspan="2" class="bg-light pb-4"> Cetak </th>
+                                                @endif
                                             </tr>
                                             <tr>
                                                 @foreach($dataNilai->groupBy('arab') as $arab => $item)
@@ -161,9 +166,11 @@
                                                 </td> 
                                                 @endforeach
                                                 @endif
+                                                @if(Auth::user()->level == 1)
                                                 <td class="text-center">
                                                     <a href="/raport/tahfidz/{{$items->first()->id}}/print" target="_blank" class="text-warning"><i class="bi bi-printer-fill"></i></a>
                                                 </td>
+                                                @endif
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -335,6 +342,57 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalGuru" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Guru Tahfidz</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="deskripsi">Pilih Guru Tahfidz <span class="text-danger">*</span> </label>
+                    <input type="search" class="form-control" wire:model="keyGuru" placeholder="Cari Guru..">
+                </div>
+            </div>
+            <div class="col-sm-12 my-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama</th>
+                            <th>Pilih</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($dataGuru)
+                        @foreach($dataGuru as $item)
+                        <tr>
+                            <td> {{$loop->iteration}} </td>
+                            <td> {{$item->first_name}} </td>
+                            <td>
+                                <a href="javascript:void(0)" class="text-success" wire:click="addGuruTahsin({{$item->id}})">select <i class="bi bi-arrow-right"></i></a>
+                            </td>
+                        </tr>
+                        @endforeach
+                        @else 
+                        <tr>
+                            <td colspan="3"">Cari nama guru...</td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 
   @push('scripts')
     <script>
@@ -356,11 +414,16 @@
                 $("#modalDeskripsi").modal('show')
             });
 
+            Livewire.on('modalGuru', function () {
+                $("#modalGuru").modal('show')
+            });
+
             Livewire.on('closeModal', function () {
                 $('#modalSurah').modal('hide')
                 $("#modalNickName").modal('hide')
                 $("#modalSaran").modal('hide')
                 $("#modalDeskripsi").modal('hide')
+                $("#modalGuru").modal('hide')
             }); //membuka modal
 
             
