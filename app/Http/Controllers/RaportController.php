@@ -6,6 +6,7 @@ use App\Http\Livewire\Raport\Km\Tahsin;
 use App\Models\Campu;
 use App\Models\Room;
 use App\Models\SdNilaiPelajaran;
+use App\Models\TahfidzNilai;
 use App\Models\TahsinCatatan;
 use App\Models\TahsinGuru;
 use App\Models\TahsinNilai;
@@ -14,6 +15,9 @@ use App\Models\Wali;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Alkoumi\LaravelHijriDate\Hijri;
+use App\Models\TahfidzFaturrahman;
+use IntlDateFormatter;
 
 class RaportController extends Controller
 {
@@ -129,5 +133,54 @@ class RaportController extends Controller
             'title'         => 'Database Surah',
         ];
         return view('raport.km.tahfidz-database', $data);
+    }
+
+    public function printTahfidz($id):View
+    {
+        $raport = TahfidzNilai::findOrFail($id);
+        $userid = $raport->user_id;
+        $ta = $raport->ta;
+        $semester = $raport->semester;
+        $kelas = $raport->kelas;
+        $campus = Auth::user()->campus_id;
+
+        $saran = TahsinCatatan::where('ta', $ta)->where('semester', $semester)->where('kelas', $kelas)->where('user_id', $userid)->first();
+        $tanggal = $saran->tanggal_rapor;
+        $tanggalHijriah = Hijri::MediumDate($tanggal);
+        $catatan = $saran->catatan;
+
+        $dateTime = new \DateTime($tanggal); // Konversi string tanggal ke objek DateTime
+
+        $formatter = new IntlDateFormatter(
+            'id_ID', // Locales untuk bahasa Indonesia
+            IntlDateFormatter::LONG, // Format panjang (misalnya: 12 Juli 2024)
+            IntlDateFormatter::NONE // Hanya tanggal, tanpa waktu
+        );
+
+        $formattedDate = $formatter->format($dateTime);
+
+        $data = [
+            'title'         => 'Raport Tahfidz',
+            'result'        => TahfidzNilai::join('tahfidz_surahs', 'tahfidz_surahs.id', '=', 'tahfidz_nilais.id_surah')
+                                ->where('tahfidz_nilais.ta', $ta)->where('tahfidz_nilais.semester', $semester)
+                                ->where('tahfidz_nilais.kelas', $kelas)->where('tahfidz_nilais.user_id', $userid)
+                                ->where('tahfidz_nilais.campus_id', $campus)
+                                ->select('tahfidz_nilais.id','tahfidz_nilais.user_id', 'bahasa', 'nilai', 'jus')->get(),
+            'hijriah'       => $tanggalHijriah,
+            'masehi'        => $formattedDate,
+            'campus'        => Campu::findOrFail(Auth::user()->campus_id),
+            'semester'      => $semester,
+            'ta'            => $ta,
+            'kelas'         => Room::findOrFail($kelas),
+            'user'          => User::join('students', 'students.user_id', '=', 'users.id')
+                                ->where('users.id', $userid)->select('first_name', 'nisn')->first(),
+            'faturrahman'   => TahfidzFaturrahman::where('ta', $ta)->where('semester', $semester)
+                                ->where('kelas', $kelas)->where('user_id', $userid)->where('campus_id', $campus)
+                                ->select('deskripsi', 'nilai')->first(),
+            'catatan'       => $catatan,
+            'guru_tahsin'   => TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
+                                ->where('tahsin_gurus.campus_id', Auth::user()->campus_id)->select('first_name as name')->first(),
+        ];
+        return view('raport.km.tahfidz-print', $data);
     }
 }

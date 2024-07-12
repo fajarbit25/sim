@@ -485,6 +485,7 @@ Route::controller(RaportController::class)->group(function(){
     Route::get('/raport/km/{id}/tahsin', 'raportTahsinPrint')->middleware('auth', 'admin')->name('raportKm.raportTahsinPrint');
     Route::get('/raport/raport-tahfidz', 'raportTahfidz')->middleware('auth')->name('raportKm.raportTahfidz');
     Route::get('/raport/tahfidz/database', 'databaseTahfidz')->middleware('auth')->name('raportKm.databaseTahfidz');
+    Route::get('/raport/tahfidz/{id}/print', 'printTahfidz')->middleware('auth')->name('raportKm.printTahfidz');
 });
 
 Route::controller(PaymentControlller::class)->group(function () {

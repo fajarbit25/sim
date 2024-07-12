@@ -32,10 +32,28 @@
                         </div>
                         <div class="col-sm-4 p-3 text-end">
                             @if($kelas)
-                            <button type="button" class="btn btn-success btn-sm" wire:click="modalSurah"><i class="bi bi-plus"></i> Objek Penilaian </button>
+                            <button type="button" class="btn btn-success btn-sm" wire:click="modalSurah"><i class="bi bi-plus"></i> Target Hafalan </button>
                             @endif
                             <a href="/raport/tahfidz/database" class="text-primary"> <i class="bi bi-database-fill-add"></i> Database Surah </a>
                         </div>
+                        @if(Auth::user()->level == 1)
+                        <div class="col-sm-12 mb-3">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="tanggal">Tanggal Rapor</label>
+                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" wire:model="tanggal">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="guru">Guru Tahsin</label>
+                                        <input type="text" class="form-control @error('guru') is-invalid @enderror" wire:model="guru" placeholder="Input Guru Tahsin.." readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
 
                         @if($dataNilai)
                             @if($dataNilai->count() == 0)
@@ -54,13 +72,22 @@
                                                 <th colspan="{{$dataNilai->groupBy('bahasa')->count()}}" class="bg-light">Surah</th>
                                                 <th rowspan="2" class="text-center bg-light pb-4">Rata-Rata</th>
                                                 <th rowspan="2" class="bg-light pb-4">Saran</th>
+                                                @if($tingkat == 7)
+                                                <th colspan="2" class="bg-light">Faturrahman</th>
+                                                @endif
+
                                                 <th rowspan="2" class="bg-light pb-4"> Cetak </th>
                                             </tr>
                                             <tr>
                                                 @foreach($dataNilai->groupBy('arab') as $arab => $item)
                                                     <th class="bg-light"> {{$arab}} </th>
                                                 @endforeach
+                                                @if($tingkat == 7)
+                                                <th class="bg-light"> Nilai </th> 
+                                                <th class="bg-light"> Deskripsi </th> 
+                                                @endif
                                             </tr>
+                                            
                                         </thead>
                                         <tbody>
                                             @foreach($dataNilai->groupBy('user_id') as $iduser => $items)
@@ -110,8 +137,32 @@
                                                         @endforeach
                                                     </span>
                                                 </td>
+                                                @if($tingkat == 7)
+                                                @foreach($faturrahman->where('user_id', $iduser) as $ft)
+                                                <td class="text-center">
+                                                    <a class="icon" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                                        {{$ft->nilai}}
+                                                     </a>
+                                                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                         <div class="col-sm-12" style="padding-left: 10px; padding-right:10px; max-width:200px;">
+                                                             <div class="input-group">
+                                                                 <input type="text" class="form-control @error('nilaiFaturrahman') is-invalid @endif" aria-describedby="button-addon2" wire:model.lazy="nilaiFaturrahman">
+                                                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2" wire:loading.attr="disabled" wire:click="updateNilaiFaturrahman('{{$ft->id}}')">
+                                                                     <i class="bi bi-check"></i>
+                                                                 </button>
+                                                             </div>
+                                                         </div>
+                                                     </ul>    
+                                                </td> 
                                                 <td>
-                                                    <a href="javascript:void(0)" class="text-warning"><i class="bi bi-printer-fill"></i></a>
+                                                    <a href="javascript:void(0)" wire:click="modalDeskripsi({{$ft->id}})" class="fst-italic">
+                                                        {{substr($ft->deskripsi, 0, 20)}}...
+                                                    </a>
+                                                </td> 
+                                                @endforeach
+                                                @endif
+                                                <td class="text-center">
+                                                    <a href="/raport/tahfidz/{{$items->first()->id}}/print" target="_blank" class="text-warning"><i class="bi bi-printer-fill"></i></a>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -257,6 +308,33 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="modalDeskripsi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Deskripsi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="deskripsi">Seri Kitab (Deskripsi) <span class="text-danger">*</span> </label>
+                    <textarea class="form-control @error('deskripsi') is-invalid @enderror" rows="5" wire:model="deskripsi"></textarea>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" wire:click="updateFaturrahmanDeskripsi">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
+                    Simpan
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 
   @push('scripts')
     <script>
@@ -274,10 +352,15 @@
                 $("#modalSaran").modal('show')
             });
 
+            Livewire.on('modalDeskripsi', function () {
+                $("#modalDeskripsi").modal('show')
+            });
+
             Livewire.on('closeModal', function () {
                 $('#modalSurah').modal('hide')
                 $("#modalNickName").modal('hide')
                 $("#modalSaran").modal('hide')
+                $("#modalDeskripsi").modal('hide')
             }); //membuka modal
 
             

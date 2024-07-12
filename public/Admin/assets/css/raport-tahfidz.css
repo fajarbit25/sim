@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.kop-raport{
+    width: 100%;
+}
+
+table thead tr td{
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+}
+
+
+.line-header-smk{
+    border-bottom: 3px solid rgb(3, 124, 204);
+    border-top: 2px solid rgb(22, 154, 230);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding: 1px;;
+}
+
+.bg-soft{
+    background-color: rgba(122, 224, 224, 0.226);
+}
+
+#font-smk{
+    color: rgb(113, 153, 177);
+}
+
+#bg-soft-footer{
+    background-color: rgba(122, 224, 224, 0.226);
+}
+
+#thead-smk{
+    background-color: rgb(113, 153, 177);
+}

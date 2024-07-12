@@ -10,6 +10,7 @@ class TahsinGuru extends Model
     use HasFactory;
     protected $fillable = [
         'campus_id',
+        'kelas',
         'user_id',
     ];
 }

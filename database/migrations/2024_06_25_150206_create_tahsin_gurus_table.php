@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tahsin_gurus', function (Blueprint $table) {
             $table->id();
             $table->string('campus_id');
+            $table->string('kelas');
             $table->string('user_id');
             $table->timestamps();
         });

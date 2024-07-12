@@ -307,11 +307,12 @@ class Tahsin extends Component
             'idGuruTahsin'      => 'required',
         ]);
 
-        $cek = TahsinGuru::where('campus_id', Auth::user()->campus_id)->where('user_id', $this->idGuruTahsin)->count();
+        $cek = TahsinGuru::where('campus_id', Auth::user()->campus_id)->where('user_id', $this->idGuruTahsin)->where('kelas', $this->kelas)->count();
 
         if($cek == 0){
             TahsinGuru::create([
                 'campus_id'     => Auth::user()->campus_id,
+                'kelas'         => $this->kelas,
                 'user_id'       => $this->idGuruTahsin,
             ]);
             $this->emit('closeModal');
@@ -339,6 +340,7 @@ class Tahsin extends Component
     {
         $guru = TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
                         ->where('users.campus_id', Auth::user()->campus_id)
+                        ->where('kelas', $this->kelas)
                         ->select('tahsin_gurus.id', 'first_name')->get();
         $this->guruTahsin = $guru;
     }

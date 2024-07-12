@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Raport\Km;
 
 use App\Models\Room;
-use App\Models\Saran;
 use App\Models\Semester;
 use App\Models\TahfidzFaturrahman;
 use App\Models\TahfidzNilai;
@@ -35,6 +34,16 @@ class Tahfidz extends Component
     public $namaLengkap = "";
     public $idEditName;
 
+    public $faturrahman;
+    public $deskripsi;
+    public $idEditFaturrahman;
+    public $nilaiFaturrahman;
+
+    public $tanggal;
+    public $guru;
+
+    public $notif;
+
     public function mount()
     {
         $this->getDataKelas();
@@ -47,6 +56,9 @@ class Tahfidz extends Component
             $this->getDataNilai();
             $this->getDataObjek();
             $this->getDataSaran();
+            if($this->tingkat == 7){
+                $this->getFaturrahman();
+            }
         }
         return view('livewire.raport.km.tahfidz');
     }
@@ -107,7 +119,7 @@ class Tahfidz extends Component
 
     public function addSurah($id)
     {
-        $data = [
+        $data = [ 
             'ta'        => $this->ta,
             'semester'  => $this->semester,
             'tingkat'   => $this->tingkat,
@@ -122,16 +134,39 @@ class Tahfidz extends Component
     {
         $data = TahfidzObject::join('tahfidz_surahs', 'tahfidz_surahs.id', '=', 'tahfidz_objects.surah_id')
                     ->where('ta', $this->ta)->where('semester', $this->semester)->where('tingkat', $this->tingkat)
-                    ->select('tahfidz_objects.id', 'tahfidz_surahs.bahasa')->get();
+                    ->select('tahfidz_objects.id', 'tahfidz_surahs.bahasa')->get(); 
         $this->dataObject = $data;
     }
 
     public function getDataSaran()
     {
         $data = TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)
-                            ->where('kelas', $this->kelas)->select('id', 'user_id', 'catatan')
+                            ->where('kelas', $this->kelas)->select('id', 'user_id', 'catatan', 'tanggal_rapor')
                             ->get();
         $this->dataSaran = $data;
+        $this->tanggal = $data->first()->tanggal_rapor;
+    }
+
+    public function updatedtanggal()
+    {
+        TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)
+            ->where('kelas', $this->kelas)->select('id', 'user_id', 'catatan', 'tanggal_rapor')
+            ->update(['tanggal_rapor' => $this->tanggal]);
+        $this->getDatasaran();
+        
+        $this->notif = [
+            'status'    => 200,
+            'message'   => 'Tanggal diperbahaui ke <br/>'.$this->tanggal,
+        ];
+        $this->showAlert();
+    }
+
+    public function getFaturrahman()
+    {
+        $data = TahfidzFaturrahman::where('campus_id', Auth::user()->campus_id)
+                ->where('ta', $this->ta)->where('semester', $this->semester)
+                ->where('kelas', $this->kelas)->select('id', 'deskripsi', 'nilai', 'user_id')->get();
+        $this->faturrahman = $data;
     }
 
     public function modalSaran($id)
@@ -189,30 +224,40 @@ class Tahfidz extends Component
             }//Endforeach Object
 
              /**create Faturrahman */
-             if($this->tingkat == '7'){
-                TahfidzFaturrahman::create([
-                    'campus_id'         => Auth::user()->campus_id,
+             $cekFaturrahman = TahfidzFaturrahman::where('campus_id', Auth::user()->campus_id)
+                                ->where('ta', $this->ta)->where('semester', $this->semester)
+                                ->where('kelas', $this->kelas)->where('user_id', $user->id)->count();
+            if($cekFaturrahman == 0){
+                if($this->tingkat == '7'){
+                    TahfidzFaturrahman::create([
+                        'campus_id'         => Auth::user()->campus_id,
+                        'ta'                => $this->ta,
+                        'semester'          => $this->semester,
+                        'kelas'             => $this->kelas,
+                        'user_id'           => $user->id,
+                        'deskripsi'         => '-',
+                        'nilai'             => 0,
+                    ]);
+                }
+            }
+
+
+
+            /**Create Saran */
+            $cekCatatan = TahsinCatatan::where('ta', $this->ta)->where('semester', $this->semester)
+                            ->where('kelas', $this->kelas)->where('user_id', $user->id)->count();
+            if($cekCatatan == 0){
+                TahsinCatatan::create([
                     'ta'                => $this->ta,
                     'semester'          => $this->semester,
                     'kelas'             => $this->kelas,
                     'user_id'           => $user->id,
-                    'deskripsi'         => '-',
-                    'nilai'             => 0,
+                    'catatan'           => 'none',
+                    'tanggal_rapor'     => date('Y-m-d'),
                 ]);
             }
 
-            /**Create Saran */
-            TahsinCatatan::create([
-                'ta'                => $this->ta,
-                'semester'          => $this->semester,
-                'kelas'             => $this->kelas,
-                'user_id'           => $user->id,
-                'catatan'           => 'none',
-                'tanggal_rapor'     => date('Y-m-d'),
-            ]);
-
         }//Endforeach Users
-        $this->getDataNilai();
     }
 
     public function modalNickName($id)
@@ -251,5 +296,47 @@ class Tahfidz extends Component
             'nilai'     => $this->nilai,
         ]);
         $this->nilai = "";
+    }
+
+    public function modalDeskripsi($id)
+    {
+        $this->idEditFaturrahman = $id;
+        $data = TahfidzFaturrahman::findOrFail($id);
+        $this->deskripsi = $data->deskripsi;
+        $this->emit('modalDeskripsi');
+    }
+
+    public function updateFaturrahmanDeskripsi()
+    {
+        $data = TahfidzFaturrahman::findOrFail($this->idEditFaturrahman);
+        $data->update([
+            'deskripsi'     => $this->deskripsi,
+        ]);
+
+        $this->emit('closeModal');
+    }
+
+    public function updateNilaiFaturrahman($id)
+    {
+        $this->validate([
+            'nilaiFaturrahman'     => 'required|integer|min:59|max:99',
+        ]);
+
+        $data = TahfidzFaturrahman::findOrFail($id);
+        $data->update([
+            'nilai'     => $this->nilaiFaturrahman,
+        ]);
+
+        $this->nilaiFaturrahman = "";
+
+    }
+
+    public function showAlert()
+    {
+        // Panggil JavaScript untuk menampilkan popup SweatAlert
+        $this->emit('showAlert', [
+            'type' => $this->notif['status'],
+            'message' => $this->notif['message'],
+        ]);
     }
 }
