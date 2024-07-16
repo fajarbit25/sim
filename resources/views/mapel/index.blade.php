@@ -149,12 +149,12 @@
         <span class="text-danger fw-bold">Alert!</span> Hapus mata pelajaran ini?
       </div>
       <div class="modal-footer">
-        <input type="hidden" name="idmapel" id="idmapel"/>
+        <input type="hidden" name="idmapelDelete" id="idmapelDelete"/>
         <button type="button" class="btn btn-danger" onclick="deleteMapel()"><i class="bi bi-check-lg"></i> Ya</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Tidak</button>
       </div>
     </div>
   </div>
 </div>
-<script src="{{url('Admin/assets/js/mapel.js?v.1.2')}}"></script>
+<script src="{{url('Admin/assets/js/mapel.js?v.1.3')}}"></script>
 @endsection

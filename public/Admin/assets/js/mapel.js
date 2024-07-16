@@ -69,7 +69,7 @@ function updateMapel()
 function modalDelete(id)
 {
     $("#modalDelete").modal('show');
-    $("#idmapel").val(id);
+    $("#idmapelDelete").val(id);
 }
 
 function deleteMapel()
@@ -83,8 +83,10 @@ function deleteMapel()
         cache:false,
         data:{idmapel:idmapel},
         success:function(response){
+
             tabelMapel();
             $("#modalDelete").modal('hide');
+
             console.log('deleted');
             Swal.fire({
                 icon: 'success',
@@ -94,6 +96,7 @@ function deleteMapel()
         }
     });
 }
+
 
 //search function
 function search()
