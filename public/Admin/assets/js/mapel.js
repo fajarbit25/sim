@@ -66,16 +66,16 @@ function updateMapel()
     });
 }
 
-function modalDelete(id)
+function modalDeleteMapel(id)
 {
-    $("#modalDelete").modal('show');
+    $("#modalDeleteMapel").modal('show');
     $("#idmapelDelete").val(id);
 }
 
-function deleteMapel()
+function deleteMataPelajaran()
 {
     var url = "/mapel/destroy";
-    var idmapel = $("#idmapel").val();
+    var idmapel = $("#idmapelDelete").val();
 
     $.ajax({
         url:url,
@@ -85,7 +85,7 @@ function deleteMapel()
         success:function(response){
 
             tabelMapel();
-            $("#modalDelete").modal('hide');
+            $("#modalDeleteMapel").modal('hide');
 
             console.log('deleted');
             Swal.fire({

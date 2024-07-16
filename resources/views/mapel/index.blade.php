@@ -138,7 +138,7 @@
 </div>
 
 <!-- Modal Delete -->
-<div class="modal fade" id="modalDelete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalDeleteMapel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -150,11 +150,11 @@
       </div>
       <div class="modal-footer">
         <input type="hidden" name="idmapelDelete" id="idmapelDelete"/>
-        <button type="button" class="btn btn-danger" onclick="deleteMapel()"><i class="bi bi-check-lg"></i> Ya</button>
+        <button type="button" class="btn btn-danger" onclick="deleteMataPelajaran()"><i class="bi bi-check-lg"></i> Ya</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Tidak</button>
       </div>
     </div>
   </div>
 </div>
-<script src="{{url('Admin/assets/js/mapel.js?v.1.3.1')}}"></script>
+<script src="{{url('Admin/assets/js/mapel.js?v.1.3.2')}}"></script>
 @endsection

@@ -24,7 +24,7 @@
           <td>{{$mp->kkm}}</td>
           <td>
             <a href="#" class="text-success" onclick="modalUpdate({{$mp->idmapel}})"><i class="bi bi-pencil-square"></i></a>&nbsp;
-            <a href="#" class="text-danger" onclick="modalDelete({{$mp->idmapel}})"><i class="bi bi-trash"></i></a>
+            <a href="#" class="text-danger" onclick="modalDeleteMapel({{$mp->idmapel}})"><i class="bi bi-trash"></i></a>
           </td>
         </tr>
         @endif
