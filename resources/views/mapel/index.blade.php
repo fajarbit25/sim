@@ -156,5 +156,5 @@
     </div>
   </div>
 </div>
-<script src="{{url('Admin/assets/js/mapel.js?v.1.3')}}"></script>
+<script src="{{url('Admin/assets/js/mapel.js?v.1.3.1')}}"></script>
 @endsection
