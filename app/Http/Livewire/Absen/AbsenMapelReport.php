@@ -4,12 +4,13 @@ namespace App\Http\Livewire\Absen;
 
 use App\Models\Absen;
 use App\Models\Campu;
+use App\Models\Mapel;
 use App\Models\Room;
 use App\Models\Semester;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class WaliKelasReport extends Component
+class AbsenMapelReport extends Component
 {
     public $loading = false;
     public $campus;
@@ -22,19 +23,22 @@ class WaliKelasReport extends Component
     public $dataTa;
     public $dataKelas;
     public $dataAbsen;
+    public $dataMapel;
     public $hide = 1;
+    public $mapel;
 
 
     public function loadAll()
     {
         $this->getDataCampus();
         $this->getDataTa();
+        $this->getDataMapel();
     }
 
     public function render()
     {
         $this->loadAll();
-        return view('livewire.absen.wali-kelas-report');
+        return view('livewire.absen.absen-mapel-report');
     }
 
     public function getDataCampus()
@@ -53,23 +57,32 @@ class WaliKelasReport extends Component
         $this->dataTa = $data;
     }
 
+    public function getDataMapel()
+    {
+        $data = Mapel::where('mapel_campus', Auth::user()->campus_id)->where('is_active', '1')->get();
+        $this->dataMapel = $data;
+    }
+
     public function updatedcampus()
     {
         $this->getDataKelas();
         $this->kelas = null;
         $this->ta = null;
         $this->semester = null;
+        $this->mapel = null;
     }
 
     public function updatedkelas()
     {
         $this->ta = null;
         $this->semester = null;
+        $this->mapel = null;
     }
 
     public function updatedta()
     {
         $this->semester = null;
+        $this->mapel = null;
     }
     
     public function getDataKelas()
@@ -78,9 +91,14 @@ class WaliKelasReport extends Component
         $this->dataKelas = $data;
     }
 
-    public function updatedSemester()
+    public function updatedsemester()
     {
-        $this->getDataAbsen();   
+        $this->mapel = null;
+    }
+
+    public function updatedmapel()
+    {
+        $this->getDataAbsen();
     }
 
     public function getDataAbsen()
@@ -90,8 +108,8 @@ class WaliKelasReport extends Component
                 ->join('registers', 'registers.user_id', '=', 'absens.siswa_id')
                 ->where('ta', $this->ta)->where('absens.campus_id', $this->campus)
                 ->where('absens.kelas', $this->kelas)->where('semester', $this->semester)
-                ->where('absens.mapel', 0)
-                ->select('first_name', 'nis', 'nisn', 'absensi', 'users.id as user_id', 'tanggal_absen')->get();
+                ->where('absens.mapel', $this->mapel)
+                ->select('first_name', 'nis', 'nisn', 'gender', 'absensi', 'users.id as user_id', 'tanggal_absen')->get();
         $this->dataAbsen = $data;
     }
 

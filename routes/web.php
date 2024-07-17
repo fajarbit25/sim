@@ -275,6 +275,8 @@ Route::controller(MapelController::class)->group(function(){
 Route::controller(AbsenController::class)->group(function(){
     Route::get('/absen', 'index')->middleware('auth', 'guru')->name('absen');
     Route::get('/absen/report', 'report')->middleware('auth', 'admin')->name('absenReport');
+    Route::get('/absen/mapel', 'absenMapel')->middleware('auth', 'allguru')->name('absenMapel');
+    Route::get('/absen/mapel/report', 'absenMapelreport')->middleware('auth', 'admin')->name('absenMapelreport');
 
     /**Absen Guru&Staff */
     Route::get('/absen/guru/report', 'absenGuru')->middleware('auth')->name('absen.absenGuru');

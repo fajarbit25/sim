@@ -5,10 +5,10 @@
                 <div class="card-body">
                     <h3 class="card-title">
                         <span class="spinner-border spinner-border-sm" aria-hidden="true" wire:loading></span>
-                        Laporan Absensi Wali Kelas
+                        Laporan Absensi Mata Pelajaran
                     </h3>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-bank2"></i></label>
                                 <select class="form-select" id="inputGroupSelect01" wire:model="campus">
@@ -19,7 +19,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-house" wire:model="kelas"></i></label>
                                 <select class="form-select" id="inputGroupSelect01" wire:model="kelas">
@@ -32,7 +32,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3">           
+                        <div class="col-sm-4">           
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-calendar4-week"></i></label>
                                 <select class="form-select" id="inputGroupSelect01" wire:model="ta">
@@ -43,13 +43,26 @@
                                 </select>
                             </div>
                         </div>  
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-graph-up-arrow"></i></label>
                                 <select class="form-select" id="inputGroupSelect01" wire:model="semester">
                                     <option selected>Pilih Semester...</option>
                                     <option value="1">Ganjil</option>
                                     <option value="2">Genap</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-graph-up-arrow"></i></label>
+                                <select class="form-select" id="inputGroupSelect01" wire:model="mapel">
+                                    <option selected>Pilih Mata Pelajaran...</option>
+                                    @if($dataMapel)
+                                    @foreach($dataMapel as $item)
+                                    <option value="{{$item->idmapel}}">{{$item->kode_mapel.' - '.$item->nama_mapel}}</option>
+                                    @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -80,6 +93,7 @@
                                             <th rowspan="2" class="text-center bg-light"> No </th>
                                             <th rowspan="2" class="text-center bg-light"> NIS </th>
                                             <th rowspan="2" class="text-center bg-light"> Nama Siswa </th>
+                                            <th rowspan="2" class="text-center bg-light"> JK </th>
                                             @if($hide == 0)
                                             <th colspan="{{$dataAbsen->groupBy('tanggal_absen')->count()}}" class="text-center bg-light"> Tanggal Absensi </th>
                                             @endif
@@ -100,12 +114,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if($semester)
+                                        @if($mapel)
                                         @foreach($dataAbsen->groupBy('user_id') as $user_id => $items)
                                         <tr>
                                             <td class="text-center fw-bold"> {{$loop->iteration}} </td>
                                             <td class="text-center fw-bold"> {{$items->first()->nis.' / '.$items->first()->nis}} </td>
                                             <td> {{$items->first()->first_name}} </td>
+                                            <td class="text-center fw-bold">
+                                                @if($items->first()->gender == 'Laki-laki')
+                                                    L
+                                                @elseif($items->first()->gender == 'Perempuan') 
+                                                    P
+                                                @else 
+                                                    N/A
+                                                @endif
+                                            </td>
 
                                             @php
                                                 $dataAbsensi = $dataAbsen->where('user_id', $user_id);

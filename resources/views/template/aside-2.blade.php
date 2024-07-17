@@ -98,7 +98,12 @@
         <ul id="absen-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{{url('/absen')}}">
-              <i class="bi bi-circle"></i><span>Absen</span>
+              <i class="bi bi-circle"></i><span>Absen Wali Kelas</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/absen/mapel')}}">
+              <i class="bi bi-circle"></i><span>Absen Mata Pelajaran</span>
             </a>
           </li>
           <li>

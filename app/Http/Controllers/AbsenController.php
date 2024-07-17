@@ -50,6 +50,23 @@ class AbsenController extends Controller
         return view('absen.guru.index', $data);
     }
 
+    /**Absen Guru */
+    public function absenMapel(): View
+    {
+        $data = [
+            'title'     => 'Absensi Mata Pelajaran',
+        ];
+        return view('absen.absen-mapel', $data);
+    }
+
+    public function absenMapelreport()
+    {
+        $data = [
+            'title'     => 'Absensi Mata Pelajaran',
+        ];
+        return view('absen.absen-mapel-report', $data);
+    }
+
     public function absenGuruToday() : View
     {
         $data = [
