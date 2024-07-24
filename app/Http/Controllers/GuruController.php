@@ -258,6 +258,7 @@ class GuruController extends Controller
         $photo = $request->file('photo');
         $ekstensi = $photo->getClientOriginalExtension();
         $randomName = rand(1111, 9999);
+        $url = "https://sim.iqis.sch.id/storage/photo-users/";
         $filename = date('Ymdhis').'-'.$randomName.".".$ekstensi;
         $path = 'photo-users/'.$filename;
 
@@ -265,7 +266,7 @@ class GuruController extends Controller
 
         $id = $request->id;
         $data = [
-            'photo'     => $filename,
+            'photo'     => $url.$filename,
         ];
 
         User::where('id', $id)->update($data);
