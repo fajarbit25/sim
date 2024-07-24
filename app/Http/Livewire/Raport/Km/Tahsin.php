@@ -340,7 +340,7 @@ class Tahsin extends Component
     {
         $guru = TahsinGuru::join('users', 'users.id', '=', 'tahsin_gurus.user_id')
                         ->where('users.campus_id', Auth::user()->campus_id)
-                        ->where('kelas', $this->kelas)
+                        ->where('tahsin_gurus.kelas', $this->kelas)
                         ->select('tahsin_gurus.id', 'first_name')->get();
         $this->guruTahsin = $guru;
     }
