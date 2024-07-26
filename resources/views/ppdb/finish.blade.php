@@ -61,15 +61,16 @@
             <div class="card-body">
               <div class="row">
 
-                <div class="col-sm-10">
+                <div class="col-sm-8">
                   <h5 class="card-title"> 
                     TANDA BUKTI PENDAFTARAN <br/> 
                     PENERIMAAN PESERTA DIDIK BARU
                   </h5>
                   <P>Tahun Pelajaran {{$master->tahun_id}}</P>
                 </div>
-                <div class="col-sm-2 my-3 text-center">
-                  <img src="{{asset('storage/document/'.$doc->foto)}}" style="width: 150px" alt="img">
+                <div class="col-sm-4 my-3 text-center">
+                  {{-- <img src="{{asset('storage/document/'.$doc->foto)}}" style="width: 150px" alt="img"> --}}
+                  <img src="{{Auth::user()->photo}}" style="max-width: 150px" alt="img">
                 </div>
               
                 {{-- <div class="col-2 mb-3 text-center">

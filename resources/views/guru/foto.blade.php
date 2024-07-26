@@ -5,9 +5,5 @@
     <h3>{{$guru->kode_level.' '.$guru->nama_level}}</h3>
     <div class="social-links mt-2">
         <h3>{{$guru->nip}}</h3>
-        {{-- <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a> --}}
     </div>
 </div>

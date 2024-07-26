@@ -40,6 +40,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12 my-5">
+        
         <img src="{{asset('Admin/assets/img/kop-surat/smkit.png')}}" alt="" style="width: 100%">
       </div>
 
@@ -51,7 +52,7 @@
         <P>Tahun Pelajaran 2022/2023</P>
       </div>
       <div class="col-2 my-3">
-        <img src="{{asset('storage/document/'.$doc->foto)}}" style="width: 100px" alt="img">
+        <img src="{{Auth::user()->photo}}" style="width: 100px" alt="img">
       </div>
     
       <div class="col-12">

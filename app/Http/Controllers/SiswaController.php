@@ -253,13 +253,14 @@ class SiswaController extends Controller
         $ekstensi = $photo->getClientOriginalExtension();
         $randomName = rand(1111, 9999);
         $filename = date('Ymdhis').'-'.$randomName.".".$ekstensi;
+        $url = url('/storage/photo-users/');
         $path = 'photo-users/'.$filename;
 
         Storage::disk('public')->put($path, file_get_contents($photo));
 
         $id = $request->id;
         $data = [
-            'photo'     => $filename,
+            'photo'     => $url.'/'.$filename,
         ];
 
         User::where('id', $id)->update($data);

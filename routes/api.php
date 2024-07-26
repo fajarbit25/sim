@@ -45,7 +45,7 @@ Route::post('/user/payment/callback', [OrangtuaController::class, 'callback'])->
 //cron job autosend invoice
 Route::get('/payment/send-invoices', [PaymentControlller::class, 'kirimTagihanApi'])->name('paymen.kirimTagihanApi');
 
-Route::post('/absen/post', [AbsenApiController::class, 'post'])->name('api.post')->middleware('auth:sanctum');
+Route::post('/absen/post', [AbsenApiController::class, 'post'])->name('api.post');
 
 Route::post('/user/login', [AuthTokenController::class, 'loginUser']);
 
