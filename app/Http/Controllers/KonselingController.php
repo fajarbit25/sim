@@ -32,5 +32,13 @@ class KonselingController extends Controller
 
         return view('konseling.siswa', $data);
     }
+
+    public function report(): View
+    {
+        $data = [
+            'title'     => 'Laporan Konseling',
+        ];
+        return view('konseling.report', $data);
+    }
     
 }
