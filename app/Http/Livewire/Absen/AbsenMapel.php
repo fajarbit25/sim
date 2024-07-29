@@ -94,13 +94,14 @@ class AbsenMapel extends Component
         $data = Absen::join('users', 'users.id', '=', 'absens.siswa_id')
                 ->join('registers', 'registers.user_id', '=', 'absens.siswa_id')
                 ->join('students', 'students.user_id', '=', 'absens.siswa_id')
-                ->where('ta', $this->ta)->where('semester', $this->semester)->where('mapel', 0)
+                ->where('ta', $this->ta)->where('semester', $this->semester)->where('mapel', $this->mapel)
                 ->where('absens.kelas', $this->kelas)->where('tanggal_absen', $this->tanggal)
                 ->where('first_name', 'like', '%'.$this->search.'%')
                 ->select('idabsen', 'first_name', 'nis', 'nisn', 'gender', 'absensi', 'keterangan', 'absens.status')
                 ->get();
         $this->dataAbsen = $data;
     }
+
 
     public function getDataSemester()
     {

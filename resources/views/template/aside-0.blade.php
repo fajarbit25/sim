@@ -100,6 +100,29 @@
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#konseling-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-exclamation-circle"></i><span>Konseling</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="konseling-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{url('/konseling/point')}}">
+              <i class="bi bi-circle"></i><span>Point Tata Tertib</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/konseling/input')}}">
+              <i class="bi bi-circle"></i><span>Form Pelanggaran</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/konseling/report')}}">
+              <i class="bi bi-circle"></i><span>Laporan Pelanggaran</span>
+            </a>
+          </li>
+        </ul>
+      </li><!-- End Forms Nav -->
+
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#admin-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-sliders"></i><span>Administrasi</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>

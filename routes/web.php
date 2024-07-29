@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KonselingController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MapelController;
@@ -498,4 +499,11 @@ Route::controller(PaymentControlller::class)->group(function () {
     Route::get('/finance/payment-unpaid', 'paymentUnpaid')->middleware('auth', 'finance')->name('finance.paymentUnpaid');
     Route::get('/finance/payment-history', 'paymentHistory')->middleware('auth', 'finance')->name('finance.paymentHistory');
     Route::get('/finance/send-notifikasi-wa', 'sendNotifikasiWA')->middleware('auth')->name('finance.sendNotifikasiWA');
+});
+
+Route::controller(KonselingController::class)->group(function () {
+    Route::get('/konseling/point', 'point')->middleware('auth')->name('konseling.point');
+    Route::get('/konseling/input', 'input')->middleware('auth')->name('konseling.input');
+    Route::get('/konseling/report', 'report')->middleware('auth')->name('konseling.report');
+    Route::get('/konseling/{id}/siswa', 'siswa')->middleware('auth')->name('konseling.siswa');
 });

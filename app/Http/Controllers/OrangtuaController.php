@@ -13,6 +13,7 @@ use App\Models\Score;
 use App\Models\Semester;
 use App\Models\Siswalog;
 use App\Models\Student;
+use App\Models\TahfidzNilai;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,12 +39,20 @@ class OrangtuaController extends Controller
         $semesterKode = $semester->semester_kode;
         $ta = $semester->tahun_ajaran;
 
+        if(Auth::user()->campus_id == '3'){
+            $nilai = 0;
+        }else{
+            $nilai = TahfidzNilai::where('campus_id', Auth::user()->campus_id)
+                        ->where('ta', $ta)->where('semester', $semesterKode)
+                        ->where('user_id', $id)->get();
+        }
+
         $data = [
             'title'     => 'Statistik Siswa',
             'campus'    => Campu::where('idcampus', Auth::user()->campus_id)->first(),
             'students'  => Student::where('user_id', $id)->first(),
-            'nilai'     => Score::where('siswa_id', $id)->where('semester', '!=', $semesterKode)->where('ta', '!=',  $ta)
-                            ->join('mapels', 'mapels.idmapel', '=', 'scores.mapel')->get(),
+            'nilai'     => $nilai->avg('nilai') ?? 0,
+            'updated'   => $nilai->first()->updated_at,
         ];
         return view('ortu.index', $data);
     }
@@ -56,8 +65,13 @@ class OrangtuaController extends Controller
      */
     public function tahfidz($id):View
     {
+        $semester = Semester::where('is_active', 'true')->first();
         $data = [
-            'title'         => 'Tahfidz',
+            'title'             => 'Tahfidz',
+            'student'           => Student::where('user_id', Auth::user()->id)->first(),
+            'nilai'             => TahfidzNilai::where('campus_id', Auth::user()->campus_id)
+                                    ->where('ta', $semester->tahun_ajaran)->where('semester', $semester->semester_kode)
+                                    ->where('user_id', Auth::user()->id)->get(),
         ];
         return view('ortu.tahfidz', $data);
     }

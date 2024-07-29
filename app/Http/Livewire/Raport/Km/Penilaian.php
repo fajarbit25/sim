@@ -111,6 +111,7 @@ class Penilaian extends Component
                 session()->flash('message', 'TP untuk Mata Pelajaran yang Dipilih Belum Ada!');
             }else{
                 foreach($dataKd as $kd){
+                    
                     SdNilaiPelajaran::create([
                         'ta'        => $this->ta,
                         'semester'  => $this->semester,
@@ -118,6 +119,7 @@ class Penilaian extends Component
                         'mapel_id'  => $this->mapel,
                         'aspek'     => $this->aspek,
                         'kd'        => $kd->idkd,
+                        'jenis'     => 'PAS',
                         'nilai'     => 0,
                         'non_test'  => 0,
                         'test'      => 0,

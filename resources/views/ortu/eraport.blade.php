@@ -29,7 +29,7 @@
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                         {{-- <i class="bi bi-person-bounding-box"></i> --}}
-                        <img src="{{asset('/storage/photo-users/'.Auth::user()->photo)}}" alt="profile" style="width: 100%;">
+                        <img src="{{Auth::user()->photo}}" alt="profile" style="width: 100%;">
                     </div>
                     <div class="ps-3">
                       <h6>{{Auth::user()->first_name}} </h6>
@@ -61,31 +61,44 @@
                             <th>Predikat</th>
                             <th>Deskripsi</th>
                         </tr>
-                        @if(count($nilai) <= 0)
+
+                        @if(Auth::user()->campus_id == '2' || Auth::user()->campus_id == '3')
                           <tr>
                             <td colspan="5">
-                              <i class="fw-bold"> Nilai Raport Belum Keluar </i>
+                              <i class="fw-bold">
+                                Anda tidak dapat melihat nilai realtime, <br/> Silahkan hubungi pihak sekolah!
+                              </i>
                             </td>
                           </tr>
-                        @else
-                          @foreach($nilai as $item)
-                          <tr>
-                              <td>{{$loop->iteration}}</td>
-                              <td>{{$item->nama_mapel}}</td>
-                              <td>
-                                {{$item->nilai}}
+                        @else 
+
+                          @if(count($nilai) <= 0)
+                            <tr>
+                              <td colspan="5">
+                                <i class="fw-bold"> Nilai Raport Belum Keluar </i>
                               </td>
-                              <td>
-                                @if($item->nilai >= 90 && $item->nilai <= 100) <span class="fw-bold text-success">A</span>
-                                @elseif($item->nilai >= 80 && $item->nilai <= 89) <span class="fw-bold text-success">B</span>
-                                @elseif($item->nilai >= 70 && $item->nilai <= 79) <span class="fw-bold text-info">C</span>
-                                @elseif($item->nilai >= 60 && $item->nilai <= 69) <span class="fw-bold text-warning">D</span>
-                                @else<span class="fw-bold text-danger">E</span>@endif
-                              </td>
-                              <td>{{$item->deskripsi}}</td>
-                          </tr>
-                          @endforeach
+                            </tr>
+                          @else
+                            @foreach($nilai as $item)
+                            <tr>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$item->nama_mapel}}</td>
+                                <td>
+                                  {{$item->nilai}}
+                                </td>
+                                <td>
+                                  @if($item->nilai >= 90 && $item->nilai <= 100) <span class="fw-bold text-success">A</span>
+                                  @elseif($item->nilai >= 80 && $item->nilai <= 89) <span class="fw-bold text-success">B</span>
+                                  @elseif($item->nilai >= 70 && $item->nilai <= 79) <span class="fw-bold text-info">C</span>
+                                  @elseif($item->nilai >= 60 && $item->nilai <= 69) <span class="fw-bold text-warning">D</span>
+                                  @else<span class="fw-bold text-danger">E</span>@endif
+                                </td>
+                                <td>{{$item->deskripsi}}</td>
+                            </tr>
+                            @endforeach
+                          @endif
                         @endif
+
 
                     </table>
                   </div>

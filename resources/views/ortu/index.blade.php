@@ -73,22 +73,22 @@
                       <div class="list-group">
                         <a href="/user/{{Auth::user()->id}}/tahfidz" class="list-group-item list-group-item-action" aria-current="true">
                           <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1 text-success">50 Surah</h5>
-                            <small>Diperbaharui 2023-10-19</small>
+                            <h5 class="mb-1 text-success">{{number_format($nilai)}}/100 Rata-Rata</h5>
+                            <small>Diperbaharui {{substr($updated, 0, 10)}}</small>
                           </div>
                           <p class="mb-1">Tahfidz</p>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action">
                           <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1 text-success">85/100</h5>
-                            <small class="text-muted">Diperbaharui 2023-10-19</small>
+                            <h5 class="mb-1 text-success">0/100</h5>
+                            <small class="text-muted">Diperbaharui 2024-07-01</small>
                           </div>
                           <p class="mb-1">Bahasa Asing</p>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action">
                           <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">95/100</h5>
-                            <small class="text-muted">Diperbaharui 2023-10-19</small>
+                            <h5 class="mb-1">0/100</h5>
+                            <small class="text-muted">Diperbaharui 2024-07-01</small>
                           </div>
                           <p class="mb-1">Ekstrakurikuler</p>
                         </a>

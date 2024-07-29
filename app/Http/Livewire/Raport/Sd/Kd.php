@@ -116,11 +116,11 @@ class Kd extends Component
         ];
         $kd = KompetensiDasar::create($data);
 
-        $loadKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
+        //$loadKelas = Room::where('idkelas', $this->kelas)->select('tingkat')->first();
         $cekDataNilai = SdNilaiPelajaran::where('kd', $kd->id)->count();
         if($cekDataNilai == 0){
             $users = User::join('rooms', 'rooms.idkelas', '=', 'users.kelas')
-                        ->where('rooms.tingkat', $loadKelas->tingkat)
+                        ->where('rooms.tingkat', $this->kelas)
                         ->select('users.id as userid')->get();
             foreach($users as $user){
                 SdNilaiPelajaran::create([

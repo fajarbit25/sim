@@ -376,7 +376,7 @@
                                 <h3 class="fw-bold">LAPORAN HASIL BELAJAR <br/> (RAPOR)</h3>
                             </div>
                             <div class="col-2 font-13">
-                                Nama Peserta Didik<br/>
+                                <span style="white-space: nowrap;">Nama Peserta Didik</span> <br/>
                                 NISN<br/>
                                 Sekolah<br/>
                                 Alamat<br/>
@@ -396,28 +396,40 @@
                                 @php
                                     if($user->tingkat == 1){
                                         $textKelas = 'Satu';
+                                        $fase = 'A';
                                     }elseif($user->tingkat == 2){
                                         $textKelas = 'Dua';
+                                        $fase = 'A';
                                     }elseif($user->tingkat == 3){
                                         $textKelas = 'Tiga';
+                                        $fase = 'B';
                                     }elseif($user->tingkat == 4){
                                         $textKelas = 'Empat';
+                                        $fase = 'B';
                                     }elseif($user->tingkat == 5){
                                         $textKelas = 'Lima';
+                                        $fase = 'C';
                                     }elseif($user->tingkat == 6){
                                         $textKelas = 'Enam';
+                                        $fase = 'C';
                                     }elseif($user->tingkat == 7){
                                         $textKelas = 'Tujuh';
+                                        $fase = 'D';
                                     }elseif($user->tingkat == 8){
                                         $textKelas = 'Delapan';
+                                        $fase = 'D';
                                     }elseif($user->tingkat == 9){
                                         $textKelas = 'Sembilan';
+                                        $fase = 'D';
                                     }elseif($user->tingkat == 10){
                                         $textKelas = 'Sepuluh';
+                                        $fase = 'E';
                                     }elseif($user->tingkat == 11){
                                         $textKelas = 'Sebelas';
+                                        $fase = 'F';
                                     }elseif($user->tingkat == 12){
                                         $textKelas = 'Dua Belas';
+                                        $fase = 'F';
                                     }
 
                                     if($user->tingkat == 1){
@@ -459,7 +471,7 @@
                                     }
                                 @endphp
                                 : {{$romawiKelas}} {{$user->kode_kelas}} ({{$textKelas}})<br/>
-                                : -<br/>
+                                : {{$fase}}<br/>
                                 : {{$semesterText}}<br/>
                                 : {{$dataRaport->ta}}
                             </div>
